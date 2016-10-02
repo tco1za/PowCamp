@@ -38,22 +38,103 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CellCoords.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ComponentDependencies.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entity.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityType.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Game1.cs" />
+    <Compile Include="InstantiatedEntity.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Level.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PowCampDatabaseModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PowCampDatabaseModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PowCampDatabaseModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PowCampDatabaseModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PowCampDatabaseModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveGame.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Scene.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenCoords.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />
+    <Content Include="PowCampDatabaseModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PowCampDatabaseModel.Context.cs</LastGenOutput>
+      <DependentUpon>PowCampDatabaseModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="PowCampDatabaseModel.edmx.sql" />
+    <Content Include="PowCampDatabaseModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PowCampDatabaseModel.cs</LastGenOutput>
+      <DependentUpon>PowCampDatabaseModel.edmx</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="PowCampDatabaseModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PowCampDatabaseModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="packages.config" />
+    <None Include="PowCampDatabaseModel.edmx.diagram">
+      <DependentUpon>PowCampDatabaseModel.edmx</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

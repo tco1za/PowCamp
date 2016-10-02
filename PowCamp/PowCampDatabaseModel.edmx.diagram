@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5dbfd7e727d84f73976845f8d13eabce" Name="Diagram1" DisplayType="true" ZoomLevel="85" >
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Entity" Width="1.75" PointX="4.625" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.EntityType" Width="1.5" PointX="5" PointY="4.625" />
+        <AssociationConnector Association="PowCampDatabaseModel.EntityEntityType" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.InstantiatedEntity" Width="1.75" PointX="7.75" PointY="2.375" />
+        <AssociationConnector Association="PowCampDatabaseModel.InstantiatedEntityEntity" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.ScreenCoords" Width="1.5" PointX="7.25" PointY="0.5" />
+        <AssociationConnector Association="PowCampDatabaseModel.ScreenCoordsEntity" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.CellCoords" Width="1.5" PointX="7.125" PointY="4.625" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Scene" Width="1.5" PointX="1.875" PointY="3.75" />
+        <AssociationConnector Association="PowCampDatabaseModel.EntityCellCoords" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.ComponentDependencies" Width="2.125" PointX="6.625" PointY="7.125" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Level" Width="1.5" PointX="2" PointY="1" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.SaveGame" Width="1.5" PointX="1.75" PointY="6.25" />
+        <AssociationConnector Association="PowCampDatabaseModel.SceneSaveGame" />
+        <AssociationConnector Association="PowCampDatabaseModel.LevelScene" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

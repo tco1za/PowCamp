@@ -38,20 +38,24 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CellCoords.cs">
+    <Compile Include="CellCoord.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ComponentDependencies.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entity.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityType.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="DataAccess.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="InstantiatedEntity.cs">
+    <Compile Include="GameObject.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GameObjectType.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GameObjectTypeEnum.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InstantiatedGameObject.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Level.cs">
@@ -80,7 +84,10 @@
     <Compile Include="Scene.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="ScreenCoords.cs">
+    <Compile Include="ScreenCoord.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Visible.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>

@@ -1,6 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 
 namespace PowCamp
 {
@@ -9,6 +14,10 @@ namespace PowCamp
     /// </summary>
     public class Game1 : Game
     {
+
+        private Texture2D grassBlock;
+        private Texture2D mudBlock;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -17,6 +26,8 @@ namespace PowCamp
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
+        
+
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -26,7 +37,30 @@ namespace PowCamp
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            //            createGameObjectTypes();
+
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
+
+
+            //   DataAccess.createGameObjectTypes();
+
+
+
+            List<GameObject> gameObjects = new List<GameObject>();
+
+         //   gameObjects = DataAccess.loadSaveGame("10/3/2016 12:00:00 AM");
+
+            //gameObjects.Add(DataAccess.instantiateEntity(GameObjectTypeEnum.grassBlock));
+            //Debug.WriteLine(gameObjects[0].ScreenCoord.x);
+            //gameObjects[0].ScreenCoord.x = 456;
+       //     DataAccess.saveGame(gameObjects);
+
+
+            // cell Dimensions = 54x54
+
 
             base.Initialize();
         }
@@ -41,6 +75,9 @@ namespace PowCamp
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            grassBlock = Content.Load<Texture2D>("grassBlock2");
+            mudBlock = Content.Load<Texture2D>("mudBlock2");
+
         }
 
         /// <summary>
@@ -73,9 +110,19 @@ namespace PowCamp
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+
+
+            spriteBatch.Begin( SpriteSortMode.Immediate, BlendState.Additive);
+
+            
+
+            spriteBatch.Draw(grassBlock, new Vector2(-108/4, 0), Color.White);
+            spriteBatch.Draw(mudBlock, new Vector2(108/4, 0), Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

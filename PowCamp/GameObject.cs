@@ -12,13 +12,13 @@ namespace PowCamp
     using System;
     using System.Collections.Generic;
     
-    public partial class Entity
+    public partial class GameObject
     {
         public int Id { get; set; }
     
-        public virtual EntityType EntityType { get; set; }
-        public virtual InstantiatedEntity InstantiatedEntity { get; set; }
-        public virtual ScreenCoords ScreenCoord { get; set; }
-        public virtual CellCoords CellCoord { get; set; }
+        public virtual GameObjectType GameObjectType { get; set; }
+        public virtual InstantiatedGameObject InstantiatedGameObject { get; set; }
+        public virtual ScreenCoord ScreenCoord { get; set; }
+        public virtual CellCoord CellCoord { get; set; }
     }
 }

@@ -12,12 +12,12 @@ namespace PowCamp
     using System;
     using System.Collections.Generic;
     
-    public partial class CellCoords
+    public partial class ScreenCoord
     {
         public int Id { get; set; }
         public double x { get; set; }
         public double y { get; set; }
     
-        public virtual Entity Entity { get; set; }
+        public virtual GameObject GameObject { get; set; }
     }
 }

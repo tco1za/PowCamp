@@ -6,30 +6,30 @@
     <edmx:StorageModels>
     <Schema Namespace="PowCampDatabaseModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityContainer Name="PowCampDatabaseModelStoreContainer">
-    <EntitySet Name="Entities" EntityType="PowCampDatabaseModel.Store.Entities" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="EntityTypes" EntityType="PowCampDatabaseModel.Store.EntityTypes" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="InstantiatedEntities" EntityType="PowCampDatabaseModel.Store.InstantiatedEntities" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="ScreenCoords" EntityType="PowCampDatabaseModel.Store.ScreenCoords" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="CellCoords" EntityType="PowCampDatabaseModel.Store.CellCoords" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GameObjects" EntityType="PowCampDatabaseModel.Store.GameObjects" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GameObjectTypes" EntityType="PowCampDatabaseModel.Store.GameObjectTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="InstantiatedGameObjects" EntityType="PowCampDatabaseModel.Store.InstantiatedGameObjects" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ScreenCoord" EntityType="PowCampDatabaseModel.Store.ScreenCoord" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CellCoord" EntityType="PowCampDatabaseModel.Store.CellCoord" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Scenes" EntityType="PowCampDatabaseModel.Store.Scenes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="ComponentDependencies" EntityType="PowCampDatabaseModel.Store.ComponentDependencies" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Levels" EntityType="PowCampDatabaseModel.Store.Levels" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="SaveGames" EntityType="PowCampDatabaseModel.Store.SaveGames" store:Type="Tables" Schema="dbo" />
-    <AssociationSet Name="EntityEntityType" Association="PowCampDatabaseModel.Store.EntityEntityType">
-      <End Role="Entity" EntitySet="Entities" />
-      <End Role="EntityType" EntitySet="EntityTypes" />
+    <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
+      <End Role="GameObject" EntitySet="GameObjects" />
+      <End Role="GameObjectType" EntitySet="GameObjectTypes" />
     </AssociationSet>
-    <AssociationSet Name="InstantiatedEntityEntity" Association="PowCampDatabaseModel.Store.InstantiatedEntityEntity">
-      <End Role="InstantiatedEntity" EntitySet="InstantiatedEntities" />
-      <End Role="Entity" EntitySet="Entities" />
+    <AssociationSet Name="InstantiatedGameObjectGameObject" Association="PowCampDatabaseModel.Store.InstantiatedGameObjectGameObject">
+      <End Role="InstantiatedGameObject" EntitySet="InstantiatedGameObjects" />
+      <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
-    <AssociationSet Name="ScreenCoordsEntity" Association="PowCampDatabaseModel.Store.ScreenCoordsEntity">
-      <End Role="ScreenCoords" EntitySet="ScreenCoords" />
-      <End Role="Entity" EntitySet="Entities" />
+    <AssociationSet Name="ScreenCoordGameObject" Association="PowCampDatabaseModel.Store.ScreenCoordGameObject">
+      <End Role="ScreenCoord" EntitySet="ScreenCoord" />
+      <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
-    <AssociationSet Name="EntityCellCoords" Association="PowCampDatabaseModel.Store.EntityCellCoords">
-      <End Role="CellCoords" EntitySet="CellCoords" />
-      <End Role="Entity" EntitySet="Entities" />
+    <AssociationSet Name="EntityCellCoord" Association="PowCampDatabaseModel.Store.GameObjectCellCoord">
+      <End Role="CellCoord" EntitySet="CellCoord" />
+      <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
     <AssociationSet Name="SceneSaveGame" Association="PowCampDatabaseModel.Store.SceneSaveGame">
       <End Role="SaveGame" EntitySet="SaveGames" />
@@ -39,44 +39,51 @@
       <End Role="Level" EntitySet="Levels" />
       <End Role="Scene" EntitySet="Scenes" />
     </AssociationSet>
+    <AssociationSet Name="InstantiatedGameObjectScene" Association="PowCampDatabaseModel.Store.InstantiatedGameObjectScene">
+      <End Role="InstantiatedGameObject" EntitySet="InstantiatedGameObjects" />
+      <End Role="Scene" EntitySet="Scenes" />
+    </AssociationSet>
   </EntityContainer>
-  <EntityType Name="Entities">
+  <EntityType Name="GameObjects">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="EntityType_Id" Type="int" Nullable="false" />
+    <Property Name="GameObjectType_Id" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="EntityTypes">
+  <EntityType Name="GameObjectTypes">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="enumValue" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="InstantiatedEntities">
+  <EntityType Name="InstantiatedGameObjects">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Entity_Id" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+    <Property Name="Scene_Id" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="ScreenCoords">
+  <EntityType Name="ScreenCoord">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="x" Type="float" Nullable="false" />
     <Property Name="y" Type="float" Nullable="false" />
-    <Property Name="Entity_Id" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="CellCoords">
+  <EntityType Name="CellCoord">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="x" Type="float" Nullable="false" />
     <Property Name="y" Type="float" Nullable="false" />
-    <Property Name="Entity_Id" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Scenes">
     <Key>
@@ -106,53 +113,54 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="levelCreatedFrom" Type="int" Nullable="false" />
     <Property Name="Scene_Id" Type="int" Nullable="false" />
   </EntityType>
-  <Association Name="EntityEntityType">
-    <End Role="Entity" Type="PowCampDatabaseModel.Store.Entities" Multiplicity="*" />
-    <End Role="EntityType" Type="PowCampDatabaseModel.Store.EntityTypes" Multiplicity="1" />
+  <Association Name="GameObjectGameObjectType">
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="*" />
+    <End Role="GameObjectType" Type="PowCampDatabaseModel.Store.GameObjectTypes" Multiplicity="1" />
     <ReferentialConstraint>
-      <Principal Role="EntityType">
+      <Principal Role="GameObjectType">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="Entity">
-        <PropertyRef Name="EntityType_Id" />
+      <Dependent Role="GameObject">
+        <PropertyRef Name="GameObjectType_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="InstantiatedEntityEntity">
-    <End Role="InstantiatedEntity" Type="PowCampDatabaseModel.Store.InstantiatedEntities" Multiplicity="*" />
-    <End Role="Entity" Type="PowCampDatabaseModel.Store.Entities" Multiplicity="1" />
+  <Association Name="InstantiatedGameObjectGameObject">
+    <End Role="InstantiatedGameObject" Type="PowCampDatabaseModel.Store.InstantiatedGameObjects" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
     <ReferentialConstraint>
-      <Principal Role="Entity">
+      <Principal Role="GameObject">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="InstantiatedEntity">
-        <PropertyRef Name="Entity_Id" />
+      <Dependent Role="InstantiatedGameObject">
+        <PropertyRef Name="GameObject_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="ScreenCoordsEntity">
-    <End Role="ScreenCoords" Type="PowCampDatabaseModel.Store.ScreenCoords" Multiplicity="*" />
-    <End Role="Entity" Type="PowCampDatabaseModel.Store.Entities" Multiplicity="1" />
+  <Association Name="ScreenCoordGameObject">
+    <End Role="ScreenCoord" Type="PowCampDatabaseModel.Store.ScreenCoord" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
     <ReferentialConstraint>
-      <Principal Role="Entity">
+      <Principal Role="GameObject">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="ScreenCoords">
-        <PropertyRef Name="Entity_Id" />
+      <Dependent Role="ScreenCoord">
+        <PropertyRef Name="GameObject_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="EntityCellCoords">
-    <End Role="CellCoords" Type="PowCampDatabaseModel.Store.CellCoords" Multiplicity="*" />
-    <End Role="Entity" Type="PowCampDatabaseModel.Store.Entities" Multiplicity="1" />
+  <Association Name="GameObjectCellCoord">
+    <End Role="CellCoord" Type="PowCampDatabaseModel.Store.CellCoord" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
     <ReferentialConstraint>
-      <Principal Role="Entity">
+      <Principal Role="GameObject">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="CellCoords">
-        <PropertyRef Name="Entity_Id" />
+      <Dependent Role="CellCoord">
+        <PropertyRef Name="GameObject_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -180,32 +188,44 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="InstantiatedGameObjectScene">
+    <End Role="InstantiatedGameObject" Type="PowCampDatabaseModel.Store.InstantiatedGameObjects" Multiplicity="*" />
+    <End Role="Scene" Type="PowCampDatabaseModel.Store.Scenes" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Scene">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InstantiatedGameObject">
+        <PropertyRef Name="Scene_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="PowCampDatabaseModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="PowCampDatabaseModelContainer" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Entities" EntityType="PowCampDatabaseModel.Entity" />
-          <EntitySet Name="EntityTypes" EntityType="PowCampDatabaseModel.EntityType" />
-          <AssociationSet Name="EntityEntityType" Association="PowCampDatabaseModel.EntityEntityType">
-            <End Role="Entity" EntitySet="Entities" />
-            <End Role="EntityType" EntitySet="EntityTypes" />
+          <EntitySet Name="GameObjects" EntityType="PowCampDatabaseModel.GameObject" />
+          <EntitySet Name="GameObjectTypes" EntityType="PowCampDatabaseModel.GameObjectType" />
+          <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.GameObjectGameObjectType">
+            <End Role="GameObject" EntitySet="GameObjects" />
+            <End Role="GameObjectType" EntitySet="GameObjectTypes" />
           </AssociationSet>
-          <EntitySet Name="InstantiatedEntities" EntityType="PowCampDatabaseModel.InstantiatedEntity" />
-          <AssociationSet Name="InstantiatedEntityEntity" Association="PowCampDatabaseModel.InstantiatedEntityEntity">
-            <End Role="InstantiatedEntity" EntitySet="InstantiatedEntities" />
-            <End Role="Entity" EntitySet="Entities" />
+          <EntitySet Name="InstantiatedGameObjects" EntityType="PowCampDatabaseModel.InstantiatedGameObject" />
+          <AssociationSet Name="InstantiatedGameObjectGameObject" Association="PowCampDatabaseModel.InstantiatedGameObjectGameObject">
+            <End Role="InstantiatedGameObject" EntitySet="InstantiatedGameObjects" />
+            <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
-          <EntitySet Name="ScreenCoords" EntityType="PowCampDatabaseModel.ScreenCoords" />
-          <AssociationSet Name="ScreenCoordsEntity" Association="PowCampDatabaseModel.ScreenCoordsEntity">
-            <End Role="ScreenCoords" EntitySet="ScreenCoords" />
-            <End Role="Entity" EntitySet="Entities" />
+          <EntitySet Name="ScreenCoord" EntityType="PowCampDatabaseModel.ScreenCoord" />
+          <AssociationSet Name="ScreenCoordGameObject" Association="PowCampDatabaseModel.ScreenCoordGameObject">
+            <End Role="ScreenCoord" EntitySet="ScreenCoord" />
+            <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
-          <EntitySet Name="CellCoords" EntityType="PowCampDatabaseModel.CellCoords" />
+          <EntitySet Name="CellCoord" EntityType="PowCampDatabaseModel.CellCoord" />
           <EntitySet Name="Scenes" EntityType="PowCampDatabaseModel.Scene" />
-          <AssociationSet Name="EntityCellCoords" Association="PowCampDatabaseModel.EntityCellCoords">
-            <End Role="CellCoords" EntitySet="CellCoords" />
-            <End Role="Entity" EntitySet="Entities" />
+          <AssociationSet Name="EntityCellCoord" Association="PowCampDatabaseModel.GameObjectCellCoord">
+            <End Role="CellCoord" EntitySet="CellCoord" />
+            <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
           <EntitySet Name="ComponentDependencies" EntityType="PowCampDatabaseModel.ComponentDependencies" />
           <EntitySet Name="Levels" EntityType="PowCampDatabaseModel.Level" />
@@ -218,60 +238,68 @@
             <End Role="Level" EntitySet="Levels" />
             <End Role="Scene" EntitySet="Scenes" />
           </AssociationSet>
+          <AssociationSet Name="InstantiatedGameObjectScene" Association="PowCampDatabaseModel.InstantiatedGameObjectScene">
+            <End Role="InstantiatedGameObject" EntitySet="InstantiatedGameObjects" />
+            <End Role="Scene" EntitySet="Scenes" />
+          </AssociationSet>
+          <EntitySet Name="Visibles" EntityType="PowCampDatabaseModel.Visible" />
         </EntityContainer>
-        <EntityType Name="Entity">
+        <EntityType Name="GameObject">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="EntityType" Relationship="PowCampDatabaseModel.EntityEntityType" FromRole="Entity" ToRole="EntityType" />
-          <NavigationProperty Name="InstantiatedEntity" Relationship="PowCampDatabaseModel.InstantiatedEntityEntity" FromRole="Entity" ToRole="InstantiatedEntity" />
-          <NavigationProperty Name="ScreenCoord" Relationship="PowCampDatabaseModel.ScreenCoordsEntity" FromRole="Entity" ToRole="ScreenCoords" />
-          <NavigationProperty Name="CellCoord" Relationship="PowCampDatabaseModel.EntityCellCoords" FromRole="Entity" ToRole="CellCoords" />
+          <NavigationProperty Name="GameObjectType" Relationship="PowCampDatabaseModel.GameObjectGameObjectType" FromRole="GameObject" ToRole="GameObjectType" />
+          <NavigationProperty Name="InstantiatedGameObject" Relationship="PowCampDatabaseModel.InstantiatedGameObjectGameObject" FromRole="GameObject" ToRole="InstantiatedGameObject" />
+          <NavigationProperty Name="ScreenCoord" Relationship="PowCampDatabaseModel.ScreenCoordGameObject" FromRole="GameObject" ToRole="ScreenCoord" />
+          <NavigationProperty Name="CellCoord" Relationship="PowCampDatabaseModel.GameObjectCellCoord" FromRole="GameObject" ToRole="CellCoord" />
         </EntityType>
-        <EntityType Name="EntityType">
+        <EntityType Name="GameObjectType">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Entities" Relationship="PowCampDatabaseModel.EntityEntityType" FromRole="EntityType" ToRole="Entity" />
+          <NavigationProperty Name="GameObjects" Relationship="PowCampDatabaseModel.GameObjectGameObjectType" FromRole="GameObjectType" ToRole="GameObject" />
+          <Property Name="name" Type="String" Nullable="false" />
+          <Property Name="enumValue" Type="PowCampDatabaseModel.GameObjectTypeEnum" Nullable="false" />
         </EntityType>
-        <Association Name="EntityEntityType">
-          <End Type="PowCampDatabaseModel.Entity" Role="Entity" Multiplicity="*" />
-          <End Type="PowCampDatabaseModel.EntityType" Role="EntityType" Multiplicity="1" />
+        <Association Name="GameObjectGameObjectType">
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="*" />
+          <End Type="PowCampDatabaseModel.GameObjectType" Role="GameObjectType" Multiplicity="1" />
         </Association>
-        <EntityType Name="InstantiatedEntity">
+        <EntityType Name="InstantiatedGameObject">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Entity" Relationship="PowCampDatabaseModel.InstantiatedEntityEntity" FromRole="InstantiatedEntity" ToRole="Entity" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.InstantiatedGameObjectGameObject" FromRole="InstantiatedGameObject" ToRole="GameObject" />
+          <NavigationProperty Name="Scene" Relationship="PowCampDatabaseModel.InstantiatedGameObjectScene" FromRole="InstantiatedGameObject" ToRole="Scene" />
         </EntityType>
-        <Association Name="InstantiatedEntityEntity">
-          <End Type="PowCampDatabaseModel.InstantiatedEntity" Role="InstantiatedEntity" Multiplicity="0..1" />
-          <End Type="PowCampDatabaseModel.Entity" Role="Entity" Multiplicity="1" />
+        <Association Name="InstantiatedGameObjectGameObject">
+          <End Type="PowCampDatabaseModel.InstantiatedGameObject" Role="InstantiatedGameObject" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
-        <EntityType Name="ScreenCoords">
+        <EntityType Name="ScreenCoord">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="x" Type="Double" Nullable="false" />
           <Property Name="y" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Entity" Relationship="PowCampDatabaseModel.ScreenCoordsEntity" FromRole="ScreenCoords" ToRole="Entity" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.ScreenCoordGameObject" FromRole="ScreenCoord" ToRole="GameObject" />
         </EntityType>
-        <Association Name="ScreenCoordsEntity">
-          <End Type="PowCampDatabaseModel.ScreenCoords" Role="ScreenCoords" Multiplicity="0..1" />
-          <End Type="PowCampDatabaseModel.Entity" Role="Entity" Multiplicity="1" />
+        <Association Name="ScreenCoordGameObject">
+          <End Type="PowCampDatabaseModel.ScreenCoord" Role="ScreenCoord" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
-        <EntityType Name="CellCoords">
+        <EntityType Name="CellCoord">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="x" Type="Double" Nullable="false" />
           <Property Name="y" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Entity" Relationship="PowCampDatabaseModel.EntityCellCoords" FromRole="CellCoords" ToRole="Entity" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.GameObjectCellCoord" FromRole="CellCoord" ToRole="GameObject" />
         </EntityType>
         <EntityType Name="Scene">
           <Key>
@@ -280,10 +308,11 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="SaveGame" Relationship="PowCampDatabaseModel.SceneSaveGame" FromRole="Scene" ToRole="SaveGame" />
           <NavigationProperty Name="Level" Relationship="PowCampDatabaseModel.LevelScene" FromRole="Scene" ToRole="Level" />
+          <NavigationProperty Name="InstantiatedGameObjects" Relationship="PowCampDatabaseModel.InstantiatedGameObjectScene" FromRole="Scene" ToRole="InstantiatedGameObject" />
         </EntityType>
-        <Association Name="EntityCellCoords">
-          <End Type="PowCampDatabaseModel.CellCoords" Role="CellCoords" Multiplicity="0..1" />
-          <End Type="PowCampDatabaseModel.Entity" Role="Entity" Multiplicity="1" />
+        <Association Name="GameObjectCellCoord">
+          <End Type="PowCampDatabaseModel.CellCoord" Role="CellCoord" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
         <EntityType Name="ComponentDependencies">
           <Key>
@@ -308,6 +337,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" Nullable="false" />
           <NavigationProperty Name="Scene" Relationship="PowCampDatabaseModel.SceneSaveGame" FromRole="SaveGame" ToRole="Scene" />
+          <Property Name="levelCreatedFrom" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="SceneSaveGame">
           <End Type="PowCampDatabaseModel.SaveGame" Role="SaveGame" Multiplicity="0..1" />
@@ -317,45 +347,62 @@
           <End Type="PowCampDatabaseModel.Level" Role="Level" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.Scene" Role="Scene" Multiplicity="1" />
         </Association>
+        <Association Name="InstantiatedGameObjectScene">
+          <End Type="PowCampDatabaseModel.InstantiatedGameObject" Role="InstantiatedGameObject" Multiplicity="*" />
+          <End Type="PowCampDatabaseModel.Scene" Role="Scene" Multiplicity="1" />
+        </Association>
+        <EnumType Name="GameObjectTypeEnum">
+          <Member Name="grassBlock" />
+          <Member Name="sandBlock" />
+        </EnumType>
+        <EntityType Name="Visible">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="drawOrder" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="PowCampDatabaseModelStoreContainer" CdmEntityContainer="PowCampDatabaseModelContainer">
-    <EntitySetMapping Name="Entities">
-      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Entity)">
-        <MappingFragment StoreEntitySet="Entities">
+    <EntitySetMapping Name="GameObjects">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.GameObject)">
+        <MappingFragment StoreEntitySet="GameObjects">
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="EntityTypes">
-      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.EntityType)">
-        <MappingFragment StoreEntitySet="EntityTypes">
+    <EntitySetMapping Name="GameObjectTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.GameObjectType)">
+        <MappingFragment StoreEntitySet="GameObjectTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="enumValue" ColumnName="enumValue" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InstantiatedGameObjects">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.InstantiatedGameObject)">
+        <MappingFragment StoreEntitySet="InstantiatedGameObjects">
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="InstantiatedEntities">
-      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.InstantiatedEntity)">
-        <MappingFragment StoreEntitySet="InstantiatedEntities">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ScreenCoords">
-      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.ScreenCoords)">
-        <MappingFragment StoreEntitySet="ScreenCoords">
+    <EntitySetMapping Name="ScreenCoord">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.ScreenCoord)">
+        <MappingFragment StoreEntitySet="ScreenCoord">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="x" ColumnName="x" />
           <ScalarProperty Name="y" ColumnName="y" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="CellCoords">
-      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.CellCoords)">
-        <MappingFragment StoreEntitySet="CellCoords">
+    <EntitySetMapping Name="CellCoord">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.CellCoord)">
+        <MappingFragment StoreEntitySet="CellCoord">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="x" ColumnName="x" />
           <ScalarProperty Name="y" ColumnName="y" />
@@ -391,38 +438,39 @@
         <MappingFragment StoreEntitySet="SaveGames">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="levelCreatedFrom" ColumnName="levelCreatedFrom" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="EntityEntityType" TypeName="PowCampDatabaseModel.EntityEntityType" StoreEntitySet="Entities">
-      <EndProperty Name="EntityType">
-        <ScalarProperty Name="Id" ColumnName="EntityType_Id" />
+    <AssociationSetMapping Name="GameObjectGameObjectType" TypeName="PowCampDatabaseModel.GameObjectGameObjectType" StoreEntitySet="GameObjects">
+      <EndProperty Name="GameObjectType">
+        <ScalarProperty Name="Id" ColumnName="GameObjectType_Id" />
       </EndProperty>
-      <EndProperty Name="Entity">
+      <EndProperty Name="GameObject">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="InstantiatedEntityEntity" TypeName="PowCampDatabaseModel.InstantiatedEntityEntity" StoreEntitySet="InstantiatedEntities">
-      <EndProperty Name="Entity">
-        <ScalarProperty Name="Id" ColumnName="Entity_Id" />
+    <AssociationSetMapping Name="InstantiatedGameObjectGameObject" TypeName="PowCampDatabaseModel.InstantiatedGameObjectGameObject" StoreEntitySet="InstantiatedGameObjects">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
-      <EndProperty Name="InstantiatedEntity">
+      <EndProperty Name="InstantiatedGameObject">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="ScreenCoordsEntity" TypeName="PowCampDatabaseModel.ScreenCoordsEntity" StoreEntitySet="ScreenCoords">
-      <EndProperty Name="Entity">
-        <ScalarProperty Name="Id" ColumnName="Entity_Id" />
+    <AssociationSetMapping Name="ScreenCoordGameObject" TypeName="PowCampDatabaseModel.ScreenCoordGameObject" StoreEntitySet="ScreenCoord">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
-      <EndProperty Name="ScreenCoords">
+      <EndProperty Name="ScreenCoord">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="EntityCellCoords" TypeName="PowCampDatabaseModel.EntityCellCoords" StoreEntitySet="CellCoords">
-      <EndProperty Name="Entity">
-        <ScalarProperty Name="Id" ColumnName="Entity_Id" />
+    <AssociationSetMapping Name="EntityCellCoord" TypeName="PowCampDatabaseModel.GameObjectCellCoord" StoreEntitySet="CellCoord">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
-      <EndProperty Name="CellCoords">
+      <EndProperty Name="CellCoord">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
@@ -439,6 +487,14 @@
         <ScalarProperty Name="Id" ColumnName="Scene_Id" />
       </EndProperty>
       <EndProperty Name="Level">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="InstantiatedGameObjectScene" TypeName="PowCampDatabaseModel.InstantiatedGameObjectScene" StoreEntitySet="InstantiatedGameObjects">
+      <EndProperty Name="Scene">
+        <ScalarProperty Name="Id" ColumnName="Scene_Id" />
+      </EndProperty>
+      <EndProperty Name="InstantiatedGameObject">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

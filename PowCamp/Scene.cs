@@ -14,9 +14,17 @@ namespace PowCamp
     
     public partial class Scene
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Scene()
+        {
+            this.InstantiatedGameObjects = new HashSet<InstantiatedGameObject>();
+        }
+    
         public int Id { get; set; }
     
         public virtual SaveGame SaveGame { get; set; }
         public virtual Level Level { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<InstantiatedGameObject> InstantiatedGameObjects { get; set; }
     }
 }

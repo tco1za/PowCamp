@@ -25,14 +25,15 @@ namespace PowCamp
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Entity> Entities { get; set; }
-        public virtual DbSet<EntityType> EntityTypes { get; set; }
-        public virtual DbSet<InstantiatedEntity> InstantiatedEntities { get; set; }
-        public virtual DbSet<ScreenCoords> ScreenCoords { get; set; }
-        public virtual DbSet<CellCoords> CellCoords { get; set; }
+        public virtual DbSet<GameObject> GameObjects { get; set; }
+        public virtual DbSet<GameObjectType> GameObjectTypes { get; set; }
+        public virtual DbSet<InstantiatedGameObject> InstantiatedGameObjects { get; set; }
+        public virtual DbSet<ScreenCoord> ScreenCoord { get; set; }
+        public virtual DbSet<CellCoord> CellCoord { get; set; }
         public virtual DbSet<Scene> Scenes { get; set; }
         public virtual DbSet<ComponentDependencies> ComponentDependencies { get; set; }
         public virtual DbSet<Level> Levels { get; set; }
         public virtual DbSet<SaveGame> SaveGames { get; set; }
+        public virtual DbSet<Visible> Visibles { get; set; }
     }
 }

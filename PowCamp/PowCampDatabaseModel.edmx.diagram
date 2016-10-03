@@ -4,22 +4,24 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5dbfd7e727d84f73976845f8d13eabce" Name="Diagram1" DisplayType="true" ZoomLevel="85" >
-        <EntityTypeShape EntityType="PowCampDatabaseModel.Entity" Width="1.75" PointX="4.625" PointY="1.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.EntityType" Width="1.5" PointX="5" PointY="4.625" />
-        <AssociationConnector Association="PowCampDatabaseModel.EntityEntityType" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.InstantiatedEntity" Width="1.75" PointX="7.75" PointY="2.375" />
-        <AssociationConnector Association="PowCampDatabaseModel.InstantiatedEntityEntity" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.ScreenCoords" Width="1.5" PointX="7.25" PointY="0.5" />
-        <AssociationConnector Association="PowCampDatabaseModel.ScreenCoordsEntity" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.CellCoords" Width="1.5" PointX="7.125" PointY="4.625" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.Scene" Width="1.5" PointX="1.875" PointY="3.75" />
-        <AssociationConnector Association="PowCampDatabaseModel.EntityCellCoords" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.ComponentDependencies" Width="2.125" PointX="6.625" PointY="7.125" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.Level" Width="1.5" PointX="2" PointY="1" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.SaveGame" Width="1.5" PointX="1.75" PointY="6.25" />
+      <Diagram DiagramId="5dbfd7e727d84f73976845f8d13eabce" Name="Diagram1" DisplayType="true" ZoomLevel="87" >
+        <EntityTypeShape EntityType="PowCampDatabaseModel.GameObject" Width="2" PointX="10.375" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.GameObjectType" Width="1.875" PointX="10.5" PointY="5.25" />
+        <AssociationConnector Association="PowCampDatabaseModel.GameObjectGameObjectType" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.InstantiatedGameObject" Width="2" PointX="8.375" PointY="4" />
+        <AssociationConnector Association="PowCampDatabaseModel.InstantiatedGameObjectGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.ScreenCoord" Width="1.5" PointX="13.875" PointY="1.125" />
+        <AssociationConnector Association="PowCampDatabaseModel.ScreenCoordGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.CellCoord" Width="1.5" PointX="12.875" PointY="4.5" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Scene" Width="2.125" PointX="5.75" PointY="4" />
+        <AssociationConnector Association="PowCampDatabaseModel.GameObjectCellCoord" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.ComponentDependencies" Width="2.125" PointX="8" PointY="6.125" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Level" Width="1.5" PointX="6" PointY="1.375" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.SaveGame" Width="2" PointX="5.5" PointY="6.375" />
         <AssociationConnector Association="PowCampDatabaseModel.SceneSaveGame" />
         <AssociationConnector Association="PowCampDatabaseModel.LevelScene" />
+        <AssociationConnector Association="PowCampDatabaseModel.InstantiatedGameObjectScene" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Visible" Width="2.125" PointX="16.125" PointY="3.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

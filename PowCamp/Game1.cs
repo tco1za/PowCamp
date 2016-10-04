@@ -20,6 +20,8 @@ namespace PowCamp
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+  
+
 
         public Game1()
         {
@@ -39,14 +41,20 @@ namespace PowCamp
         {
             //            createGameObjectTypes();
 
-            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+            //graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            //graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
+            
 
-            //   DataAccess.createGameObjectTypes();
 
+       //     DataAccess.createComponentDependencies();
+
+         //   DataAccess.createGameObjectTypes();
+            DataAccess.createAndLinkToGameObjectsAllDependenciesThatDontExist();
 
 
             List<GameObject> gameObjects = new List<GameObject>();
@@ -75,8 +83,8 @@ namespace PowCamp
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            grassBlock = Content.Load<Texture2D>("grassBlock2");
-            mudBlock = Content.Load<Texture2D>("mudBlock2");
+
+            mudBlock = Content.Load<Texture2D>("backTest");
 
         }
 
@@ -101,6 +109,12 @@ namespace PowCamp
 
             // TODO: Add your update logic here
 
+//public virtual Point PointToScreen(Point point)
+//        {
+//            var matrix = Matrix.Invert(GetScaleMatrix());
+//            return Vector2.Transform(point.ToVector2(), matrix).ToPoint();
+//        }
+
             base.Update(gameTime);
         }
 
@@ -114,14 +128,48 @@ namespace PowCamp
 
             // TODO: Add your drawing code here
 
+        //    Rectangle sourceRectangle = new Rectangle(0, 0, grassBlock.Width, grassBlock.Height);
+            var scaleX = (float)800 / 1920;
+            var scaleY = (float)600 / 1080;
+            var matrix = Matrix.CreateScale(scaleX, scaleY, 1.0f);
 
-            spriteBatch.Begin( SpriteSortMode.Immediate, BlendState.Additive);
+            spriteBatch.Begin( SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, matrix);
+         //   Vector2 origin = new Vector2(grassBlock.Width / 2, grassBlock.Height/2);
+
+//            Vector2 origin = new Vector2(0, 0);
+
+
+//                    //spriteBatch.Draw(grassBlock, new Vector2(-108 / 4 + x * 108 , -108 / 4 + y * 54), Color.White);
+
+                spriteBatch.Draw(mudBlock, new Vector2(0 , 0), Color.White);
+
+
+//            for (int y = 0; y < 20; y++)
+//            {
+//                for (int x = 0; x < 35; x++)
+//                {
+
+//                    //spriteBatch.Draw(grassBlock, new Vector2(-108 / 4 + x * 108 , -108 / 4 + y * 54), Color.White);
+
+//                    //spriteBatch.Draw(grassBlock, new Vector2(-108 / 4 + x * 108, -108 / 4 + y * 54), sourceRectangle, Color.White, (float)MathHelper.ToRadians(degrees[y,x]), origin, 1.0f, SpriteEffects.None, 1);
+
+//                    SpriteEffects s = new SpriteEffects();
+//                    if ( flip[y,x] == 1)
+//                    {
+//                        s = SpriteEffects.FlipHorizontally;
+//                    }
+//                    else
+//                    {
+//                        s = SpriteEffects.None;
+//                    }
+//                    spriteBatch.Draw(grassBlock, new Vector2(-108 / 4 + x * 108 + 108/2, -108 / 4 + y * 54 + 108 / 2), sourceRectangle, Color.White, (float)MathHelper.ToRadians(degrees[y,x]), origin, 1.0f, s, 1);
+//                    spriteBatch.Draw(mudBlock, new Vector2(-108 / 4 + x * 108 + 108 / 2 - 54, -108 / 4 + y * 54 + 108 / 2), sourceRectangle, Color.White, (float)MathHelper.ToRadians(degrees[y, x]), origin, 1.0f, s, 1);
+
+////                    spriteBatch.Draw(mudBlock, new Vector2(-108 / 4 + x * 108 -54, -108 / 4 + y * 54), Color.White);
+//                }
+//            }
 
             
-
-            spriteBatch.Draw(grassBlock, new Vector2(-108/4, 0), Color.White);
-            spriteBatch.Draw(mudBlock, new Vector2(108/4, 0), Color.White);
-
             spriteBatch.End();
 
             base.Draw(gameTime);

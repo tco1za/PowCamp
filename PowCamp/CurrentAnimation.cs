@@ -12,10 +12,12 @@ namespace PowCamp
     using System;
     using System.Collections.Generic;
     
-    public partial class ComponentDependencies
+    public partial class CurrentAnimation
     {
         public int Id { get; set; }
-        public string componentName { get; set; }
-        public string dependsOn { get; set; }
+        public int index { get; set; }
+    
+        public virtual GameObject GameObject { get; set; }
+        public virtual Animation Animation { get; set; }
     }
 }

@@ -12,16 +12,10 @@ namespace PowCamp
     using System;
     using System.Collections.Generic;
     
-    public partial class GameObject
+    public partial class ComponentDependency
     {
         public int Id { get; set; }
-    
-        public virtual GameObjectType GameObjectType { get; set; }
-        public virtual InstantiatedGameObject InstantiatedGameObject { get; set; }
-        public virtual ScreenCoord ScreenCoord { get; set; }
-        public virtual CellCoord CellCoord { get; set; }
-        public virtual CurrentAnimation CurrentAnimation { get; set; }
-        public virtual Velocity Velocity { get; set; }
-        public virtual Acceleration Acceleration { get; set; }
+        public string componentName { get; set; }
+        public string dependsOn { get; set; }
     }
 }

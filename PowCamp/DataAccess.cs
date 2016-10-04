@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity.Design.PluralizationServices;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace PowCamp
 {
@@ -12,6 +17,8 @@ namespace PowCamp
         private static int currentLevelId = 1;
 
         private static PowCampDatabaseModelContainer db = new PowCampDatabaseModelContainer();    
+
+        private static string currentErrorMessage;
 
         private static void resetIdsOfGameObjectComponents(GameObject gameObject)
         {
@@ -95,16 +102,114 @@ namespace PowCamp
             return loadScene(db.Scenes.Where(item => item.SaveGame.name == name).FirstOrDefault().Id);
         }
 
-        public static void createGameObjectTypes()
+        public static void createComponentDependencies()
         {
-            GameObject grassBlock = new GameObject();
-            grassBlock.GameObjectType = new GameObjectType();
-            grassBlock.GameObjectType.enumValue = GameObjectTypeEnum.grassBlock;
-            grassBlock.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), grassBlock.GameObjectType.enumValue);
-            grassBlock.ScreenCoord = new ScreenCoord() { x = 10, y = 12 };
-            db.GameObjects.Add(grassBlock);
+            ComponentDependency newComponentDependency;
+            newComponentDependency = new ComponentDependency() { componentName = "Velocity", dependsOn = "ScreenCoord" };
+            db.ComponentDependencies.Add(newComponentDependency);
+            newComponentDependency = new ComponentDependency() { componentName = "Acceleration", dependsOn = "Velocity" };
+            db.ComponentDependencies.Add(newComponentDependency);
             db.SaveChanges();
         }
+
+        public static void createGameObjectTypes()
+        {
+            GameObject newGameObjectType = new GameObject();
+            newGameObjectType.GameObjectType = new GameObjectType();
+            newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.grassBlock;
+            newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+            newGameObjectType.Acceleration = new Acceleration();
+            db.GameObjects.Add(newGameObjectType);
+
+            db.SaveChanges();            
+        }
+
+        private static List<string> getDatabaseTableNames()
+        {
+            List<string> tableNames = new List<string>();
+            db.Database.Connection.Open();
+            DataTable schema = db.Database.Connection.GetSchema("Tables");
+            foreach (DataRow row in schema.Rows)
+            {
+                tableNames.Add(row[2].ToString());
+            }
+            return tableNames;
+        }
+
+        private static List<string> getRowsInComponentDependenciesThatContainErrors()
+        {
+            List<string> tableNames = getDatabaseTableNames();
+            List<string> rowsThatContainErrors = new List<string>();
+            var query = from e in db.ComponentDependencies
+                        select e;
+            foreach (var row in query)
+            {
+                if (tableNames.Contains(row.componentName) == false || tableNames.Contains(row.dependsOn) == false)
+                {
+                    rowsThatContainErrors.Add(row.componentName + " " + row.dependsOn);
+                }
+            }
+            currentErrorMessage = "Database Incoherent! There are field entries in ComponentDependencies that dont match the names of Tables. Invalid rows are: ";
+            currentErrorMessage += String.Join(", ", rowsThatContainErrors);
+            return rowsThatContainErrors;
+        }
+
+        private static List<string> getRowsInComponentDependenciesTableThatHaveCircularDependencies()
+        {
+            // TODO : implement
+            return new List<string>();
+        }
+
+
+        public static void createAndLinkToGameObjectsAllDependenciesThatDontExist()
+        {
+            List<GameObject> gameObjectList = db.GameObjects.AsNoTracking().ToList();
+            foreach (var gameObject in gameObjectList)
+            {
+                List<string> allLinkedComponentNames = getAllLinkedComponentNames(gameObject);
+                foreach ( string linkedComponentName in allLinkedComponentNames)
+                {
+                    string dependentComponentName = db.ComponentDependencies.Where(item => item.componentName == linkedComponentName).FirstOrDefault().dependsOn;
+                    while ( !allLinkedComponentNames.Contains(dependentComponentName))
+                    {
+                        db.Database.ExecuteSqlCommand("INSERT INTO [" + PluralizationService.CreateService(new CultureInfo("en-US")).Pluralize(dependentComponentName) + "] (GameObject_Id) VALUES ( " + gameObject.Id + " );");
+                        dependentComponentName = db.ComponentDependencies.Where(item => item.componentName == dependentComponentName).FirstOrDefault().dependsOn;
+                    }
+                }
+            }
+        }
+
+        private static List<string> getAllLinkedComponentNames(GameObject gameObject)
+        {
+            List<string> linkedComponents = new List<string>();
+            object source;
+            TypeInfo entityTypeInfo = typeof(GameObject).GetTypeInfo();
+            IEnumerable<PropertyInfo> declaredProperties = entityTypeInfo.DeclaredProperties;
+            foreach (var property in declaredProperties)
+            {
+                source = gameObject;
+                if (property.Name != "Id" && property.Name != "GameObjectType" && property.Name != "InstantiatedGameObject")  // TODO: convert these strings to references
+                {
+                    PropertyInfo prop = source.GetType().GetProperty(property.Name);
+                    if (prop != null)
+                    {
+                        source = prop.GetValue(source, null);
+                        if (source != null)
+                        {
+                            linkedComponents.Add(property.Name);
+                        }
+                    }
+                }
+            }
+            return linkedComponents;
+        }
+
+        public static void isDatabaseCoherent()
+        {
+            Debug.Assert(getRowsInComponentDependenciesThatContainErrors().Count == 0, currentErrorMessage);
+        }
+
+
 
     }
 }

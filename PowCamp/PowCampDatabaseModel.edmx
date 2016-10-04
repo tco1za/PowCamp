@@ -15,6 +15,10 @@
     <EntitySet Name="ComponentDependencies" EntityType="PowCampDatabaseModel.Store.ComponentDependencies" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Levels" EntityType="PowCampDatabaseModel.Store.Levels" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="SaveGames" EntityType="PowCampDatabaseModel.Store.SaveGames" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CurrentAnimations" EntityType="PowCampDatabaseModel.Store.CurrentAnimations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Animations" EntityType="PowCampDatabaseModel.Store.Animations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Velocities" EntityType="PowCampDatabaseModel.Store.Velocities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Accelerations" EntityType="PowCampDatabaseModel.Store.Accelerations" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -42,6 +46,22 @@
     <AssociationSet Name="InstantiatedGameObjectScene" Association="PowCampDatabaseModel.Store.InstantiatedGameObjectScene">
       <End Role="InstantiatedGameObject" EntitySet="InstantiatedGameObjects" />
       <End Role="Scene" EntitySet="Scenes" />
+    </AssociationSet>
+    <AssociationSet Name="CurrentAnimationGameObject" Association="PowCampDatabaseModel.Store.CurrentAnimationGameObject">
+      <End Role="CurrentAnimation" EntitySet="CurrentAnimations" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="CurrentAnimationAnimation" Association="PowCampDatabaseModel.Store.CurrentAnimationAnimation">
+      <End Role="CurrentAnimation" EntitySet="CurrentAnimations" />
+      <End Role="Animation" EntitySet="Animations" />
+    </AssociationSet>
+    <AssociationSet Name="VelocityGameObject" Association="PowCampDatabaseModel.Store.VelocityGameObject">
+      <End Role="Velocity" EntitySet="Velocities" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="AccelerationGameObject" Association="PowCampDatabaseModel.Store.AccelerationGameObject">
+      <End Role="Acceleration" EntitySet="Accelerations" />
+      <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="GameObjects">
@@ -115,6 +135,46 @@
     <Property Name="name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="levelCreatedFrom" Type="int" Nullable="false" />
     <Property Name="Scene_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CurrentAnimations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="index" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+    <Property Name="Animation_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Animations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="atlasName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="frameWidth" Type="int" Nullable="false" />
+    <Property Name="frameHeight" Type="int" Nullable="false" />
+    <Property Name="startX" Type="int" Nullable="false" />
+    <Property Name="startY" Type="int" Nullable="false" />
+    <Property Name="enumValue" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Velocities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="x" Type="float" Nullable="false" />
+    <Property Name="y" Type="float" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Accelerations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="x" Type="float" Nullable="false" />
+    <Property Name="y" Type="float" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
     <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="*" />
@@ -200,6 +260,54 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="CurrentAnimationGameObject">
+    <End Role="CurrentAnimation" Type="PowCampDatabaseModel.Store.CurrentAnimations" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CurrentAnimation">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CurrentAnimationAnimation">
+    <End Role="CurrentAnimation" Type="PowCampDatabaseModel.Store.CurrentAnimations" Multiplicity="*" />
+    <End Role="Animation" Type="PowCampDatabaseModel.Store.Animations" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Animation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CurrentAnimation">
+        <PropertyRef Name="Animation_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="VelocityGameObject">
+    <End Role="Velocity" Type="PowCampDatabaseModel.Store.Velocities" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Velocity">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AccelerationGameObject">
+    <End Role="Acceleration" Type="PowCampDatabaseModel.Store.Accelerations" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Acceleration">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -227,7 +335,7 @@
             <End Role="CellCoord" EntitySet="CellCoord" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
-          <EntitySet Name="ComponentDependencies" EntityType="PowCampDatabaseModel.ComponentDependencies" />
+          <EntitySet Name="ComponentDependencies" EntityType="PowCampDatabaseModel.ComponentDependency" />
           <EntitySet Name="Levels" EntityType="PowCampDatabaseModel.Level" />
           <EntitySet Name="SaveGames" EntityType="PowCampDatabaseModel.SaveGame" />
           <AssociationSet Name="SceneSaveGame" Association="PowCampDatabaseModel.SceneSaveGame">
@@ -242,7 +350,26 @@
             <End Role="InstantiatedGameObject" EntitySet="InstantiatedGameObjects" />
             <End Role="Scene" EntitySet="Scenes" />
           </AssociationSet>
-          <EntitySet Name="Visibles" EntityType="PowCampDatabaseModel.Visible" />
+          <EntitySet Name="CurrentAnimations" EntityType="PowCampDatabaseModel.CurrentAnimation" />
+          <EntitySet Name="Animations" EntityType="PowCampDatabaseModel.Animation" />
+          <AssociationSet Name="CurrentAnimationGameObject" Association="PowCampDatabaseModel.CurrentAnimationGameObject">
+            <End Role="CurrentAnimation" EntitySet="CurrentAnimations" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
+          <AssociationSet Name="CurrentAnimationAnimation" Association="PowCampDatabaseModel.CurrentAnimationAnimation">
+            <End Role="CurrentAnimation" EntitySet="CurrentAnimations" />
+            <End Role="Animation" EntitySet="Animations" />
+          </AssociationSet>
+          <EntitySet Name="Velocity" EntityType="PowCampDatabaseModel.Velocity" />
+          <AssociationSet Name="VelocityGameObject" Association="PowCampDatabaseModel.VelocityGameObject">
+            <End Role="Velocity" EntitySet="Velocity" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
+          <EntitySet Name="Accelerations" EntityType="PowCampDatabaseModel.Acceleration" />
+          <AssociationSet Name="AccelerationGameObject" Association="PowCampDatabaseModel.AccelerationGameObject">
+            <End Role="Acceleration" EntitySet="Accelerations" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -253,6 +380,9 @@
           <NavigationProperty Name="InstantiatedGameObject" Relationship="PowCampDatabaseModel.InstantiatedGameObjectGameObject" FromRole="GameObject" ToRole="InstantiatedGameObject" />
           <NavigationProperty Name="ScreenCoord" Relationship="PowCampDatabaseModel.ScreenCoordGameObject" FromRole="GameObject" ToRole="ScreenCoord" />
           <NavigationProperty Name="CellCoord" Relationship="PowCampDatabaseModel.GameObjectCellCoord" FromRole="GameObject" ToRole="CellCoord" />
+          <NavigationProperty Name="CurrentAnimation" Relationship="PowCampDatabaseModel.CurrentAnimationGameObject" FromRole="GameObject" ToRole="CurrentAnimation" />
+          <NavigationProperty Name="Velocity" Relationship="PowCampDatabaseModel.VelocityGameObject" FromRole="GameObject" ToRole="Velocity" />
+          <NavigationProperty Name="Acceleration" Relationship="PowCampDatabaseModel.AccelerationGameObject" FromRole="GameObject" ToRole="Acceleration" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -314,7 +444,7 @@
           <End Type="PowCampDatabaseModel.CellCoord" Role="CellCoord" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
-        <EntityType Name="ComponentDependencies">
+        <EntityType Name="ComponentDependency">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -355,13 +485,66 @@
           <Member Name="grassBlock" />
           <Member Name="sandBlock" />
         </EnumType>
-        <EntityType Name="Visible">
+        <EntityType Name="CurrentAnimation">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="drawOrder" Type="Int32" Nullable="false" />
+          <Property Name="index" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.CurrentAnimationGameObject" FromRole="CurrentAnimation" ToRole="GameObject" />
+          <NavigationProperty Name="Animation" Relationship="PowCampDatabaseModel.CurrentAnimationAnimation" FromRole="CurrentAnimation" ToRole="Animation" />
         </EntityType>
+        <EntityType Name="Animation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" />
+          <Property Name="atlasName" Type="String" Nullable="false" />
+          <Property Name="frameWidth" Type="Int32" Nullable="false" />
+          <Property Name="frameHeight" Type="Int32" Nullable="false" />
+          <Property Name="startX" Type="Int32" Nullable="false" />
+          <Property Name="startY" Type="Int32" Nullable="false" />
+          <Property Name="enumValue" Type="PowCampDatabaseModel.AnimationEnum" Nullable="false" />
+          <NavigationProperty Name="CurrentAnimations" Relationship="PowCampDatabaseModel.CurrentAnimationAnimation" FromRole="Animation" ToRole="CurrentAnimation" />
+        </EntityType>
+        <EnumType Name="AnimationEnum">
+          <Member Name="run" />
+        </EnumType>
+        <Association Name="CurrentAnimationGameObject">
+          <End Type="PowCampDatabaseModel.CurrentAnimation" Role="CurrentAnimation" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <Association Name="CurrentAnimationAnimation">
+          <End Type="PowCampDatabaseModel.CurrentAnimation" Role="CurrentAnimation" Multiplicity="*" />
+          <End Type="PowCampDatabaseModel.Animation" Role="Animation" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Velocity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="x" Type="Double" Nullable="false" />
+          <Property Name="y" Type="Double" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.VelocityGameObject" FromRole="Velocity" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="VelocityGameObject">
+          <End Type="PowCampDatabaseModel.Velocity" Role="Velocity" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Acceleration">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="x" Type="Double" Nullable="false" />
+          <Property Name="y" Type="Double" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.AccelerationGameObject" FromRole="Acceleration" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="AccelerationGameObject">
+          <End Type="PowCampDatabaseModel.Acceleration" Role="Acceleration" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -417,7 +600,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="ComponentDependencies">
-      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.ComponentDependencies)">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.ComponentDependency)">
         <MappingFragment StoreEntitySet="ComponentDependencies">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="componentName" ColumnName="componentName" />
@@ -439,6 +622,46 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="levelCreatedFrom" ColumnName="levelCreatedFrom" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CurrentAnimations">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.CurrentAnimation)">
+        <MappingFragment StoreEntitySet="CurrentAnimations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="index" ColumnName="index" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Animations">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Animation)">
+        <MappingFragment StoreEntitySet="Animations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="atlasName" ColumnName="atlasName" />
+          <ScalarProperty Name="frameWidth" ColumnName="frameWidth" />
+          <ScalarProperty Name="frameHeight" ColumnName="frameHeight" />
+          <ScalarProperty Name="startX" ColumnName="startX" />
+          <ScalarProperty Name="startY" ColumnName="startY" />
+          <ScalarProperty Name="enumValue" ColumnName="enumValue" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Velocity">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Velocity)">
+        <MappingFragment StoreEntitySet="Velocities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="x" ColumnName="x" />
+          <ScalarProperty Name="y" ColumnName="y" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Accelerations">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Acceleration)">
+        <MappingFragment StoreEntitySet="Accelerations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="x" ColumnName="x" />
+          <ScalarProperty Name="y" ColumnName="y" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -495,6 +718,38 @@
         <ScalarProperty Name="Id" ColumnName="Scene_Id" />
       </EndProperty>
       <EndProperty Name="InstantiatedGameObject">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CurrentAnimationGameObject" TypeName="PowCampDatabaseModel.CurrentAnimationGameObject" StoreEntitySet="CurrentAnimations">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="CurrentAnimation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CurrentAnimationAnimation" TypeName="PowCampDatabaseModel.CurrentAnimationAnimation" StoreEntitySet="CurrentAnimations">
+      <EndProperty Name="Animation">
+        <ScalarProperty Name="Id" ColumnName="Animation_Id" />
+      </EndProperty>
+      <EndProperty Name="CurrentAnimation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="VelocityGameObject" TypeName="PowCampDatabaseModel.VelocityGameObject" StoreEntitySet="Velocities">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Velocity">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AccelerationGameObject" TypeName="PowCampDatabaseModel.AccelerationGameObject" StoreEntitySet="Accelerations">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Acceleration">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

@@ -10,11 +10,9 @@
 namespace PowCamp
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Visible
+    public enum AnimationEnum : int
     {
-        public int Id { get; set; }
-        public int drawOrder { get; set; }
+        run = 0
     }
 }

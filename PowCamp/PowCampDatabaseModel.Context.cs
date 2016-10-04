@@ -31,9 +31,12 @@ namespace PowCamp
         public virtual DbSet<ScreenCoord> ScreenCoord { get; set; }
         public virtual DbSet<CellCoord> CellCoord { get; set; }
         public virtual DbSet<Scene> Scenes { get; set; }
-        public virtual DbSet<ComponentDependencies> ComponentDependencies { get; set; }
+        public virtual DbSet<ComponentDependency> ComponentDependencies { get; set; }
         public virtual DbSet<Level> Levels { get; set; }
         public virtual DbSet<SaveGame> SaveGames { get; set; }
-        public virtual DbSet<Visible> Visibles { get; set; }
+        public virtual DbSet<CurrentAnimation> CurrentAnimations { get; set; }
+        public virtual DbSet<Animation> Animations { get; set; }
+        public virtual DbSet<Velocity> Velocity { get; set; }
+        public virtual DbSet<Acceleration> Accelerations { get; set; }
     }
 }

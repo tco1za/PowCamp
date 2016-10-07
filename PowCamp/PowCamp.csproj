@@ -57,7 +57,7 @@
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DataAccess.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
@@ -67,6 +67,7 @@
     <Compile Include="GameObjectTypeEnum.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="InitializeDatabase.cs" />
     <Compile Include="InstantiatedGameObject.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
@@ -88,7 +89,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PowCampDatabaseModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="ApplicationEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveGame.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
@@ -99,6 +100,7 @@
     <Compile Include="ScreenCoord.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserInterface.cs" />
     <Compile Include="Velocity.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>

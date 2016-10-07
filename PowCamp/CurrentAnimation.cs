@@ -14,6 +14,12 @@ namespace PowCamp
     
     public partial class CurrentAnimation
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public CurrentAnimation()
+        {
+            this.index = 0;
+        }
+    
         public int Id { get; set; }
         public int index { get; set; }
     

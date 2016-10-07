@@ -6,7 +6,7 @@ namespace PowCamp
     /// <summary>
     /// The main class.
     /// </summary>
-    public static class Program
+    public static class ApplicationEntry
     {
         /// <summary>
         /// The main entry point for the application.
@@ -14,7 +14,7 @@ namespace PowCamp
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new Game())
                 game.Run();
         }
     }

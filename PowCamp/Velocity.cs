@@ -14,6 +14,13 @@ namespace PowCamp
     
     public partial class Velocity
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Velocity()
+        {
+            this.x = 0D;
+            this.y = 0D;
+        }
+    
         public int Id { get; set; }
         public double x { get; set; }
         public double y { get; set; }

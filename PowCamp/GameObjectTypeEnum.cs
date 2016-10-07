@@ -13,7 +13,7 @@ namespace PowCamp
     
     public enum GameObjectTypeEnum : int
     {
-        grassBlock = 0,
-        sandBlock = 1
+        fence = 0,
+        brickWall = 1
     }
 }

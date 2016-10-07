@@ -15,8 +15,8 @@ namespace PowCamp
     public partial class CellCoord
     {
         public int Id { get; set; }
-        public double x { get; set; }
-        public double y { get; set; }
+        public int x { get; set; }
+        public int y { get; set; }
     
         public virtual GameObject GameObject { get; set; }
     }

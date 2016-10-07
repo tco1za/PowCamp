@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/04/2016 19:52:59
+-- Date Created: 10/07/2016 13:48:36
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -24,10 +24,10 @@ IF OBJECT_ID(N'[dbo].[FK_InstantiatedGameObjectGameObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[InstantiatedGameObjects] DROP CONSTRAINT [FK_InstantiatedGameObjectGameObject];
 GO
 IF OBJECT_ID(N'[dbo].[FK_ScreenCoordGameObject]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[ScreenCoord] DROP CONSTRAINT [FK_ScreenCoordGameObject];
+    ALTER TABLE [dbo].[ScreenCoords] DROP CONSTRAINT [FK_ScreenCoordGameObject];
 GO
 IF OBJECT_ID(N'[dbo].[FK_GameObjectCellCoord]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[CellCoord] DROP CONSTRAINT [FK_GameObjectCellCoord];
+    ALTER TABLE [dbo].[CellCoords] DROP CONSTRAINT [FK_GameObjectCellCoord];
 GO
 IF OBJECT_ID(N'[dbo].[FK_SceneSaveGame]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[SaveGames] DROP CONSTRAINT [FK_SceneSaveGame];
@@ -64,11 +64,11 @@ GO
 IF OBJECT_ID(N'[dbo].[InstantiatedGameObjects]', 'U') IS NOT NULL
     DROP TABLE [dbo].[InstantiatedGameObjects];
 GO
-IF OBJECT_ID(N'[dbo].[ScreenCoord]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[ScreenCoord];
+IF OBJECT_ID(N'[dbo].[ScreenCoords]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[ScreenCoords];
 GO
-IF OBJECT_ID(N'[dbo].[CellCoord]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[CellCoord];
+IF OBJECT_ID(N'[dbo].[CellCoords]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[CellCoords];
 GO
 IF OBJECT_ID(N'[dbo].[Scenes]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Scenes];
@@ -122,8 +122,8 @@ CREATE TABLE [dbo].[InstantiatedGameObjects] (
 );
 GO
 
--- Creating table 'ScreenCoord'
-CREATE TABLE [dbo].[ScreenCoord] (
+-- Creating table 'ScreenCoords'
+CREATE TABLE [dbo].[ScreenCoords] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [x] float  NOT NULL,
     [y] float  NOT NULL,
@@ -131,11 +131,11 @@ CREATE TABLE [dbo].[ScreenCoord] (
 );
 GO
 
--- Creating table 'CellCoord'
-CREATE TABLE [dbo].[CellCoord] (
+-- Creating table 'CellCoords'
+CREATE TABLE [dbo].[CellCoords] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [x] float  NOT NULL,
-    [y] float  NOT NULL,
+    [x] int  NOT NULL,
+    [y] int  NOT NULL,
     [GameObject_Id] int  NOT NULL
 );
 GO
@@ -187,9 +187,9 @@ CREATE TABLE [dbo].[Animations] (
     [atlasName] nvarchar(max)  NOT NULL,
     [frameWidth] int  NOT NULL,
     [frameHeight] int  NOT NULL,
-    [startX] int  NOT NULL,
-    [startY] int  NOT NULL,
-    [enumValue] int  NOT NULL
+    [startIndex] int  NOT NULL,
+    [enumValue] int  NOT NULL,
+    [count] int  NOT NULL
 );
 GO
 
@@ -233,15 +233,15 @@ ADD CONSTRAINT [PK_InstantiatedGameObjects]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'ScreenCoord'
-ALTER TABLE [dbo].[ScreenCoord]
-ADD CONSTRAINT [PK_ScreenCoord]
+-- Creating primary key on [Id] in table 'ScreenCoords'
+ALTER TABLE [dbo].[ScreenCoords]
+ADD CONSTRAINT [PK_ScreenCoords]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'CellCoord'
-ALTER TABLE [dbo].[CellCoord]
-ADD CONSTRAINT [PK_CellCoord]
+-- Creating primary key on [Id] in table 'CellCoords'
+ALTER TABLE [dbo].[CellCoords]
+ADD CONSTRAINT [PK_CellCoords]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -327,8 +327,8 @@ ON [dbo].[InstantiatedGameObjects]
     ([GameObject_Id]);
 GO
 
--- Creating foreign key on [GameObject_Id] in table 'ScreenCoord'
-ALTER TABLE [dbo].[ScreenCoord]
+-- Creating foreign key on [GameObject_Id] in table 'ScreenCoords'
+ALTER TABLE [dbo].[ScreenCoords]
 ADD CONSTRAINT [FK_ScreenCoordGameObject]
     FOREIGN KEY ([GameObject_Id])
     REFERENCES [dbo].[GameObjects]
@@ -338,12 +338,12 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_ScreenCoordGameObject'
 CREATE INDEX [IX_FK_ScreenCoordGameObject]
-ON [dbo].[ScreenCoord]
+ON [dbo].[ScreenCoords]
     ([GameObject_Id]);
 GO
 
--- Creating foreign key on [GameObject_Id] in table 'CellCoord'
-ALTER TABLE [dbo].[CellCoord]
+-- Creating foreign key on [GameObject_Id] in table 'CellCoords'
+ALTER TABLE [dbo].[CellCoords]
 ADD CONSTRAINT [FK_GameObjectCellCoord]
     FOREIGN KEY ([GameObject_Id])
     REFERENCES [dbo].[GameObjects]
@@ -353,7 +353,7 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_GameObjectCellCoord'
 CREATE INDEX [IX_FK_GameObjectCellCoord]
-ON [dbo].[CellCoord]
+ON [dbo].[CellCoords]
     ([GameObject_Id]);
 GO
 

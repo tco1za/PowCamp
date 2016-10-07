@@ -13,6 +13,6 @@ namespace PowCamp
     
     public enum AnimationEnum : int
     {
-        run = 0
+        fence = 0
     }
 }

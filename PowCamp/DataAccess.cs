@@ -15,9 +15,7 @@ namespace PowCamp
     class DataAccess
     {
         private static int currentLevelId = 1;
-
         private static PowCampDatabaseModelContainer db = new PowCampDatabaseModelContainer();    
-
         private static string currentErrorMessage;
 
         private static void resetIdsOfGameObjectComponents(GameObject gameObject)
@@ -36,8 +34,18 @@ namespace PowCamp
                         source = prop.GetValue(source, null);
                         if (source != null)
                         {
-                            PropertyInfo propertyToSet = source.GetType().GetProperty("Id");
-                            propertyToSet.SetValue(source, -1, null);
+                            if (property.Name == "CurrentAnimation")
+                            {
+                                object newComponent = CreateInstanceFromName("PowCamp." + property.Name);
+                                ((CurrentAnimation)newComponent).Animation = db.Animations.Where(item => item.Id == ((CurrentAnimation)source).Animation.Id).FirstOrDefault();
+                                ((CurrentAnimation)newComponent).index = ((CurrentAnimation)source).index;  // TODO: automatically set properties of all components
+                                prop.SetValue(gameObject, newComponent, null);
+                            }
+                            else
+                            {
+                                PropertyInfo propertyToSet = source.GetType().GetProperty("Id");
+                                propertyToSet.SetValue(source, -1, null);
+                            }
                         }
                     }
                 }
@@ -101,29 +109,7 @@ namespace PowCamp
             currentLevelId = db.SaveGames.Where(item => item.name == name).FirstOrDefault().levelCreatedFrom;
             return loadScene(db.Scenes.Where(item => item.SaveGame.name == name).FirstOrDefault().Id);
         }
-
-        public static void createComponentDependencies()
-        {
-            ComponentDependency newComponentDependency;
-            newComponentDependency = new ComponentDependency() { componentName = "Velocity", dependsOn = "ScreenCoord" };
-            db.ComponentDependencies.Add(newComponentDependency);
-            newComponentDependency = new ComponentDependency() { componentName = "Acceleration", dependsOn = "Velocity" };
-            db.ComponentDependencies.Add(newComponentDependency);
-            db.SaveChanges();
-        }
-
-        public static void createGameObjectTypes()
-        {
-            GameObject newGameObjectType = new GameObject();
-            newGameObjectType.GameObjectType = new GameObjectType();
-            newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.grassBlock;
-            newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
-            newGameObjectType.Acceleration = new Acceleration();
-            db.GameObjects.Add(newGameObjectType);
-
-            db.SaveChanges();            
-        }
-
+ 
         private static List<string> getDatabaseTableNames()
         {
             List<string> tableNames = new List<string>();
@@ -160,23 +146,44 @@ namespace PowCamp
             return new List<string>();
         }
 
-
-        public static void createAndLinkToGameObjectsAllDependenciesThatDontExist()
+        private static object CreateInstanceFromName(string fullyQualifiedName)
         {
-            List<GameObject> gameObjectList = db.GameObjects.AsNoTracking().ToList();
+            Type t = Type.GetType(fullyQualifiedName);
+            return Activator.CreateInstance(t);
+        }
+
+        private static void createAndLinkToGameObjectsAllDependenciesThatDontExist()
+        {
+            var gameObjectList = from e in db.GameObjects select e;
+
             foreach (var gameObject in gameObjectList)
             {
                 List<string> allLinkedComponentNames = getAllLinkedComponentNames(gameObject);
                 foreach ( string linkedComponentName in allLinkedComponentNames)
                 {
-                    string dependentComponentName = db.ComponentDependencies.Where(item => item.componentName == linkedComponentName).FirstOrDefault().dependsOn;
-                    while ( !allLinkedComponentNames.Contains(dependentComponentName))
+                    ComponentDependency dependency = db.ComponentDependencies.Where(item => item.componentName == linkedComponentName).FirstOrDefault();
+                    if (dependency != null)
                     {
-                        db.Database.ExecuteSqlCommand("INSERT INTO [" + PluralizationService.CreateService(new CultureInfo("en-US")).Pluralize(dependentComponentName) + "] (GameObject_Id) VALUES ( " + gameObject.Id + " );");
-                        dependentComponentName = db.ComponentDependencies.Where(item => item.componentName == dependentComponentName).FirstOrDefault().dependsOn;
+                        string dependentComponentName = dependency.dependsOn;
+                        while (!allLinkedComponentNames.Contains(dependentComponentName))
+                        {
+                            object newComponent = CreateInstanceFromName("PowCamp." + dependentComponentName);
+                            PropertyInfo propertyToSet = gameObject.GetType().GetProperty(dependentComponentName);
+                            propertyToSet.SetValue(gameObject, newComponent, null);
+                            ComponentDependency nextDependency = db.ComponentDependencies.Where(item => item.componentName == dependentComponentName).FirstOrDefault();
+                            if (nextDependency != null)
+                            {
+                                dependentComponentName = nextDependency.dependsOn;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
             }
+            db.SaveChanges();
         }
 
         private static List<string> getAllLinkedComponentNames(GameObject gameObject)

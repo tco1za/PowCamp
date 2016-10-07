@@ -25,9 +25,9 @@ namespace PowCamp
         public string atlasName { get; set; }
         public int frameWidth { get; set; }
         public int frameHeight { get; set; }
-        public int startX { get; set; }
-        public int startY { get; set; }
+        public int startIndex { get; set; }
         public AnimationEnum enumValue { get; set; }
+        public int count { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurrentAnimation> CurrentAnimations { get; set; }

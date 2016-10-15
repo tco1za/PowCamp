@@ -19,6 +19,9 @@
     <EntitySet Name="Animations" EntityType="PowCampDatabaseModel.Store.Animations" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Velocities" EntityType="PowCampDatabaseModel.Store.Velocities" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Accelerations" EntityType="PowCampDatabaseModel.Store.Accelerations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Walls" EntityType="PowCampDatabaseModel.Store.Walls" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PatrolRoutes" EntityType="PowCampDatabaseModel.Store.PatrolRoutes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CellPartitions" EntityType="PowCampDatabaseModel.Store.CellPartitions" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -61,6 +64,18 @@
     </AssociationSet>
     <AssociationSet Name="AccelerationGameObject" Association="PowCampDatabaseModel.Store.AccelerationGameObject">
       <End Role="Acceleration" EntitySet="Accelerations" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="WallGameObject" Association="PowCampDatabaseModel.Store.WallGameObject">
+      <End Role="Wall" EntitySet="Walls" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="PatrolRouteGameObject" Association="PowCampDatabaseModel.Store.PatrolRouteGameObject">
+      <End Role="PatrolRoute" EntitySet="PatrolRoutes" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="CellPartitionGameObject" Association="PowCampDatabaseModel.Store.CellPartitionGameObject">
+      <End Role="CellPartition" EntitySet="CellPartitions" />
       <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
   </EntityContainer>
@@ -174,6 +189,38 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="x" Type="float" Nullable="false" DefaultValue="0" />
     <Property Name="y" Type="float" Nullable="false" DefaultValue="0" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Walls">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PatrolRoutes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="startCellX" Type="int" Nullable="false" />
+    <Property Name="middleCellX" Type="int" Nullable="false" />
+    <Property Name="endCellX" Type="int" Nullable="false" />
+    <Property Name="startCellY" Type="int" Nullable="false" />
+    <Property Name="middleCellY" Type="int" Nullable="false" />
+    <Property Name="endCellY" Type="int" Nullable="false" />
+    <Property Name="direction" Type="int" Nullable="false" />
+    <Property Name="targetX" Type="int" Nullable="false" />
+    <Property Name="targetY" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CellPartitions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="partitionMidPointX" Type="int" Nullable="false" />
+    <Property Name="partitionMidPointY" Type="int" Nullable="false" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
@@ -308,6 +355,42 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="WallGameObject">
+    <End Role="Wall" Type="PowCampDatabaseModel.Store.Walls" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Wall">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PatrolRouteGameObject">
+    <End Role="PatrolRoute" Type="PowCampDatabaseModel.Store.PatrolRoutes" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PatrolRoute">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CellPartitionGameObject">
+    <End Role="CellPartition" Type="PowCampDatabaseModel.Store.CellPartitions" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CellPartition">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -370,6 +453,21 @@
             <End Role="Acceleration" EntitySet="Accelerations" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
+          <EntitySet Name="Walls" EntityType="PowCampDatabaseModel.Wall" />
+          <AssociationSet Name="WallGameObject" Association="PowCampDatabaseModel.WallGameObject">
+            <End Role="Wall" EntitySet="Walls" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
+          <EntitySet Name="PatrolRoutes" EntityType="PowCampDatabaseModel.PatrolRoute" />
+          <AssociationSet Name="PatrolRouteGameObject" Association="PowCampDatabaseModel.PatrolRouteGameObject">
+            <End Role="PatrolRoute" EntitySet="PatrolRoutes" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
+          <EntitySet Name="CellPartitions" EntityType="PowCampDatabaseModel.CellPartition" />
+          <AssociationSet Name="CellPartitionGameObject" Association="PowCampDatabaseModel.CellPartitionGameObject">
+            <End Role="CellPartition" EntitySet="CellPartitions" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -383,6 +481,9 @@
           <NavigationProperty Name="CurrentAnimation" Relationship="PowCampDatabaseModel.CurrentAnimationGameObject" FromRole="GameObject" ToRole="CurrentAnimation" />
           <NavigationProperty Name="Velocity" Relationship="PowCampDatabaseModel.VelocityGameObject" FromRole="GameObject" ToRole="Velocity" />
           <NavigationProperty Name="Acceleration" Relationship="PowCampDatabaseModel.AccelerationGameObject" FromRole="GameObject" ToRole="Acceleration" />
+          <NavigationProperty Name="Wall" Relationship="PowCampDatabaseModel.WallGameObject" FromRole="GameObject" ToRole="Wall" />
+          <NavigationProperty Name="PatrolRoute" Relationship="PowCampDatabaseModel.PatrolRouteGameObject" FromRole="GameObject" ToRole="PatrolRoute" />
+          <NavigationProperty Name="CellPartition" Relationship="PowCampDatabaseModel.CellPartitionGameObject" FromRole="GameObject" ToRole="CellPartition" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -484,6 +585,11 @@
         <EnumType Name="GameObjectTypeEnum">
           <Member Name="fence" />
           <Member Name="brickWall" />
+          <Member Name="mouseCursor" />
+          <Member Name="mouseBuildGlyph" />
+          <Member Name="concreteWall" />
+          <Member Name="mouseCellCornerGlyph" />
+          <Member Name="guard" />
         </EnumType>
         <EntityType Name="CurrentAnimation">
           <Key>
@@ -509,7 +615,13 @@
           <Property Name="count" Type="Int32" Nullable="false" />
         </EntityType>
         <EnumType Name="AnimationEnum">
-        <Member Name="fence" />
+          <Member Name="fence" />
+          <Member Name="mouseCursor" />
+          <Member Name="mouseBuildGlyph" />
+          <Member Name="brickWall" />
+          <Member Name="concreteWall" />
+          <Member Name="mouseCellCornerGlyph" />
+          <Member Name="guardWalk" />
         </EnumType>
         <Association Name="CurrentAnimationGameObject">
           <End Type="PowCampDatabaseModel.CurrentAnimation" Role="CurrentAnimation" Multiplicity="0..1" />
@@ -543,6 +655,50 @@
         </EntityType>
         <Association Name="AccelerationGameObject">
           <End Type="PowCampDatabaseModel.Acceleration" Role="Acceleration" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Wall">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.WallGameObject" FromRole="Wall" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="WallGameObject">
+          <End Type="PowCampDatabaseModel.Wall" Role="Wall" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="PatrolRoute">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="startCellX" Type="Int32" Nullable="false" />
+          <Property Name="middleCellX" Type="Int32" Nullable="false" />
+          <Property Name="endCellX" Type="Int32" Nullable="false" />
+          <Property Name="startCellY" Type="Int32" Nullable="false" />
+          <Property Name="middleCellY" Type="Int32" Nullable="false" />
+          <Property Name="endCellY" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.PatrolRouteGameObject" FromRole="PatrolRoute" ToRole="GameObject" />
+          <Property Name="direction" Type="Int32" Nullable="false" />
+          <Property Name="targetX" Type="Int32" Nullable="false" />
+          <Property Name="targetY" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="PatrolRouteGameObject">
+          <End Type="PowCampDatabaseModel.PatrolRoute" Role="PatrolRoute" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="CellPartition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="partitionMidPointX" Type="Int32" Nullable="false" />
+          <Property Name="partitionMidPointY" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.CellPartitionGameObject" FromRole="CellPartition" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="CellPartitionGameObject">
+          <End Type="PowCampDatabaseModel.CellPartition" Role="CellPartition" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
       </Schema>
@@ -665,6 +821,38 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Walls">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Wall)">
+        <MappingFragment StoreEntitySet="Walls">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PatrolRoutes">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.PatrolRoute)">
+        <MappingFragment StoreEntitySet="PatrolRoutes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="startCellX" ColumnName="startCellX" />
+          <ScalarProperty Name="middleCellX" ColumnName="middleCellX" />
+          <ScalarProperty Name="endCellX" ColumnName="endCellX" />
+          <ScalarProperty Name="startCellY" ColumnName="startCellY" />
+          <ScalarProperty Name="middleCellY" ColumnName="middleCellY" />
+          <ScalarProperty Name="endCellY" ColumnName="endCellY" />
+          <ScalarProperty Name="direction" ColumnName="direction" />
+          <ScalarProperty Name="targetX" ColumnName="targetX" />
+          <ScalarProperty Name="targetY" ColumnName="targetY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CellPartitions">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.CellPartition)">
+        <MappingFragment StoreEntitySet="CellPartitions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="partitionMidPointX" ColumnName="partitionMidPointX" />
+          <ScalarProperty Name="partitionMidPointY" ColumnName="partitionMidPointY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="GameObjectGameObjectType" TypeName="PowCampDatabaseModel.GameObjectGameObjectType" StoreEntitySet="GameObjects">
       <EndProperty Name="GameObjectType">
         <ScalarProperty Name="Id" ColumnName="GameObjectType_Id" />
@@ -750,6 +938,30 @@
         <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
       <EndProperty Name="Acceleration">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="WallGameObject" TypeName="PowCampDatabaseModel.WallGameObject" StoreEntitySet="Walls">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Wall">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PatrolRouteGameObject" TypeName="PowCampDatabaseModel.PatrolRouteGameObject" StoreEntitySet="PatrolRoutes">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="PatrolRoute">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CellPartitionGameObject" TypeName="PowCampDatabaseModel.CellPartitionGameObject" StoreEntitySet="CellPartitions">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="CellPartition">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

@@ -17,6 +17,11 @@ namespace PowCamp
         public static GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static List<GameObject> gameObjects = new List<GameObject>();
+        private static MouseState previousMouseState;
+        public static MouseState currentMouseState;
+        public static bool isLeftMouseClicked = false;
+
+        public static Dictionary<string, Texture2D> atlases = new Dictionary<string, Texture2D>();
 
 
         public Game()
@@ -27,16 +32,21 @@ namespace PowCamp
 
         protected override void Initialize()
         {
-            //graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            //graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
-            //graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+        //    graphics.PreferredBackBufferWidth = 800;
+         //   graphics.PreferredBackBufferHeight = 600;
+        //    graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
-            DataAccess.createGameObjectTypes();
+            InitializeDatabase.createGameObjectTypes();
 
-            gameObjects = DataAccess.loadLevel(3);
+            GameObject guard = DataAccess.instantiateEntity(GameObjectTypeEnum.guard);
+            UserInterface.guardToAssignPatrolRouteTo = guard;
+
+            gameObjects.Add(guard);
+
+           // gameObjects = DataAccess.loadLevel(1);
 
          //   gameObjects = DataAccess.loadSaveGame("10/3/2016 12:00:00 AM");
        //     DataAccess.saveGame(gameObjects);
@@ -49,6 +59,7 @@ namespace PowCamp
 
             background = Content.Load<Texture2D>("backTest");
             spriteMap1 = Content.Load<Texture2D>("spriteMap1");
+            atlases.Add("spriteMap1", spriteMap1);
         }
 
         protected override void UnloadContent()
@@ -65,10 +76,30 @@ namespace PowCamp
             }
             // TODO: Add your update logic here
             // TODO: play audio here
+            previousMouseState = currentMouseState;
+            currentMouseState = Mouse.GetState();
+
+
+            if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                isLeftMouseClicked = true;
+            }
+            else
+            {
+                isLeftMouseClicked = false;
+            }
+
+            UserInterface.update();
             base.Update(gameTime);
         }
 
-        private Rectangle calculateSourceRectangleForSprite(CurrentAnimation curAnim)
+        public static void drawGameObject( SpriteBatch spriteBatch, GameObject gameObject )
+        {
+            spriteBatch.Draw(Game.atlases[gameObject.CurrentAnimation.Animation.atlasName], new Vector2((float)gameObject.ScreenCoord.x, (float)gameObject.ScreenCoord.y),
+                Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation), Color.White);
+        }
+
+        public static Rectangle calculateSourceRectangleForSprite(CurrentAnimation curAnim)
         {
             const int spriteMapSize = 1024;
 
@@ -81,20 +112,14 @@ namespace PowCamp
 
         protected override void Draw(GameTime gameTime)
         {
-         //   GraphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, UserInterface.GetScaleMatrix());
+            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
 
-            spriteBatch.Begin( SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, UserInterface.GetScaleMatrix());
-                spriteBatch.Draw(background, new Vector2(0 , 0), Color.White);
 
-            var gameObjectsToDraw = gameObjects.Where(a => a.CurrentAnimation != null);
+            Walls.draw(gameObjects, spriteBatch);
 
-            foreach ( var gameObject in gameObjectsToDraw )
-            {
-                Point screenCoordsForCell = UserInterface.convertCellCoordsToVirtualScreenCoords(new Point(gameObject.CellCoord.x, gameObject.CellCoord.y));
-                spriteBatch.Draw(spriteMap1, new Vector2(screenCoordsForCell.X, screenCoordsForCell.Y), calculateSourceRectangleForSprite( gameObject.CurrentAnimation ), Color.White);
-
-            }
-//                    spriteBatch.Draw(mudBlock, new Vector2(-108 / 4 + x * 108 + 108 / 2 - 54, -108 / 4 + y * 54 + 108 / 2), sourceRectangle, Color.White, (float)MathHelper.ToRadians(degrees[y, x]), origin, 1.0f, s, 1);
+            UserInterface.draw(spriteBatch);
+         
             spriteBatch.End();
 
             base.Draw(gameTime);

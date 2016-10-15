@@ -14,6 +14,11 @@ namespace PowCamp
     public enum GameObjectTypeEnum : int
     {
         fence = 0,
-        brickWall = 1
+        brickWall = 1,
+        mouseCursor = 2,
+        mouseBuildGlyph = 3,
+        concreteWall = 4,
+        mouseCellCornerGlyph = 5,
+        guard = 6
     }
 }

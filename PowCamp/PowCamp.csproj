@@ -50,6 +50,9 @@
     <Compile Include="CellCoord.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="CellPartition.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ComponentDependency.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
@@ -57,6 +60,11 @@
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DataAccess.cs" />
+    <Compile Include="Guard.cs" />
+    <Compile Include="PatrolRoute.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Walls.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
@@ -102,6 +110,9 @@
     </Compile>
     <Compile Include="UserInterface.cs" />
     <Compile Include="Velocity.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Wall.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>

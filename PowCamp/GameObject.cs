@@ -23,5 +23,8 @@ namespace PowCamp
         public virtual CurrentAnimation CurrentAnimation { get; set; }
         public virtual Velocity Velocity { get; set; }
         public virtual Acceleration Acceleration { get; set; }
+        public virtual Wall Wall { get; set; }
+        public virtual PatrolRoute PatrolRoute { get; set; }
+        public virtual CellPartition CellPartition { get; set; }
     }
 }

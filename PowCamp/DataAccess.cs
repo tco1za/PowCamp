@@ -15,8 +15,10 @@ namespace PowCamp
     class DataAccess
     {
         private static int currentLevelId = 1;
-        private static PowCampDatabaseModelContainer db = new PowCampDatabaseModelContainer();    
+        public static PowCampDatabaseModelContainer db = new PowCampDatabaseModelContainer();    
         private static string currentErrorMessage;
+        private static Dictionary<GameObjectTypeEnum, List<GameObject>> availableInstantiatedGameObjectsPool = new Dictionary<GameObjectTypeEnum, List<GameObject>>();
+        private static Dictionary<GameObjectTypeEnum, List<GameObject>> inUseInstantiatedGameObjectsPool = new Dictionary<GameObjectTypeEnum, List<GameObject>>();
 
         private static void resetIdsOfGameObjectComponents(GameObject gameObject)
         {
@@ -57,6 +59,35 @@ namespace PowCamp
             GameObject newGameObject;
             newGameObject = db.GameObjects.AsNoTracking().FirstOrDefault(item => item.GameObjectType.enumValue == enumValue);
             return newGameObject;
+        }
+
+        public static GameObject fetchGameObjectFromPool(GameObjectTypeEnum enumValue)
+        {
+            if (!availableInstantiatedGameObjectsPool.ContainsKey(enumValue))
+            {
+                availableInstantiatedGameObjectsPool.Add(enumValue, new List<GameObject>());
+                inUseInstantiatedGameObjectsPool.Add(enumValue, new List<GameObject>());
+            }
+
+            if (availableInstantiatedGameObjectsPool[enumValue].Any())
+            {
+                GameObject gameObject = availableInstantiatedGameObjectsPool[enumValue][0];
+                inUseInstantiatedGameObjectsPool[enumValue].Add(gameObject);
+                availableInstantiatedGameObjectsPool[enumValue].RemoveAt(0);
+                return gameObject;
+            }
+            else
+            {
+                GameObject newGameObject = instantiateEntity(enumValue);
+                inUseInstantiatedGameObjectsPool[enumValue].Add(newGameObject);
+                return newGameObject;
+            }
+        }
+
+        public static void releaseGameObjectFromPool(GameObjectTypeEnum enumValue, GameObject gameObject)
+        {
+            availableInstantiatedGameObjectsPool[enumValue].Add(gameObject);
+            inUseInstantiatedGameObjectsPool[enumValue].Remove(gameObject);
         }
 
         private static List<GameObject> loadScene(int sceneID)
@@ -152,7 +183,7 @@ namespace PowCamp
             return Activator.CreateInstance(t);
         }
 
-        private static void createAndLinkToGameObjectsAllDependenciesThatDontExist()
+        public static void createAndLinkToGameObjectsAllDependenciesThatDontExist()
         {
             var gameObjectList = from e in db.GameObjects select e;
 
@@ -215,8 +246,5 @@ namespace PowCamp
         {
             Debug.Assert(getRowsInComponentDependenciesThatContainErrors().Count == 0, currentErrorMessage);
         }
-
-
-
     }
 }

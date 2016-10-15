@@ -10,15 +10,14 @@
 namespace PowCamp
 {
     using System;
+    using System.Collections.Generic;
     
-    public enum AnimationEnum : int
+    public partial class CellPartition
     {
-        fence = 0,
-        mouseCursor = 1,
-        mouseBuildGlyph = 2,
-        brickWall = 3,
-        concreteWall = 4,
-        mouseCellCornerGlyph = 5,
-        guardWalk = 6
+        public int Id { get; set; }
+        public int partitionMidPointX { get; set; }
+        public int partitionMidPointY { get; set; }
+    
+        public virtual GameObject GameObject { get; set; }
     }
 }

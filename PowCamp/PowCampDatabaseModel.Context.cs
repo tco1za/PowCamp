@@ -38,5 +38,8 @@ namespace PowCamp
         public virtual DbSet<Animation> Animations { get; set; }
         public virtual DbSet<Velocity> Velocities { get; set; }
         public virtual DbSet<Acceleration> Accelerations { get; set; }
+        public virtual DbSet<Wall> Walls { get; set; }
+        public virtual DbSet<PatrolRoute> PatrolRoutes { get; set; }
+        public virtual DbSet<CellPartition> CellPartitions { get; set; }
     }
 }

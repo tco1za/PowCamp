@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/07/2016 13:48:36
+-- Date Created: 10/15/2016 13:21:07
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -50,6 +50,15 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_AccelerationGameObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Accelerations] DROP CONSTRAINT [FK_AccelerationGameObject];
 GO
+IF OBJECT_ID(N'[dbo].[FK_WallGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Walls] DROP CONSTRAINT [FK_WallGameObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PatrolRouteGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[PatrolRoutes] DROP CONSTRAINT [FK_PatrolRouteGameObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_CellPartitionGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[CellPartitions] DROP CONSTRAINT [FK_CellPartitionGameObject];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -93,6 +102,15 @@ IF OBJECT_ID(N'[dbo].[Velocities]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Accelerations]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Accelerations];
+GO
+IF OBJECT_ID(N'[dbo].[Walls]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Walls];
+GO
+IF OBJECT_ID(N'[dbo].[PatrolRoutes]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[PatrolRoutes];
+GO
+IF OBJECT_ID(N'[dbo].[CellPartitions]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[CellPartitions];
 GO
 
 -- --------------------------------------------------
@@ -211,6 +229,38 @@ CREATE TABLE [dbo].[Accelerations] (
 );
 GO
 
+-- Creating table 'Walls'
+CREATE TABLE [dbo].[Walls] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'PatrolRoutes'
+CREATE TABLE [dbo].[PatrolRoutes] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [startCellX] int  NOT NULL,
+    [middleCellX] int  NOT NULL,
+    [endCellX] int  NOT NULL,
+    [startCellY] int  NOT NULL,
+    [middleCellY] int  NOT NULL,
+    [endCellY] int  NOT NULL,
+    [direction] int  NOT NULL,
+    [targetX] int  NOT NULL,
+    [targetY] int  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'CellPartitions'
+CREATE TABLE [dbo].[CellPartitions] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [partitionMidPointX] int  NOT NULL,
+    [partitionMidPointY] int  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -290,6 +340,24 @@ GO
 -- Creating primary key on [Id] in table 'Accelerations'
 ALTER TABLE [dbo].[Accelerations]
 ADD CONSTRAINT [PK_Accelerations]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Walls'
+ALTER TABLE [dbo].[Walls]
+ADD CONSTRAINT [PK_Walls]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'PatrolRoutes'
+ALTER TABLE [dbo].[PatrolRoutes]
+ADD CONSTRAINT [PK_PatrolRoutes]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'CellPartitions'
+ALTER TABLE [dbo].[CellPartitions]
+ADD CONSTRAINT [PK_CellPartitions]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -459,6 +527,51 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_AccelerationGameObject'
 CREATE INDEX [IX_FK_AccelerationGameObject]
 ON [dbo].[Accelerations]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'Walls'
+ALTER TABLE [dbo].[Walls]
+ADD CONSTRAINT [FK_WallGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_WallGameObject'
+CREATE INDEX [IX_FK_WallGameObject]
+ON [dbo].[Walls]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'PatrolRoutes'
+ALTER TABLE [dbo].[PatrolRoutes]
+ADD CONSTRAINT [FK_PatrolRouteGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_PatrolRouteGameObject'
+CREATE INDEX [IX_FK_PatrolRouteGameObject]
+ON [dbo].[PatrolRoutes]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'CellPartitions'
+ALTER TABLE [dbo].[CellPartitions]
+ADD CONSTRAINT [FK_CellPartitionGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CellPartitionGameObject'
+CREATE INDEX [IX_FK_CellPartitionGameObject]
+ON [dbo].[CellPartitions]
     ([GameObject_Id]);
 GO
 

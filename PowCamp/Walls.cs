@@ -33,31 +33,61 @@ namespace PowCamp
 
         public static void draw(List<GameObject> gameObjects, SpriteBatch spriteBatch)
         {
-            GameObject[,] partitionIndexGrid = new GameObject[UserInterface.getNumVerticalCells() * 2, UserInterface.getNumHorizontalCells() * 2];
+            List<GameObject>[,] partitionIndexGrid = new List<GameObject>[UserInterface.getNumVerticalCells() * 2, UserInterface.getNumHorizontalCells() * 2];
 
             foreach (var gameObject in gameObjects)
             {
                 if (gameObject.CellPartition != null)
                 {
-                    Point partitionIndex = convertVirtualScreenCoordsToPartitionIndices(new Point( gameObject.CellPartition.partitionMidPointX, gameObject.CellPartition.partitionMidPointY));
-                    partitionIndexGrid[partitionIndex.Y, partitionIndex.X] = gameObject;
+                    Point partitionIndex = convertVirtualScreenCoordsToPartitionIndices(new Point(gameObject.CellPartition.partitionMidPointX, gameObject.CellPartition.partitionMidPointY));
+                    addObjectToPartitionIndex(partitionIndexGrid, gameObject, partitionIndex);
                 }
-            }
-
-            for (int x = UserInterface.getNumHorizontalCells() * 2 - 1; x >= 0; x--)
-            {
-                for (int y = 0; y < UserInterface.getNumVerticalCells() * 2; y++)
+                else
                 {
-                    if (partitionIndexGrid[y, x] != null)
+                    if (gameObject.ScreenCoord != null)
                     {
-                        Point drawPosition = new Point(partitionIndexGrid[y, x].CellPartition.partitionMidPointX, partitionIndexGrid[y, x].CellPartition.partitionMidPointY);
-                        partitionIndexGrid[y, x].CurrentAnimation.index = determineWallOrientation(x);
-                        partitionIndexGrid[y, x].ScreenCoord.x = drawPosition.X - 35;
-                        partitionIndexGrid[y, x].ScreenCoord.y = drawPosition.Y - 64;
-                        Game.drawGameObject(spriteBatch, partitionIndexGrid[y, x]);
+                        Point partitionIndex = UserInterface.convertVirtualScreenCoordsToCellCoords(new Point((int)gameObject.ScreenCoord.x, (int)gameObject.ScreenCoord.y));
+                        partitionIndex.X = partitionIndex.X * 2;
+                        partitionIndex.Y = partitionIndex.Y * 2;
+                        if (partitionIndex.X > 0 && partitionIndex.Y > 0 && partitionIndex.X < UserInterface.getNumHorizontalCells() * 2
+                            && partitionIndex.Y < UserInterface.getNumVerticalCells() * 2)
+                        {
+                            addObjectToPartitionIndex(partitionIndexGrid, gameObject, partitionIndex);
+                        }
                     }
                 }
             }
+           
+            for (int y = 0; y < UserInterface.getNumVerticalCells() * 2; y++)
+            {
+                for (int x = UserInterface.getNumHorizontalCells() * 2 - 1; x >= 0; x--)
+                {
+                    if (partitionIndexGrid[y, x] != null)
+                    {
+                        foreach (GameObject gameObject in partitionIndexGrid[y, x])
+                        {
+                            if (gameObject.CellPartition != null)
+                            { 
+                                Point drawPosition = new Point(gameObject.CellPartition.partitionMidPointX, gameObject.CellPartition.partitionMidPointY);
+                                gameObject.CurrentAnimation.index = determineWallOrientation(x);
+                                gameObject.ScreenCoord.x = drawPosition.X + 0;
+                                gameObject.ScreenCoord.y = drawPosition.Y - 0;
+                                Game.drawGameObject(spriteBatch, gameObject);
+                            }
+                            else
+                            {
+                                Game.drawGameObject(spriteBatch, gameObject);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void addObjectToPartitionIndex(List<GameObject>[,] partitionIndexGrid, GameObject gameObject, Point partitionIndex)
+        {
+            if (partitionIndexGrid[partitionIndex.Y, partitionIndex.X] == null) partitionIndexGrid[partitionIndex.Y, partitionIndex.X] = new List<GameObject>();
+            partitionIndexGrid[partitionIndex.Y, partitionIndex.X].Add(gameObject);
         }
     }
 }

@@ -22,6 +22,8 @@
     <EntitySet Name="Walls" EntityType="PowCampDatabaseModel.Store.Walls" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="PatrolRoutes" EntityType="PowCampDatabaseModel.Store.PatrolRoutes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="CellPartitions" EntityType="PowCampDatabaseModel.Store.CellPartitions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Orientations" EntityType="PowCampDatabaseModel.Store.Orientations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Globals" EntityType="PowCampDatabaseModel.Store.Globals" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -77,6 +79,14 @@
     <AssociationSet Name="CellPartitionGameObject" Association="PowCampDatabaseModel.Store.CellPartitionGameObject">
       <End Role="CellPartition" EntitySet="CellPartitions" />
       <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="OrientationGameObject" Association="PowCampDatabaseModel.Store.OrientationGameObject">
+      <End Role="Orientation" EntitySet="Orientations" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="GlobalScene" Association="PowCampDatabaseModel.Store.GlobalScene">
+      <End Role="Global" EntitySet="Globals" />
+      <End Role="Scene" EntitySet="Scenes" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="GameObjects">
@@ -157,6 +167,7 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="index" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="timeSinceLastFrameChange" Type="real" Nullable="false" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
     <Property Name="Animation_Id" Type="int" Nullable="false" />
   </EntityType>
@@ -172,6 +183,7 @@
     <Property Name="startIndex" Type="int" Nullable="false" />
     <Property Name="enumValue" Type="int" Nullable="false" />
     <Property Name="count" Type="int" Nullable="false" />
+    <Property Name="timeBetweenFrames" Type="real" Nullable="false" DefaultValue="0.5" />
   </EntityType>
   <EntityType Name="Velocities">
     <Key>
@@ -210,8 +222,7 @@
     <Property Name="middleCellY" Type="int" Nullable="false" />
     <Property Name="endCellY" Type="int" Nullable="false" />
     <Property Name="direction" Type="int" Nullable="false" />
-    <Property Name="targetX" Type="int" Nullable="false" />
-    <Property Name="targetY" Type="int" Nullable="false" />
+    <Property Name="targetCellIndex" Type="int" Nullable="false" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="CellPartitions">
@@ -222,6 +233,24 @@
     <Property Name="partitionMidPointX" Type="int" Nullable="false" />
     <Property Name="partitionMidPointY" Type="int" Nullable="false" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Orientations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="x" Type="real" Nullable="false" />
+    <Property Name="y" Type="real" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Globals">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="timeSinceLastPrisonerSpawn" Type="real" Nullable="false" />
+    <Property Name="timeToNextPrisonerSpawn" Type="real" Nullable="false" />
+    <Property Name="Scene_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
     <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="*" />
@@ -391,6 +420,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="OrientationGameObject">
+    <End Role="Orientation" Type="PowCampDatabaseModel.Store.Orientations" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Orientation">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GlobalScene">
+    <End Role="Global" Type="PowCampDatabaseModel.Store.Globals" Multiplicity="*" />
+    <End Role="Scene" Type="PowCampDatabaseModel.Store.Scenes" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Scene">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Global">
+        <PropertyRef Name="Scene_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -468,6 +521,16 @@
             <End Role="CellPartition" EntitySet="CellPartitions" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
+          <EntitySet Name="Orientations" EntityType="PowCampDatabaseModel.Orientation" />
+          <AssociationSet Name="OrientationGameObject" Association="PowCampDatabaseModel.OrientationGameObject">
+            <End Role="Orientation" EntitySet="Orientations" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
+          <EntitySet Name="Globals" EntityType="PowCampDatabaseModel.Global" />
+          <AssociationSet Name="GlobalScene" Association="PowCampDatabaseModel.GlobalScene">
+            <End Role="Global" EntitySet="Globals" />
+            <End Role="Scene" EntitySet="Scenes" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -484,6 +547,7 @@
           <NavigationProperty Name="Wall" Relationship="PowCampDatabaseModel.WallGameObject" FromRole="GameObject" ToRole="Wall" />
           <NavigationProperty Name="PatrolRoute" Relationship="PowCampDatabaseModel.PatrolRouteGameObject" FromRole="GameObject" ToRole="PatrolRoute" />
           <NavigationProperty Name="CellPartition" Relationship="PowCampDatabaseModel.CellPartitionGameObject" FromRole="GameObject" ToRole="CellPartition" />
+          <NavigationProperty Name="Orientation" Relationship="PowCampDatabaseModel.OrientationGameObject" FromRole="GameObject" ToRole="Orientation" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -540,6 +604,7 @@
           <NavigationProperty Name="SaveGame" Relationship="PowCampDatabaseModel.SceneSaveGame" FromRole="Scene" ToRole="SaveGame" />
           <NavigationProperty Name="Level" Relationship="PowCampDatabaseModel.LevelScene" FromRole="Scene" ToRole="Level" />
           <NavigationProperty Name="InstantiatedGameObjects" Relationship="PowCampDatabaseModel.InstantiatedGameObjectScene" FromRole="Scene" ToRole="InstantiatedGameObject" />
+          <NavigationProperty Name="Global" Relationship="PowCampDatabaseModel.GlobalScene" FromRole="Scene" ToRole="Global" />
         </EntityType>
         <Association Name="GameObjectCellCoord">
           <End Type="PowCampDatabaseModel.CellCoord" Role="CellCoord" Multiplicity="0..1" />
@@ -590,6 +655,7 @@
           <Member Name="concreteWall" />
           <Member Name="mouseCellCornerGlyph" />
           <Member Name="guard" />
+          <Member Name="prisoner" />
         </EnumType>
         <EntityType Name="CurrentAnimation">
           <Key>
@@ -599,6 +665,7 @@
           <Property Name="index" Type="Int32" Nullable="false" DefaultValue="0" />
           <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.CurrentAnimationGameObject" FromRole="CurrentAnimation" ToRole="GameObject" />
           <NavigationProperty Name="Animation" Relationship="PowCampDatabaseModel.CurrentAnimationAnimation" FromRole="CurrentAnimation" ToRole="Animation" />
+          <Property Name="timeSinceLastFrameChange" Type="Single" Nullable="false" />
         </EntityType>
         <EntityType Name="Animation">
           <Key>
@@ -613,6 +680,7 @@
           <Property Name="enumValue" Type="PowCampDatabaseModel.AnimationEnum" Nullable="false" />
           <NavigationProperty Name="CurrentAnimations" Relationship="PowCampDatabaseModel.CurrentAnimationAnimation" FromRole="Animation" ToRole="CurrentAnimation" />
           <Property Name="count" Type="Int32" Nullable="false" />
+          <Property Name="timeBetweenFrames" Type="Single" Nullable="false" DefaultValue="0.5" />
         </EntityType>
         <EnumType Name="AnimationEnum">
           <Member Name="fence" />
@@ -622,6 +690,7 @@
           <Member Name="concreteWall" />
           <Member Name="mouseCellCornerGlyph" />
           <Member Name="guardWalk" />
+          <Member Name="prisonerWalk" />
         </EnumType>
         <Association Name="CurrentAnimationGameObject">
           <End Type="PowCampDatabaseModel.CurrentAnimation" Role="CurrentAnimation" Multiplicity="0..1" />
@@ -681,8 +750,7 @@
           <Property Name="endCellY" Type="Int32" Nullable="false" />
           <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.PatrolRouteGameObject" FromRole="PatrolRoute" ToRole="GameObject" />
           <Property Name="direction" Type="Int32" Nullable="false" />
-          <Property Name="targetX" Type="Int32" Nullable="false" />
-          <Property Name="targetY" Type="Int32" Nullable="false" />
+          <Property Name="targetCellIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="PatrolRouteGameObject">
           <End Type="PowCampDatabaseModel.PatrolRoute" Role="PatrolRoute" Multiplicity="0..1" />
@@ -700,6 +768,32 @@
         <Association Name="CellPartitionGameObject">
           <End Type="PowCampDatabaseModel.CellPartition" Role="CellPartition" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Orientation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="x" Type="Single" Nullable="false" />
+          <Property Name="y" Type="Single" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.OrientationGameObject" FromRole="Orientation" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="OrientationGameObject">
+          <End Type="PowCampDatabaseModel.Orientation" Role="Orientation" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Global">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="timeSinceLastPrisonerSpawn" Type="Single" Nullable="false" />
+          <Property Name="timeToNextPrisonerSpawn" Type="Single" Nullable="false" />
+          <NavigationProperty Name="Scene" Relationship="PowCampDatabaseModel.GlobalScene" FromRole="Global" ToRole="Scene" />
+        </EntityType>
+        <Association Name="GlobalScene">
+          <End Type="PowCampDatabaseModel.Global" Role="Global" Multiplicity="1" />
+          <End Type="PowCampDatabaseModel.Scene" Role="Scene" Multiplicity="1" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -786,6 +880,7 @@
         <MappingFragment StoreEntitySet="CurrentAnimations">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="index" ColumnName="index" />
+          <ScalarProperty Name="timeSinceLastFrameChange" ColumnName="timeSinceLastFrameChange" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -800,6 +895,7 @@
           <ScalarProperty Name="startIndex" ColumnName="startIndex" />
           <ScalarProperty Name="enumValue" ColumnName="enumValue" />
           <ScalarProperty Name="count" ColumnName="count" />
+          <ScalarProperty Name="timeBetweenFrames" ColumnName="timeBetweenFrames" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -839,8 +935,7 @@
           <ScalarProperty Name="middleCellY" ColumnName="middleCellY" />
           <ScalarProperty Name="endCellY" ColumnName="endCellY" />
           <ScalarProperty Name="direction" ColumnName="direction" />
-          <ScalarProperty Name="targetX" ColumnName="targetX" />
-          <ScalarProperty Name="targetY" ColumnName="targetY" />
+          <ScalarProperty Name="targetCellIndex" ColumnName="targetCellIndex" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -850,6 +945,24 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="partitionMidPointX" ColumnName="partitionMidPointX" />
           <ScalarProperty Name="partitionMidPointY" ColumnName="partitionMidPointY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Orientations">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Orientation)">
+        <MappingFragment StoreEntitySet="Orientations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="x" ColumnName="x" />
+          <ScalarProperty Name="y" ColumnName="y" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Globals">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Global)">
+        <MappingFragment StoreEntitySet="Globals">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="timeSinceLastPrisonerSpawn" ColumnName="timeSinceLastPrisonerSpawn" />
+          <ScalarProperty Name="timeToNextPrisonerSpawn" ColumnName="timeToNextPrisonerSpawn" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -962,6 +1075,22 @@
         <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
       <EndProperty Name="CellPartition">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="OrientationGameObject" TypeName="PowCampDatabaseModel.OrientationGameObject" StoreEntitySet="Orientations">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Orientation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="GlobalScene" TypeName="PowCampDatabaseModel.GlobalScene" StoreEntitySet="Globals">
+      <EndProperty Name="Scene">
+        <ScalarProperty Name="Id" ColumnName="Scene_Id" />
+      </EndProperty>
+      <EndProperty Name="Global">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

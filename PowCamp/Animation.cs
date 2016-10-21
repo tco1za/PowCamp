@@ -17,6 +17,7 @@ namespace PowCamp
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Animation()
         {
+            this.timeBetweenFrames = 0.5F;
             this.CurrentAnimations = new HashSet<CurrentAnimation>();
         }
     
@@ -28,6 +29,7 @@ namespace PowCamp
         public int startIndex { get; set; }
         public AnimationEnum enumValue { get; set; }
         public int count { get; set; }
+        public float timeBetweenFrames { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurrentAnimation> CurrentAnimations { get; set; }

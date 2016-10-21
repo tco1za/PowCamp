@@ -41,5 +41,7 @@ namespace PowCamp
         public virtual DbSet<Wall> Walls { get; set; }
         public virtual DbSet<PatrolRoute> PatrolRoutes { get; set; }
         public virtual DbSet<CellPartition> CellPartitions { get; set; }
+        public virtual DbSet<Orientation> Orientations { get; set; }
+        public virtual DbSet<Global> Globals { get; set; }
     }
 }

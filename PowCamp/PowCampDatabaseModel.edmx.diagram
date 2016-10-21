@@ -35,6 +35,10 @@
         <AssociationConnector Association="PowCampDatabaseModel.PatrolRouteGameObject" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.CellPartition" Width="2.125" PointX="10.25" PointY="7.75" />
         <AssociationConnector Association="PowCampDatabaseModel.CellPartitionGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Orientation" Width="1.5" PointX="3.5" PointY="1.875" />
+        <AssociationConnector Association="PowCampDatabaseModel.OrientationGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Global" Width="3" PointX="19.625" PointY="1" />
+        <AssociationConnector Association="PowCampDatabaseModel.GlobalScene" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

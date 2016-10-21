@@ -15,6 +15,7 @@ namespace PowCamp
     class DataAccess
     {
         private static int currentLevelId = 1;
+        public static int currentSceneId = -1;
         public static PowCampDatabaseModelContainer db = new PowCampDatabaseModelContainer();    
         private static string currentErrorMessage;
         private static Dictionary<GameObjectTypeEnum, List<GameObject>> availableInstantiatedGameObjectsPool = new Dictionary<GameObjectTypeEnum, List<GameObject>>();
@@ -92,6 +93,7 @@ namespace PowCamp
 
         private static List<GameObject> loadScene(int sceneID)
         {
+            currentSceneId = sceneID;
             List<GameObject> gameObjects = new List<GameObject>();
             IQueryable<GameObject> query;
             query = db.GameObjects.AsNoTracking().Where(item => item.InstantiatedGameObject.Scene.Id == sceneID);
@@ -175,6 +177,11 @@ namespace PowCamp
         {
             // TODO : implement
             return new List<string>();
+        }
+
+        public static List<Animation> getAllAnimations()
+        {
+            return db.Animations.ToList();
         }
 
         private static object CreateInstanceFromName(string fullyQualifiedName)

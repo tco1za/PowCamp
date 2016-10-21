@@ -12,8 +12,8 @@ namespace PowCamp
 {
     class UserInterface
     {
-        private static int virtualScreenWidth = 1920;
-        private static int virtualScreenHeight = 1080;
+        public static int virtualScreenWidth = 1920;
+        public static int virtualScreenHeight = 1080;
         public static int cellWidth = 54;
         public static int sidePanelWidth = 204;
         private enum State { neutral , placingWall, tracingPatrolRoute, deletingWall };
@@ -108,7 +108,6 @@ namespace PowCamp
             mousePosition = constrainMousePositionToWallBuildableArea(mousePosition);
             Point cellThatMouseIsCurrentlyIn = convertVirtualScreenCoordsToCellCoords(mousePosition);
             Point currentCellCornerMouseIsClosestTo = convertVirtualScreenCoordsToCellCoords(cellCornerThatMouseCursorIsClosestTo(cellThatMouseIsCurrentlyIn, mousePosition));
-            Debug.WriteLine(mousePosition);
             switch (currentTraceState)
             {
                 case (TracingState.beforePointsSelected):
@@ -145,9 +144,10 @@ namespace PowCamp
             guardToAssignPatrolRouteTo.PatrolRoute.middleCellX = middlePointOfTrace.X;
             guardToAssignPatrolRouteTo.PatrolRoute.middleCellY = middlePointOfTrace.Y;
             guardToAssignPatrolRouteTo.PatrolRoute.endCellX = endPointOfTrace.X;
-            guardToAssignPatrolRouteTo.PatrolRoute.endCellY = endPointOfTrace.X;
-            guardToAssignPatrolRouteTo.PatrolRoute.targetX = convertCellCoordsToVirtualScreenCoords(firstPointOfTrace).X;
-            guardToAssignPatrolRouteTo.PatrolRoute.targetY = convertCellCoordsToVirtualScreenCoords(firstPointOfTrace).Y;
+            guardToAssignPatrolRouteTo.PatrolRoute.endCellY = endPointOfTrace.Y;
+            guardToAssignPatrolRouteTo.PatrolRoute.targetCellIndex = 0;
+            guardToAssignPatrolRouteTo.ScreenCoord.x = convertCellCoordsToVirtualScreenCoords(firstPointOfTrace).X + cellWidth / 2;
+            guardToAssignPatrolRouteTo.ScreenCoord.y = convertCellCoordsToVirtualScreenCoords(firstPointOfTrace).Y + cellWidth / 2;
         }
 
         private static PatrolRoute createPatrolRouteObjectFromCurrentTrace()
@@ -158,7 +158,7 @@ namespace PowCamp
             patrolRoute.middleCellX = middlePointOfTrace.X;
             patrolRoute.middleCellY = middlePointOfTrace.Y;
             patrolRoute.endCellX = endPointOfTrace.X;
-            patrolRoute.endCellY = endPointOfTrace.X;
+            patrolRoute.endCellY = endPointOfTrace.Y;
             return patrolRoute;
         }
 
@@ -252,25 +252,21 @@ namespace PowCamp
                 drawPatrolRoute(spriteBatch);
             }
             GameObject mouseCursorObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCursor).FirstOrDefault();
-            mouseCursorObject.ScreenCoord.x = mousePosition.X - 26;
-            mouseCursorObject.ScreenCoord.y = mousePosition.Y - 24;
+            mouseCursorObject.ScreenCoord.x = mousePosition.X;
+            mouseCursorObject.ScreenCoord.y = mousePosition.Y;
             Game.drawGameObject(spriteBatch, mouseCursorObject);
         }
 
         private static void drawWallTrace(SpriteBatch spriteBatch)
         {
             Point cellThatMouseIsIn = UserInterface.convertVirtualScreenCoordsToCellCoords(mousePosition);
-            GameObject cellCornerGlyphObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCellCornerGlyph).FirstOrDefault();
-            cellCornerGlyphObject.ScreenCoord.x = cellCornerThatMouseCursorIsClosestTo(cellThatMouseIsIn, mousePosition).X - 50;
-            cellCornerGlyphObject.ScreenCoord.y = cellCornerThatMouseCursorIsClosestTo(cellThatMouseIsIn, mousePosition).Y - 50;
-            Game.drawGameObject(spriteBatch, cellCornerGlyphObject);
             List<Point> cellsToVisitAlongTrace = buildListOfCellsVisitedAlongTrace(createPatrolRouteObjectFromCurrentTrace());
 
             foreach (Point cell in cellsToVisitAlongTrace)
             {
                 Point builderGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
-                builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X - 50;
-                builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y - 50;
+                builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X;
+                builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y;
                 Game.drawGameObject(spriteBatch, builderGlyphObject);
             }
 
@@ -305,8 +301,8 @@ namespace PowCamp
                 Point builderGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
 
                 GameObject builderGlyphObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseBuildGlyph).FirstOrDefault();
-                builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X - 23;
-                builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y - 23;
+                builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X + cellWidth / 2;
+                builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y + cellWidth / 2;
                 Game.drawGameObject(spriteBatch, builderGlyphObject);
             }
         }

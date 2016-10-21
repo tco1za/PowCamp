@@ -12,19 +12,12 @@ namespace PowCamp
     using System;
     using System.Collections.Generic;
     
-    public partial class CurrentAnimation
+    public partial class Global
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CurrentAnimation()
-        {
-            this.index = 0;
-        }
-    
         public int Id { get; set; }
-        public int index { get; set; }
-        public float timeSinceLastFrameChange { get; set; }
+        public float timeSinceLastPrisonerSpawn { get; set; }
+        public float timeToNextPrisonerSpawn { get; set; }
     
-        public virtual GameObject GameObject { get; set; }
-        public virtual Animation Animation { get; set; }
+        public virtual Scene Scene { get; set; }
     }
 }

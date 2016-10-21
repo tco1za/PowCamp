@@ -47,6 +47,7 @@
     <Compile Include="AnimationEnum.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Animations.cs" />
     <Compile Include="CellCoord.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
@@ -60,10 +61,17 @@
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DataAccess.cs" />
+    <Compile Include="Global.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Guard.cs" />
+    <Compile Include="Orientation.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="PatrolRoute.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Prisoner.cs" />
     <Compile Include="Walls.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs">

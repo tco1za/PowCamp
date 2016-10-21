@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/15/2016 13:21:07
+-- Date Created: 10/21/2016 13:56:50
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -59,6 +59,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_CellPartitionGameObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[CellPartitions] DROP CONSTRAINT [FK_CellPartitionGameObject];
 GO
+IF OBJECT_ID(N'[dbo].[FK_OrientationGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Orientations] DROP CONSTRAINT [FK_OrientationGameObject];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -111,6 +114,9 @@ IF OBJECT_ID(N'[dbo].[PatrolRoutes]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[CellPartitions]', 'U') IS NOT NULL
     DROP TABLE [dbo].[CellPartitions];
+GO
+IF OBJECT_ID(N'[dbo].[Orientations]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Orientations];
 GO
 
 -- --------------------------------------------------
@@ -193,6 +199,7 @@ GO
 CREATE TABLE [dbo].[CurrentAnimations] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [index] int  NOT NULL,
+    [timeSinceLastFrameChange] real  NOT NULL,
     [GameObject_Id] int  NOT NULL,
     [Animation_Id] int  NOT NULL
 );
@@ -207,7 +214,8 @@ CREATE TABLE [dbo].[Animations] (
     [frameHeight] int  NOT NULL,
     [startIndex] int  NOT NULL,
     [enumValue] int  NOT NULL,
-    [count] int  NOT NULL
+    [count] int  NOT NULL,
+    [timeBetweenFrames] real  NOT NULL
 );
 GO
 
@@ -246,8 +254,7 @@ CREATE TABLE [dbo].[PatrolRoutes] (
     [middleCellY] int  NOT NULL,
     [endCellY] int  NOT NULL,
     [direction] int  NOT NULL,
-    [targetX] int  NOT NULL,
-    [targetY] int  NOT NULL,
+    [targetCellIndex] int  NOT NULL,
     [GameObject_Id] int  NOT NULL
 );
 GO
@@ -258,6 +265,24 @@ CREATE TABLE [dbo].[CellPartitions] (
     [partitionMidPointX] int  NOT NULL,
     [partitionMidPointY] int  NOT NULL,
     [GameObject_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'Orientations'
+CREATE TABLE [dbo].[Orientations] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [x] real  NOT NULL,
+    [y] real  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'Globals'
+CREATE TABLE [dbo].[Globals] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [timeSinceLastPrisonerSpawn] real  NOT NULL,
+    [timeToNextPrisonerSpawn] real  NOT NULL,
+    [Scene_Id] int  NOT NULL
 );
 GO
 
@@ -358,6 +383,18 @@ GO
 -- Creating primary key on [Id] in table 'CellPartitions'
 ALTER TABLE [dbo].[CellPartitions]
 ADD CONSTRAINT [PK_CellPartitions]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Orientations'
+ALTER TABLE [dbo].[Orientations]
+ADD CONSTRAINT [PK_Orientations]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Globals'
+ALTER TABLE [dbo].[Globals]
+ADD CONSTRAINT [PK_Globals]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -573,6 +610,36 @@ GO
 CREATE INDEX [IX_FK_CellPartitionGameObject]
 ON [dbo].[CellPartitions]
     ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'Orientations'
+ALTER TABLE [dbo].[Orientations]
+ADD CONSTRAINT [FK_OrientationGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_OrientationGameObject'
+CREATE INDEX [IX_FK_OrientationGameObject]
+ON [dbo].[Orientations]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [Scene_Id] in table 'Globals'
+ALTER TABLE [dbo].[Globals]
+ADD CONSTRAINT [FK_GlobalScene]
+    FOREIGN KEY ([Scene_Id])
+    REFERENCES [dbo].[Scenes]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GlobalScene'
+CREATE INDEX [IX_FK_GlobalScene]
+ON [dbo].[Globals]
+    ([Scene_Id]);
 GO
 
 -- --------------------------------------------------

@@ -26,5 +26,6 @@ namespace PowCamp
         public virtual Wall Wall { get; set; }
         public virtual PatrolRoute PatrolRoute { get; set; }
         public virtual CellPartition CellPartition { get; set; }
+        public virtual Orientation Orientation { get; set; }
     }
 }

@@ -13,16 +13,14 @@ namespace PowCamp
     {
         private Texture2D spriteMap1;
         private Texture2D background;
-
         public static GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static List<GameObject> gameObjects = new List<GameObject>();
         private static MouseState previousMouseState;
         public static MouseState currentMouseState;
         public static bool isLeftMouseClicked = false;
-
         public static Dictionary<string, Texture2D> atlases = new Dictionary<string, Texture2D>();
-
+        public static List<Animation> animations;
 
         public Game()
         {
@@ -41,15 +39,16 @@ namespace PowCamp
 
             InitializeDatabase.createGameObjectTypes();
 
+            animations = DataAccess.getAllAnimations();
+
             GameObject guard = DataAccess.instantiateEntity(GameObjectTypeEnum.guard);
             UserInterface.guardToAssignPatrolRouteTo = guard;
+            gameObjects = DataAccess.loadLevel(1);
 
             gameObjects.Add(guard);
 
-           // gameObjects = DataAccess.loadLevel(1);
-
-         //   gameObjects = DataAccess.loadSaveGame("10/3/2016 12:00:00 AM");
-       //     DataAccess.saveGame(gameObjects);
+            //   gameObjects = DataAccess.loadSaveGame("10/3/2016 12:00:00 AM");
+            //     DataAccess.saveGame(gameObjects);
             base.Initialize();
         }
 
@@ -89,14 +88,40 @@ namespace PowCamp
                 isLeftMouseClicked = false;
             }
 
+            Prisoner.update(gameTime );
+            Guard.update(gameTime);
+
             UserInterface.update();
+            Animations.update(gameTime);
+
+            gameObjects.RemoveAll(x => shouldGameObjectBeRemovedFromScene(x));
+
             base.Update(gameTime);
         }
 
-        public static void drawGameObject( SpriteBatch spriteBatch, GameObject gameObject )
+        public static float convertVectorToAngleOfRotation( float x, float y) // TODO: move this to helper class
         {
-            spriteBatch.Draw(Game.atlases[gameObject.CurrentAnimation.Animation.atlasName], new Vector2((float)gameObject.ScreenCoord.x, (float)gameObject.ScreenCoord.y),
-                Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation), Color.White);
+            return (float)Math.Atan2(y,x);
+        }
+
+        public static void drawGameObject(SpriteBatch spriteBatch, GameObject gameObject)
+        {
+            if (gameObject.Orientation == null)
+            { 
+                spriteBatch.Draw(Game.atlases[gameObject.CurrentAnimation.Animation.atlasName],
+                    new Vector2((float)gameObject.ScreenCoord.x - gameObject.CurrentAnimation.Animation.frameWidth / 2,
+                    (float)gameObject.ScreenCoord.y - gameObject.CurrentAnimation.Animation.frameHeight / 2),
+                    Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation), Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(Game.atlases[gameObject.CurrentAnimation.Animation.atlasName],
+                    new Vector2((float)gameObject.ScreenCoord.x,
+                        (float)gameObject.ScreenCoord.y),
+                    Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation),
+                    Color.White, convertVectorToAngleOfRotation(gameObject.Orientation.x, gameObject.Orientation.y),
+                    new Vector2(gameObject.CurrentAnimation.Animation.frameWidth / 2, gameObject.CurrentAnimation.Animation.frameHeight / 2), 1f, SpriteEffects.None, 1f);
+            }
         }
 
         public static Rectangle calculateSourceRectangleForSprite(CurrentAnimation curAnim)
@@ -110,14 +135,38 @@ namespace PowCamp
                 new Point(curAnim.Animation.frameWidth, curAnim.Animation.frameHeight));
         }
 
+        private bool isGameObjectSpriteVisibleOnscreen(GameObject gameObject )
+        {
+            if ( gameObject.ScreenCoord.x > UserInterface.virtualScreenWidth || gameObject.ScreenCoord.x < 0
+                || gameObject.ScreenCoord.y > UserInterface.virtualScreenHeight + 150 || gameObject.ScreenCoord.y < -150)
+            
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private bool shouldGameObjectBeRemovedFromScene(GameObject gameObject)
+        {
+            if ( gameObject.ScreenCoord != null && gameObject.CurrentAnimation != null && !isGameObjectSpriteVisibleOnscreen(gameObject) )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         protected override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, UserInterface.GetScaleMatrix());
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
 
-
             Walls.draw(gameObjects, spriteBatch);
-
             UserInterface.draw(spriteBatch);
          
             spriteBatch.End();

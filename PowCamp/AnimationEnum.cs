@@ -19,6 +19,7 @@ namespace PowCamp
         brickWall = 3,
         concreteWall = 4,
         mouseCellCornerGlyph = 5,
-        guardWalk = 6
+        guardWalk = 6,
+        prisonerWalk = 7
     }
 }

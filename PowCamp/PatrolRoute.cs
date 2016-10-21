@@ -22,8 +22,7 @@ namespace PowCamp
         public int middleCellY { get; set; }
         public int endCellY { get; set; }
         public int direction { get; set; }
-        public int targetX { get; set; }
-        public int targetY { get; set; }
+        public int targetCellIndex { get; set; }
     
         public virtual GameObject GameObject { get; set; }
     }

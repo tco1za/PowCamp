@@ -15,11 +15,16 @@ namespace PowCamp
     class DataAccess
     {
         private static int currentLevelId = 1;
-        public static int currentSceneId = -1;
         public static PowCampDatabaseModelContainer db = new PowCampDatabaseModelContainer();    
         private static string currentErrorMessage;
         private static Dictionary<GameObjectTypeEnum, List<GameObject>> availableInstantiatedGameObjectsPool = new Dictionary<GameObjectTypeEnum, List<GameObject>>();
         private static Dictionary<GameObjectTypeEnum, List<GameObject>> inUseInstantiatedGameObjectsPool = new Dictionary<GameObjectTypeEnum, List<GameObject>>();
+
+        public struct LoadResult
+        {
+            public List<GameObject> gameObjects;
+            public Scene scene;
+        }
 
         private static void resetIdsOfGameObjectComponents(GameObject gameObject)
         {
@@ -91,24 +96,26 @@ namespace PowCamp
             inUseInstantiatedGameObjectsPool[enumValue].Remove(gameObject);
         }
 
-        private static List<GameObject> loadScene(int sceneID)
+        private static LoadResult loadScene(int sceneID)
         {
-            currentSceneId = sceneID;
-            List<GameObject> gameObjects = new List<GameObject>();
+            LoadResult loadResult;
+
+            loadResult.gameObjects = new List<GameObject>();
+            loadResult.scene = db.Scenes.AsNoTracking().Where(item => item.Id == sceneID).FirstOrDefault();
             IQueryable<GameObject> query;
             query = db.GameObjects.AsNoTracking().Where(item => item.InstantiatedGameObject.Scene.Id == sceneID);
             foreach (var val in query)
             {
-                gameObjects.Add(val);
+                loadResult.gameObjects.Add(val);
             }
-            return gameObjects;
+            return loadResult;
         }
 
         private static void saveScene(List<GameObject> gameObjects, Scene scene)
         {
             foreach (GameObject gameObject in gameObjects)
             {
-                gameObject.GameObjectType = db.GameObjectTypes.Where(item => item.enumValue == gameObject.GameObjectType.enumValue  ).FirstOrDefault();
+                gameObject.GameObjectType = db.GameObjectTypes.Where(item => item.enumValue == gameObject.GameObjectType.enumValue).FirstOrDefault();
                 gameObject.InstantiatedGameObject = new InstantiatedGameObject();
                 gameObject.InstantiatedGameObject.Scene = scene;
                 resetIdsOfGameObjectComponents(gameObject);
@@ -117,27 +124,27 @@ namespace PowCamp
             db.SaveChanges();
         }
 
-        public static void saveGame(List<GameObject> gameObjects)
+        public static void saveGame(List<GameObject> gameObjects, Scene scene)
         {
-            Scene savegameScene = new Scene();
-            savegameScene.SaveGame = new SaveGame() { name = DateTime.Now.ToString(), levelCreatedFrom = currentLevelId };
-            saveScene(gameObjects, savegameScene);
+            scene.Id = -1;
+            scene.SaveGame = new SaveGame() { name = DateTime.Now.ToString(), levelCreatedFrom = currentLevelId };
+            saveScene(gameObjects, scene);
         }
 
-        public static void saveLevel(List<GameObject> gameObjects, string name)
+        public static void saveLevel(List<GameObject> gameObjects, string name, Scene scene)
         {
-            Scene levelScene = new Scene();
-            levelScene.Level = new Level() { name = name };
-            saveScene(gameObjects, levelScene);
+            scene.Id = -1;
+            scene.Level = new Level() { name = name };
+            saveScene(gameObjects, scene);
         }
 
-        public static List<GameObject> loadLevel(int levelID)
+        public static LoadResult loadLevel(int levelID)
         {
             currentLevelId = db.Levels.Where(item => item.Id == levelID).FirstOrDefault().Id;
             return loadScene( db.Scenes.Where(item => item.Level.Id == levelID).FirstOrDefault().Id );
         }
 
-        public static List<GameObject> loadSaveGame(string name)
+        public static LoadResult loadSaveGame(string name)
         {
             currentLevelId = db.SaveGames.Where(item => item.name == name).FirstOrDefault().levelCreatedFrom;
             return loadScene(db.Scenes.Where(item => item.SaveGame.name == name).FirstOrDefault().Id);

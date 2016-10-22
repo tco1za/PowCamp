@@ -61,17 +61,15 @@
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DataAccess.cs" />
-    <Compile Include="Global.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Guard.cs" />
+    <Compile Include="Guards.cs" />
     <Compile Include="Orientation.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="PatrolRoute.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Prisoner.cs" />
+    <Compile Include="PatrolRoutes.cs" />
+    <Compile Include="Prisoners.cs" />
     <Compile Include="Walls.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs">

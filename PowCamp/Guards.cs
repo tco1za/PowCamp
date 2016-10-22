@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PowCamp
 {
-    class Guard
+    class Guards
     {
         private static float movementSpeed = 60f;
 

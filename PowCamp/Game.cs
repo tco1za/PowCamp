@@ -21,6 +21,8 @@ namespace PowCamp
         public static bool isLeftMouseClicked = false;
         public static Dictionary<string, Texture2D> atlases = new Dictionary<string, Texture2D>();
         public static List<Animation> animations;
+        public static Scene scene;
+        public static Random randomNumberGenerator;
 
         public Game()
         {
@@ -32,10 +34,12 @@ namespace PowCamp
         {
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-        //    graphics.PreferredBackBufferWidth = 800;
-         //   graphics.PreferredBackBufferHeight = 600;
-        //    graphics.IsFullScreen = true;
+            //    graphics.PreferredBackBufferWidth = 800;
+            //   graphics.PreferredBackBufferHeight = 600;
+            //    graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
+            randomNumberGenerator = new Random();
 
             InitializeDatabase.createGameObjectTypes();
 
@@ -43,13 +47,23 @@ namespace PowCamp
 
             GameObject guard = DataAccess.instantiateEntity(GameObjectTypeEnum.guard);
             UserInterface.guardToAssignPatrolRouteTo = guard;
-            gameObjects = DataAccess.loadLevel(1);
+
+            scene = new Scene();  // TODO: remove this when loading a level or game
+
+        //    loadLevel();
 
             gameObjects.Add(guard);
 
             //   gameObjects = DataAccess.loadSaveGame("10/3/2016 12:00:00 AM");
             //     DataAccess.saveGame(gameObjects);
             base.Initialize();
+        }
+
+        private static void loadLevel()
+        {
+            DataAccess.LoadResult loadResult = DataAccess.loadLevel(3);
+            gameObjects = loadResult.gameObjects;
+            scene = loadResult.scene;
         }
 
         protected override void LoadContent()
@@ -70,14 +84,13 @@ namespace PowCamp
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                DataAccess.saveLevel(gameObjects, "level1");
+                DataAccess.saveLevel(gameObjects, "level1", scene);
                 Exit();
             }
             // TODO: Add your update logic here
             // TODO: play audio here
             previousMouseState = currentMouseState;
             currentMouseState = Mouse.GetState();
-
 
             if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
             {
@@ -88,8 +101,8 @@ namespace PowCamp
                 isLeftMouseClicked = false;
             }
 
-            Prisoner.update(gameTime );
-            Guard.update(gameTime);
+            Prisoners.update(gameTime );
+          //  Guards.update(gameTime);
 
             UserInterface.update();
             Animations.update(gameTime);

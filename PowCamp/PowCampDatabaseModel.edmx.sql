@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/21/2016 13:56:50
+-- Date Created: 10/22/2016 10:04:53
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -166,7 +166,9 @@ GO
 
 -- Creating table 'Scenes'
 CREATE TABLE [dbo].[Scenes] (
-    [Id] int IDENTITY(1,1) NOT NULL
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [timeSinceLastPrisonerSpawn] real  NOT NULL,
+    [timeToNextPrisonerSpawn] real  NOT NULL
 );
 GO
 
@@ -277,15 +279,6 @@ CREATE TABLE [dbo].[Orientations] (
 );
 GO
 
--- Creating table 'Globals'
-CREATE TABLE [dbo].[Globals] (
-    [Id] int IDENTITY(1,1) NOT NULL,
-    [timeSinceLastPrisonerSpawn] real  NOT NULL,
-    [timeToNextPrisonerSpawn] real  NOT NULL,
-    [Scene_Id] int  NOT NULL
-);
-GO
-
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -389,12 +382,6 @@ GO
 -- Creating primary key on [Id] in table 'Orientations'
 ALTER TABLE [dbo].[Orientations]
 ADD CONSTRAINT [PK_Orientations]
-    PRIMARY KEY CLUSTERED ([Id] ASC);
-GO
-
--- Creating primary key on [Id] in table 'Globals'
-ALTER TABLE [dbo].[Globals]
-ADD CONSTRAINT [PK_Globals]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -625,21 +612,6 @@ GO
 CREATE INDEX [IX_FK_OrientationGameObject]
 ON [dbo].[Orientations]
     ([GameObject_Id]);
-GO
-
--- Creating foreign key on [Scene_Id] in table 'Globals'
-ALTER TABLE [dbo].[Globals]
-ADD CONSTRAINT [FK_GlobalScene]
-    FOREIGN KEY ([Scene_Id])
-    REFERENCES [dbo].[Scenes]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_GlobalScene'
-CREATE INDEX [IX_FK_GlobalScene]
-ON [dbo].[Globals]
-    ([Scene_Id]);
 GO
 
 -- --------------------------------------------------

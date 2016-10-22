@@ -17,15 +17,18 @@ namespace PowCamp
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Scene()
         {
+            this.timeSinceLastPrisonerSpawn = 99999F;
+            this.timeToNextPrisonerSpawn = 3F;
             this.InstantiatedGameObjects = new HashSet<InstantiatedGameObject>();
         }
     
         public int Id { get; set; }
+        public float timeSinceLastPrisonerSpawn { get; set; }
+        public float timeToNextPrisonerSpawn { get; set; }
     
         public virtual SaveGame SaveGame { get; set; }
         public virtual Level Level { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InstantiatedGameObject> InstantiatedGameObjects { get; set; }
-        public virtual Global Global { get; set; }
     }
 }

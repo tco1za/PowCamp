@@ -146,8 +146,7 @@ namespace PowCamp
             guardToAssignPatrolRouteTo.PatrolRoute.endCellX = endPointOfTrace.X;
             guardToAssignPatrolRouteTo.PatrolRoute.endCellY = endPointOfTrace.Y;
             guardToAssignPatrolRouteTo.PatrolRoute.targetCellIndex = 0;
-            guardToAssignPatrolRouteTo.ScreenCoord.x = convertCellCoordsToVirtualScreenCoords(firstPointOfTrace).X + cellWidth / 2;
-            guardToAssignPatrolRouteTo.ScreenCoord.y = convertCellCoordsToVirtualScreenCoords(firstPointOfTrace).Y + cellWidth / 2;
+            PatrolRoutes.placeGameObjectOnFirstCellOfRoute(guardToAssignPatrolRouteTo);
         }
 
         private static PatrolRoute createPatrolRouteObjectFromCurrentTrace()

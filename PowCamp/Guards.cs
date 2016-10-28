@@ -13,11 +13,7 @@ namespace PowCamp
     {
         private static float movementSpeed = 60f;
 
-        private static bool isValuesClose(double val1, double val2)  // TODO: move to helper class
-        {
-            double threshold = 0.1f;
-            return (Math.Abs(val1 - val2) < threshold);
-        } 
+ 
 
         private static float moveGuardSpecifiedDistanceTowardsTargetCell(GameObject guard, float distanceToTravelThisFrame, List<Point> cellsVisitedAlongPatrolRoute)
         {
@@ -42,10 +38,10 @@ namespace PowCamp
             guard.Orientation.x = vecToTravelThisFrame.X;
             guard.Orientation.y = vecToTravelThisFrame.Y;
 
-            if (isValuesClose(guard.ScreenCoord.x, (double)targetX) && isValuesClose(guard.ScreenCoord.y, (double)targetY))
+            if (MyMathHelper.isValuesClose(guard.ScreenCoord.x, (double)targetX) && MyMathHelper.isValuesClose(guard.ScreenCoord.y, (double)targetY))
             {
-                guard.ScreenCoord.x = (double)targetX;
-                guard.ScreenCoord.y = (double)targetY;
+                guard.ScreenCoord.x = targetX;
+                guard.ScreenCoord.y = targetY;
                 determineNewTargetIndexInPatrolRoute(guard, cellsVisitedAlongPatrolRoute);
             }
             return distanceLeftOver;
@@ -95,7 +91,7 @@ namespace PowCamp
 
         public static void update(GameTime gameTime)
         {
-            List<GameObject> guards = Game.gameObjects.Where(item => item.GameObjectType.enumValue == GameObjectTypeEnum.guard || item.GameObjectType.enumValue == GameObjectTypeEnum.prisoner).ToList();
+            List<GameObject> guards = Game.gameObjects.Where(item => item.GameObjectType.enumValue == GameObjectTypeEnum.guard).ToList();
             foreach ( GameObject guard in guards )
             {
                 followPatrolRoute(guard, gameTime);

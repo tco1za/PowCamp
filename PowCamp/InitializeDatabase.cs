@@ -102,8 +102,10 @@ namespace PowCamp
                 newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.prisoner;
                 newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
                 newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.prisonerWalk).FirstOrDefault() };
-                newGameObjectType.ScreenCoord = new ScreenCoord();
-                newGameObjectType.PatrolRoute = new PatrolRoute();
+                newGameObjectType.ScreenCoord = new ScreenCoord() { x = 0, y = 0 };
+                newGameObjectType.Orientation = new Orientation();
+                newGameObjectType.TargetScreenCoord = new TargetScreenCoord();
+                newGameObjectType.TargetPathIndex = new TargetPathIndex();
                 DataAccess.db.GameObjects.Add(newGameObjectType);
 
                 DataAccess.db.SaveChanges();

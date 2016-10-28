@@ -27,5 +27,8 @@ namespace PowCamp
         public virtual PatrolRoute PatrolRoute { get; set; }
         public virtual CellPartition CellPartition { get; set; }
         public virtual Orientation Orientation { get; set; }
+        public virtual TargetScreenCoord TargetScreenCoord { get; set; }
+        public virtual PrevScreenCoord PrevScreenCoord { get; set; }
+        public virtual TargetPathIndex TargetPathIndex { get; set; }
     }
 }

@@ -12,11 +12,11 @@ namespace PowCamp
     using System;
     using System.Collections.Generic;
     
-    public partial class ScreenCoord
+    public partial class TargetPathIndex
     {
         public int Id { get; set; }
-        public float x { get; set; }
-        public float y { get; set; }
+        public int x { get; set; }
+        public int y { get; set; }
     
         public virtual GameObject GameObject { get; set; }
     }

@@ -62,14 +62,26 @@
     </Compile>
     <Compile Include="DataAccess.cs" />
     <Compile Include="Guards.cs" />
+    <Compile Include="MyMathHelper.cs" />
     <Compile Include="Orientation.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="PathFindingGraph.cs" />
     <Compile Include="PatrolRoute.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="PatrolRoutes.cs" />
+    <Compile Include="PrevScreenCoord.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Prisoners.cs" />
+    <Compile Include="TargetPathIndex.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TargetScreenCoord.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Velocities.cs" />
     <Compile Include="Walls.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs">
@@ -138,6 +150,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
@@ -174,6 +187,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AStar\AStar.csproj">
+      <Project>{33f0d9ea-c2f0-40cc-976b-3a590fb16fae}</Project>
+      <Name>AStar</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

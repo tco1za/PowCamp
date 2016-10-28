@@ -32,14 +32,16 @@ namespace PowCamp
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-            //    graphics.PreferredBackBufferWidth = 800;
-            //   graphics.PreferredBackBufferHeight = 600;
+            //graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            //graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                graphics.PreferredBackBufferWidth = 1380;
+               graphics.PreferredBackBufferHeight = 700;
             //    graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             randomNumberGenerator = new Random();
+
+            PathFindingGraph.initialize();
 
             InitializeDatabase.createGameObjectTypes();
 
@@ -50,7 +52,7 @@ namespace PowCamp
 
             scene = new Scene();  // TODO: remove this when loading a level or game
 
-        //    loadLevel();
+       //     loadLevel();
 
             gameObjects.Add(guard);
 
@@ -61,7 +63,7 @@ namespace PowCamp
 
         private static void loadLevel()
         {
-            DataAccess.LoadResult loadResult = DataAccess.loadLevel(3);
+            DataAccess.LoadResult loadResult = DataAccess.loadLevel(1);
             gameObjects = loadResult.gameObjects;
             scene = loadResult.scene;
         }
@@ -101,8 +103,9 @@ namespace PowCamp
                 isLeftMouseClicked = false;
             }
 
-            Prisoners.update(gameTime );
-          //  Guards.update(gameTime);
+            Prisoners.update(gameTime);
+            Guards.update(gameTime);
+            Velocities.update(gameTime);
 
             UserInterface.update();
             Animations.update(gameTime);
@@ -112,10 +115,7 @@ namespace PowCamp
             base.Update(gameTime);
         }
 
-        public static float convertVectorToAngleOfRotation( float x, float y) // TODO: move this to helper class
-        {
-            return (float)Math.Atan2(y,x);
-        }
+ 
 
         public static void drawGameObject(SpriteBatch spriteBatch, GameObject gameObject)
         {
@@ -132,7 +132,7 @@ namespace PowCamp
                     new Vector2((float)gameObject.ScreenCoord.x,
                         (float)gameObject.ScreenCoord.y),
                     Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation),
-                    Color.White, convertVectorToAngleOfRotation(gameObject.Orientation.x, gameObject.Orientation.y),
+                    Color.White, MyMathHelper.convertVectorToAngleOfRotation(gameObject.Orientation.x, gameObject.Orientation.y),
                     new Vector2(gameObject.CurrentAnimation.Animation.frameWidth / 2, gameObject.CurrentAnimation.Animation.frameHeight / 2), 1f, SpriteEffects.None, 1f);
             }
         }
@@ -150,9 +150,14 @@ namespace PowCamp
 
         private bool isGameObjectSpriteVisibleOnscreen(GameObject gameObject )
         {
-            if ( gameObject.ScreenCoord.x > UserInterface.virtualScreenWidth || gameObject.ScreenCoord.x < 0
-                || gameObject.ScreenCoord.y > UserInterface.virtualScreenHeight + 150 || gameObject.ScreenCoord.y < -150)
-            
+            Point coordinateOfBottomRightMostOffscreenCell = UserInterface.convertCellCoordsToVirtualScreenCoords(
+                    new Point(UserInterface.getNumHorizontalCells() + 1, UserInterface.getNumVerticalCells() + 1));
+            Point coordinateOfTopLeftMostOffscreenCell = UserInterface.convertCellCoordsToVirtualScreenCoords(
+                    new Point(-1, -1));
+            if ( gameObject.ScreenCoord.x >= coordinateOfBottomRightMostOffscreenCell.X + UserInterface.cellWidth/2 ||
+                gameObject.ScreenCoord.x <= coordinateOfTopLeftMostOffscreenCell.X + UserInterface.cellWidth / 2 ||
+                gameObject.ScreenCoord.y >= coordinateOfBottomRightMostOffscreenCell.Y + UserInterface.cellWidth / 2  ||
+                gameObject.ScreenCoord.y <= coordinateOfTopLeftMostOffscreenCell.Y + UserInterface.cellWidth / 2)  
             {
                 return false;
             }
@@ -179,7 +184,10 @@ namespace PowCamp
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, UserInterface.GetScaleMatrix());
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
 
-            Walls.draw(gameObjects, spriteBatch);
+            //    Walls.draw(gameObjects, spriteBatch);
+
+            gameObjects.ForEach(a => drawGameObject(spriteBatch, a));
+
             UserInterface.draw(spriteBatch);
          
             spriteBatch.End();

@@ -10,7 +10,7 @@ namespace PowCamp
 {
     class Walls
     {
-        private static Point convertVirtualScreenCoordsToPartitionIndices( Point point )
+        public static Point convertVirtualScreenCoordsToPartitionIndices( Point point )
         {
             Point cellCoords = UserInterface.convertVirtualScreenCoordsToCellCoords(point);
             int indexX = cellCoords.X * 2;
@@ -26,7 +26,7 @@ namespace PowCamp
             return new Point( indexX, indexY );
         }
 
-        private static int determineWallOrientation(int partitionXindex)
+        public static int determineWallOrientation(int partitionXindex)
         {
             return 1-(partitionXindex % 2);
         }

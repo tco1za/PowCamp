@@ -12,7 +12,7 @@ namespace PowCamp
     using System;
     using System.Collections.Generic;
     
-    public partial class ScreenCoord
+    public partial class TargetScreenCoord
     {
         public int Id { get; set; }
         public float x { get; set; }

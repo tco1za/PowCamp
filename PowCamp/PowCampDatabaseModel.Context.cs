@@ -42,5 +42,8 @@ namespace PowCamp
         public virtual DbSet<PatrolRoute> PatrolRoutes { get; set; }
         public virtual DbSet<CellPartition> CellPartitions { get; set; }
         public virtual DbSet<Orientation> Orientations { get; set; }
+        public virtual DbSet<TargetScreenCoord> TargetScreenCoords { get; set; }
+        public virtual DbSet<PrevScreenCoord> PrevScreenCoords { get; set; }
+        public virtual DbSet<TargetPathIndex> TargetPathIndexes { get; set; }
     }
 }

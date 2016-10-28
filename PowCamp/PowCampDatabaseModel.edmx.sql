@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/22/2016 10:04:53
+-- Date Created: 10/27/2016 19:46:55
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -62,6 +62,15 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_OrientationGameObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Orientations] DROP CONSTRAINT [FK_OrientationGameObject];
 GO
+IF OBJECT_ID(N'[dbo].[FK_TargetScreenCoordGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[TargetScreenCoords] DROP CONSTRAINT [FK_TargetScreenCoordGameObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PrevScreenCoordGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[PrevScreenCoords] DROP CONSTRAINT [FK_PrevScreenCoordGameObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_TargetPathIndexGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[TargetPathIndexes] DROP CONSTRAINT [FK_TargetPathIndexGameObject];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -118,6 +127,15 @@ GO
 IF OBJECT_ID(N'[dbo].[Orientations]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Orientations];
 GO
+IF OBJECT_ID(N'[dbo].[TargetScreenCoords]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[TargetScreenCoords];
+GO
+IF OBJECT_ID(N'[dbo].[PrevScreenCoords]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[PrevScreenCoords];
+GO
+IF OBJECT_ID(N'[dbo].[TargetPathIndexes]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[TargetPathIndexes];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -149,8 +167,8 @@ GO
 -- Creating table 'ScreenCoords'
 CREATE TABLE [dbo].[ScreenCoords] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [x] float  NOT NULL,
-    [y] float  NOT NULL,
+    [x] real  NOT NULL,
+    [y] real  NOT NULL,
     [GameObject_Id] int  NOT NULL
 );
 GO
@@ -279,6 +297,33 @@ CREATE TABLE [dbo].[Orientations] (
 );
 GO
 
+-- Creating table 'TargetScreenCoords'
+CREATE TABLE [dbo].[TargetScreenCoords] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [x] real  NOT NULL,
+    [y] real  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'PrevScreenCoords'
+CREATE TABLE [dbo].[PrevScreenCoords] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [x] real  NOT NULL,
+    [y] real  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'TargetPathIndexes'
+CREATE TABLE [dbo].[TargetPathIndexes] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [x] int  NOT NULL,
+    [y] int  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -382,6 +427,24 @@ GO
 -- Creating primary key on [Id] in table 'Orientations'
 ALTER TABLE [dbo].[Orientations]
 ADD CONSTRAINT [PK_Orientations]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'TargetScreenCoords'
+ALTER TABLE [dbo].[TargetScreenCoords]
+ADD CONSTRAINT [PK_TargetScreenCoords]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'PrevScreenCoords'
+ALTER TABLE [dbo].[PrevScreenCoords]
+ADD CONSTRAINT [PK_PrevScreenCoords]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'TargetPathIndexes'
+ALTER TABLE [dbo].[TargetPathIndexes]
+ADD CONSTRAINT [PK_TargetPathIndexes]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -611,6 +674,51 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_OrientationGameObject'
 CREATE INDEX [IX_FK_OrientationGameObject]
 ON [dbo].[Orientations]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'TargetScreenCoords'
+ALTER TABLE [dbo].[TargetScreenCoords]
+ADD CONSTRAINT [FK_TargetScreenCoordGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_TargetScreenCoordGameObject'
+CREATE INDEX [IX_FK_TargetScreenCoordGameObject]
+ON [dbo].[TargetScreenCoords]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'PrevScreenCoords'
+ALTER TABLE [dbo].[PrevScreenCoords]
+ADD CONSTRAINT [FK_PrevScreenCoordGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_PrevScreenCoordGameObject'
+CREATE INDEX [IX_FK_PrevScreenCoordGameObject]
+ON [dbo].[PrevScreenCoords]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'TargetPathIndexes'
+ALTER TABLE [dbo].[TargetPathIndexes]
+ADD CONSTRAINT [FK_TargetPathIndexGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_TargetPathIndexGameObject'
+CREATE INDEX [IX_FK_TargetPathIndexGameObject]
+ON [dbo].[TargetPathIndexes]
     ([GameObject_Id]);
 GO
 

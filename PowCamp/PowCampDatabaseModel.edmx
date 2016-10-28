@@ -23,6 +23,9 @@
     <EntitySet Name="PatrolRoutes" EntityType="PowCampDatabaseModel.Store.PatrolRoutes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="CellPartitions" EntityType="PowCampDatabaseModel.Store.CellPartitions" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Orientations" EntityType="PowCampDatabaseModel.Store.Orientations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TargetScreenCoords" EntityType="PowCampDatabaseModel.Store.TargetScreenCoords" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PrevScreenCoords" EntityType="PowCampDatabaseModel.Store.PrevScreenCoords" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TargetPathIndexes" EntityType="PowCampDatabaseModel.Store.TargetPathIndexes" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -83,6 +86,18 @@
       <End Role="Orientation" EntitySet="Orientations" />
       <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
+    <AssociationSet Name="TargetScreenCoordGameObject" Association="PowCampDatabaseModel.Store.TargetScreenCoordGameObject">
+      <End Role="TargetScreenCoord" EntitySet="TargetScreenCoords" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="PrevScreenCoordGameObject" Association="PowCampDatabaseModel.Store.PrevScreenCoordGameObject">
+      <End Role="PrevScreenCoord" EntitySet="PrevScreenCoords" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="TargetPathIndexGameObject" Association="PowCampDatabaseModel.Store.TargetPathIndexGameObject">
+      <End Role="TargetPathIndex" EntitySet="TargetPathIndexes" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="GameObjects">
     <Key>
@@ -112,8 +127,8 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="x" Type="float" Nullable="false" DefaultValue="0" />
-    <Property Name="y" Type="float" Nullable="false" DefaultValue="0" />
+    <Property Name="x" Type="real" Nullable="false" />
+    <Property Name="y" Type="real" Nullable="false" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="CellCoords">
@@ -131,7 +146,7 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="timeSinceLastPrisonerSpawn" Type="real" Nullable="false" DefaultValue="99999" />
-    <Property Name="timeToNextPrisonerSpawn" Type="real" Nullable="false" DefaultValue="3" />
+    <Property Name="timeToNextPrisonerSpawn" Type="real" Nullable="false" DefaultValue="50" />
   </EntityType>
   <EntityType Name="ComponentDependencies">
     <Key>
@@ -238,6 +253,33 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="x" Type="real" Nullable="false" />
     <Property Name="y" Type="real" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TargetScreenCoords">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="x" Type="real" Nullable="false" />
+    <Property Name="y" Type="real" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PrevScreenCoords">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="x" Type="real" Nullable="false" />
+    <Property Name="y" Type="real" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TargetPathIndexes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="x" Type="int" Nullable="false" />
+    <Property Name="y" Type="int" Nullable="false" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
@@ -420,6 +462,42 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="TargetScreenCoordGameObject">
+    <End Role="TargetScreenCoord" Type="PowCampDatabaseModel.Store.TargetScreenCoords" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TargetScreenCoord">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PrevScreenCoordGameObject">
+    <End Role="PrevScreenCoord" Type="PowCampDatabaseModel.Store.PrevScreenCoords" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="PrevScreenCoord">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="TargetPathIndexGameObject">
+    <End Role="TargetPathIndex" Type="PowCampDatabaseModel.Store.TargetPathIndexes" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TargetPathIndex">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -502,6 +580,21 @@
             <End Role="Orientation" EntitySet="Orientations" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
+          <EntitySet Name="TargetScreenCoords" EntityType="PowCampDatabaseModel.TargetScreenCoord" />
+          <AssociationSet Name="TargetScreenCoordGameObject" Association="PowCampDatabaseModel.TargetScreenCoordGameObject">
+            <End Role="TargetScreenCoord" EntitySet="TargetScreenCoords" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
+          <EntitySet Name="PrevScreenCoords" EntityType="PowCampDatabaseModel.PrevScreenCoord" />
+          <AssociationSet Name="PrevScreenCoordGameObject" Association="PowCampDatabaseModel.PrevScreenCoordGameObject">
+            <End Role="PrevScreenCoord" EntitySet="PrevScreenCoords" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
+          <EntitySet Name="TargetPathIndexes" EntityType="PowCampDatabaseModel.TargetPathIndex" />
+          <AssociationSet Name="TargetPathIndexGameObject" Association="PowCampDatabaseModel.TargetPathIndexGameObject">
+            <End Role="TargetPathIndex" EntitySet="TargetPathIndexes" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -519,6 +612,9 @@
           <NavigationProperty Name="PatrolRoute" Relationship="PowCampDatabaseModel.PatrolRouteGameObject" FromRole="GameObject" ToRole="PatrolRoute" />
           <NavigationProperty Name="CellPartition" Relationship="PowCampDatabaseModel.CellPartitionGameObject" FromRole="GameObject" ToRole="CellPartition" />
           <NavigationProperty Name="Orientation" Relationship="PowCampDatabaseModel.OrientationGameObject" FromRole="GameObject" ToRole="Orientation" />
+          <NavigationProperty Name="TargetScreenCoord" Relationship="PowCampDatabaseModel.TargetScreenCoordGameObject" FromRole="GameObject" ToRole="TargetScreenCoord" />
+          <NavigationProperty Name="PrevScreenCoord" Relationship="PowCampDatabaseModel.PrevScreenCoordGameObject" FromRole="GameObject" ToRole="PrevScreenCoord" />
+          <NavigationProperty Name="TargetPathIndex" Relationship="PowCampDatabaseModel.TargetPathIndexGameObject" FromRole="GameObject" ToRole="TargetPathIndex" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -550,8 +646,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="x" Type="Double" Nullable="false" DefaultValue="0" />
-          <Property Name="y" Type="Double" Nullable="false" DefaultValue="0" />
+          <Property Name="x" Type="Single" Nullable="false" />
+          <Property Name="y" Type="Single" Nullable="false" />
           <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.ScreenCoordGameObject" FromRole="ScreenCoord" ToRole="GameObject" />
         </EntityType>
         <Association Name="ScreenCoordGameObject">
@@ -754,6 +850,45 @@
           <End Type="PowCampDatabaseModel.Orientation" Role="Orientation" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
+        <EntityType Name="TargetScreenCoord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="x" Type="Single" Nullable="false" />
+          <Property Name="y" Type="Single" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.TargetScreenCoordGameObject" FromRole="TargetScreenCoord" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="TargetScreenCoordGameObject">
+          <End Type="PowCampDatabaseModel.TargetScreenCoord" Role="TargetScreenCoord" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="PrevScreenCoord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="x" Type="Single" Nullable="false" />
+          <Property Name="y" Type="Single" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.PrevScreenCoordGameObject" FromRole="PrevScreenCoord" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="PrevScreenCoordGameObject">
+          <End Type="PowCampDatabaseModel.PrevScreenCoord" Role="PrevScreenCoord" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="TargetPathIndex">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="x" Type="Int32" Nullable="false" />
+          <Property Name="y" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.TargetPathIndexGameObject" FromRole="TargetPathIndex" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="TargetPathIndexGameObject">
+          <End Type="PowCampDatabaseModel.TargetPathIndex" Role="TargetPathIndex" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -918,6 +1053,33 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="TargetScreenCoords">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.TargetScreenCoord)">
+        <MappingFragment StoreEntitySet="TargetScreenCoords">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="x" ColumnName="x" />
+          <ScalarProperty Name="y" ColumnName="y" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PrevScreenCoords">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.PrevScreenCoord)">
+        <MappingFragment StoreEntitySet="PrevScreenCoords">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="x" ColumnName="x" />
+          <ScalarProperty Name="y" ColumnName="y" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TargetPathIndexes">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.TargetPathIndex)">
+        <MappingFragment StoreEntitySet="TargetPathIndexes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="x" ColumnName="x" />
+          <ScalarProperty Name="y" ColumnName="y" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="GameObjectGameObjectType" TypeName="PowCampDatabaseModel.GameObjectGameObjectType" StoreEntitySet="GameObjects">
       <EndProperty Name="GameObjectType">
         <ScalarProperty Name="Id" ColumnName="GameObjectType_Id" />
@@ -1035,6 +1197,30 @@
         <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
       <EndProperty Name="Orientation">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="TargetScreenCoordGameObject" TypeName="PowCampDatabaseModel.TargetScreenCoordGameObject" StoreEntitySet="TargetScreenCoords">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="TargetScreenCoord">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PrevScreenCoordGameObject" TypeName="PowCampDatabaseModel.PrevScreenCoordGameObject" StoreEntitySet="PrevScreenCoords">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="PrevScreenCoord">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="TargetPathIndexGameObject" TypeName="PowCampDatabaseModel.TargetPathIndexGameObject" StoreEntitySet="TargetPathIndexes">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="TargetPathIndex">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

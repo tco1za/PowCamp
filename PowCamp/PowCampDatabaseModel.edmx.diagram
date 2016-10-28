@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="5dbfd7e727d84f73976845f8d13eabce" Name="Diagram1" DisplayType="true" ZoomLevel="109" >
-        <EntityTypeShape EntityType="PowCampDatabaseModel.GameObject" Width="2" PointX="10.625" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.GameObject" Width="2" PointX="10.5" PointY="0.625" IsExpanded="true" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.GameObjectType" Width="2.125" PointX="10.5" PointY="5.25" />
         <AssociationConnector Association="PowCampDatabaseModel.GameObjectGameObjectType" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.InstantiatedGameObject" Width="2" PointX="7.75" PointY="4" />
@@ -37,6 +37,12 @@
         <AssociationConnector Association="PowCampDatabaseModel.CellPartitionGameObject" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.Orientation" Width="1.5" PointX="3.5" PointY="1.875" />
         <AssociationConnector Association="PowCampDatabaseModel.OrientationGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.TargetScreenCoord" Width="1.5" PointX="1.375" PointY="1.875" />
+        <AssociationConnector Association="PowCampDatabaseModel.TargetScreenCoordGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.PrevScreenCoord" Width="1.5" PointX="1.875" PointY="4" />
+        <AssociationConnector Association="PowCampDatabaseModel.PrevScreenCoordGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.TargetPathIndex" Width="1.5" PointX="3.5" PointY="6.375" />
+        <AssociationConnector Association="PowCampDatabaseModel.TargetPathIndexGameObject" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

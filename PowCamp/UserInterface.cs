@@ -18,7 +18,7 @@ namespace PowCamp
         public static int sidePanelWidth = 204;
         private enum State { neutral , placingWall, tracingPatrolRoute, deletingWall };
         private enum TracingState { beforePointsSelected, firstCellSelected, middleCellSelected, endCellSelected };
-        private static State currentState = State.tracingPatrolRoute;
+        private static State currentState = State.placingWall;
         private static TracingState currentTraceState = TracingState.beforePointsSelected;
         private static Point firstPointOfTrace;
         private static Point middlePointOfTrace;

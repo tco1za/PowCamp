@@ -287,6 +287,7 @@ namespace PowCamp
             if (currentTraceState == TracingState.endCellSelected)
             {
                 Game.gameObjects.AddRange(wallObjects);  // TODO: move this to update method
+                wallObjects.ForEach(a => PathFindingGraph.addWall(a));
                 currentState = State.neutral;
             }
         }

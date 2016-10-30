@@ -183,15 +183,10 @@ namespace PowCamp
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, UserInterface.GetScaleMatrix());
             spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
-
-            //    Walls.draw(gameObjects, spriteBatch);
-
-            gameObjects.ForEach(a => drawGameObject(spriteBatch, a));
-
+            Walls.draw(gameObjects, spriteBatch);
+            gameObjects.Where(a => a.CellPartition == null && a.ScreenCoord != null && a.CurrentAnimation != null).ToList().ForEach(a => drawGameObject(spriteBatch, a));
             UserInterface.draw(spriteBatch);
-         
             spriteBatch.End();
-
             base.Draw(gameTime);
         }
     }

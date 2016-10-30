@@ -276,6 +276,8 @@ namespace PowCamp
                 GameObject newWall = DataAccess.fetchGameObjectFromPool(GameObjectTypeEnum.concreteWall);
                 newWall.CellPartition.partitionMidPointX = partitionMidPoint.X;
                 newWall.CellPartition.partitionMidPointY = partitionMidPoint.Y;
+                newWall.ScreenCoord.x = partitionMidPoint.X;
+                newWall.ScreenCoord.y = partitionMidPoint.Y;
                 wallObjects.Add(newWall);
             }
             Walls.draw(wallObjects, spriteBatch);

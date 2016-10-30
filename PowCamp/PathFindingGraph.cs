@@ -44,45 +44,81 @@ namespace PowCamp
             }
         }
 
+        private static void addHorizontalWall(GameObject wall)
+        {
+            Point cellCoordOfHorizontalWall = UserInterface.convertVirtualScreenCoordsToCellCoords(new Point(wall.CellPartition.partitionMidPointX, wall.CellPartition.partitionMidPointY));
+            Point upCoord = new Point(cellCoordOfHorizontalWall.X, cellCoordOfHorizontalWall.Y - 1);
+            Point downCoord = new Point(cellCoordOfHorizontalWall.X, cellCoordOfHorizontalWall.Y);
+            Point rightDownCoord = new Point(cellCoordOfHorizontalWall.X + 1, cellCoordOfHorizontalWall.Y);
+            Point rightUpCoord = new Point(cellCoordOfHorizontalWall.X + 1, cellCoordOfHorizontalWall.Y - 1);
+            Point leftDownCoord = new Point(cellCoordOfHorizontalWall.X - 1, cellCoordOfHorizontalWall.Y);
+            Point leftUpCoord = new Point(cellCoordOfHorizontalWall.X - 1, cellCoordOfHorizontalWall.Y - 1);
+            int upIndex = convertCellCoordToNodeIndex(upCoord);
+            int downIndex = convertCellCoordToNodeIndex(downCoord);
+            int rightDownIndex = convertCellCoordToNodeIndex(rightDownCoord);
+            int rightUpIndex = convertCellCoordToNodeIndex(rightUpCoord);
+            int leftDownIndex = convertCellCoordToNodeIndex(leftDownCoord);
+            int leftUpIndex = convertCellCoordToNodeIndex(leftUpCoord);
+            List<Tuple<int, int>> arcsToRemove = new List<Tuple<int, int>>();
+            if (isCoordValid(upCoord) && isCoordValid(rightDownCoord)) arcsToRemove.Add(new Tuple<int, int>(upIndex, rightDownIndex));
+            if (isCoordValid(upCoord) && isCoordValid(leftDownCoord)) arcsToRemove.Add(new Tuple<int, int>(upIndex, leftDownIndex));
+            if (isCoordValid(upCoord) && isCoordValid(leftDownCoord)) arcsToRemove.Add(new Tuple<int, int>(leftDownIndex, upIndex));
+            if (isCoordValid(upCoord) && isCoordValid(rightDownCoord)) arcsToRemove.Add(new Tuple<int, int>(rightDownIndex, upIndex));
+            if (isCoordValid(downCoord) && isCoordValid(rightUpCoord)) arcsToRemove.Add(new Tuple<int, int>(downIndex, rightUpIndex));
+            if (isCoordValid(downCoord) && isCoordValid(leftUpCoord)) arcsToRemove.Add(new Tuple<int, int>(downIndex, leftUpIndex));
+            if (isCoordValid(downCoord) && isCoordValid(rightUpCoord)) arcsToRemove.Add(new Tuple<int, int>(rightUpIndex, downIndex));
+            if (isCoordValid(downCoord) && isCoordValid(leftUpCoord)) arcsToRemove.Add(new Tuple<int, int>(leftUpIndex, downIndex));
+            removeArcs(arcsToRemove);
+        }
+
+        private static void removeArcs(List<Tuple<int, int>> arcsToRemove)
+        {
+            foreach (Tuple<int, int> arcTuple in arcsToRemove)
+            {
+                if (arcTuple.Item1 >= 0 && arcTuple.Item1 < graph.Nodes.Count && arcTuple.Item2 >= 0 && arcTuple.Item2 < graph.Nodes.Count)
+                {
+                    ((Arc)graph.Arcs[arcsLookupTable[arcTuple.Item1, arcTuple.Item2]]).Passable = false;
+                }
+            }
+        }
+
         public static void addWall( GameObject wall )
         {
-            Point cellCoordOfVerticalWall = UserInterface.convertVirtualScreenCoordsToCellCoords(new Point(wall.CellPartition.partitionMidPointX, wall.CellPartition.partitionMidPointY));
+            if (Walls.isWallHorizontal(wall))
+            {
+                addHorizontalWall(wall);
+            }
+            else
+            {
+                addVerticalWall(wall);
+            }
+        }
 
+        private static void addVerticalWall(GameObject wall)
+        {
+            Point cellCoordOfVerticalWall = UserInterface.convertVirtualScreenCoordsToCellCoords(new Point(wall.CellPartition.partitionMidPointX, wall.CellPartition.partitionMidPointY));
             Point rightCoord = new Point(cellCoordOfVerticalWall.X, cellCoordOfVerticalWall.Y);
-            Point leftCoord = new Point(cellCoordOfVerticalWall.X-1, cellCoordOfVerticalWall.Y);
+            Point leftCoord = new Point(cellCoordOfVerticalWall.X - 1, cellCoordOfVerticalWall.Y);
             Point rightDownCoord = new Point(cellCoordOfVerticalWall.X, cellCoordOfVerticalWall.Y + 1);
             Point rightUpCoord = new Point(cellCoordOfVerticalWall.X, cellCoordOfVerticalWall.Y - 1);
             Point leftDownCoord = new Point(cellCoordOfVerticalWall.X - 1, cellCoordOfVerticalWall.Y + 1);
             Point leftUpCoord = new Point(cellCoordOfVerticalWall.X - 1, cellCoordOfVerticalWall.Y - 1);
-
             int rightIndex = convertCellCoordToNodeIndex(rightCoord);
             int leftIndex = convertCellCoordToNodeIndex(leftCoord);
             int rightDownIndex = convertCellCoordToNodeIndex(rightDownCoord);
             int rightUpIndex = convertCellCoordToNodeIndex(rightUpCoord);
             int leftDownIndex = convertCellCoordToNodeIndex(leftDownCoord);
             int leftUpIndex = convertCellCoordToNodeIndex(leftUpCoord);
-
             List<Tuple<int, int>> arcsToRemove = new List<Tuple<int, int>>();
-
             if (isCoordValid(rightCoord) && isCoordValid(leftUpCoord)) arcsToRemove.Add(new Tuple<int, int>(rightIndex, leftUpIndex));
             if (isCoordValid(rightCoord) && isCoordValid(leftDownCoord)) arcsToRemove.Add(new Tuple<int, int>(rightIndex, leftDownIndex));
-
             if (isCoordValid(rightCoord) && isCoordValid(leftUpCoord)) arcsToRemove.Add(new Tuple<int, int>(leftUpIndex, rightIndex));
             if (isCoordValid(rightCoord) && isCoordValid(leftDownCoord)) arcsToRemove.Add(new Tuple<int, int>(leftDownIndex, rightIndex));
-
             if (isCoordValid(leftCoord) && isCoordValid(rightUpCoord)) arcsToRemove.Add(new Tuple<int, int>(leftIndex, rightUpIndex));
             if (isCoordValid(leftCoord) && isCoordValid(rightDownCoord)) arcsToRemove.Add(new Tuple<int, int>(leftIndex, rightDownIndex));
-
             if (isCoordValid(leftCoord) && isCoordValid(rightUpCoord)) arcsToRemove.Add(new Tuple<int, int>(rightUpIndex, leftIndex));
             if (isCoordValid(leftCoord) && isCoordValid(rightDownCoord)) arcsToRemove.Add(new Tuple<int, int>(rightDownIndex, leftIndex));
-
-            foreach ( Tuple<int,int> arcTuple in arcsToRemove )
-            {
-                if ( arcTuple.Item1 >= 0 && arcTuple.Item1 < graph.Nodes.Count && arcTuple.Item2 >= 0 && arcTuple.Item2 < graph.Nodes.Count )
-                {
-                    ((Arc)graph.Arcs[arcsLookupTable[arcTuple.Item1, arcTuple.Item2]]).Passable = false;
-                }
-            }
+            removeArcs(arcsToRemove);
         }
 
         private static void initializeGraphEdgeIndices()

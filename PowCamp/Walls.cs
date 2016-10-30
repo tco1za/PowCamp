@@ -31,6 +31,11 @@ namespace PowCamp
             return 1-(partitionXindex % 2);
         }
 
+        public static bool isWallHorizontal( GameObject wall )
+        {
+            return ((wall.CellPartition.partitionMidPointX - UserInterface.sidePanelWidth) % UserInterface.cellWidth) > 0;
+        }
+
         public static void draw(List<GameObject> gameObjects, SpriteBatch spriteBatch)
         {
             List<GameObject>[,] partitionIndexGrid = new List<GameObject>[UserInterface.getNumVerticalCells() * 2, UserInterface.getNumHorizontalCells() * 2];

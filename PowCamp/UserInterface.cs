@@ -18,7 +18,7 @@ namespace PowCamp
         public static int sidePanelWidth = 204;
         private enum State { neutral , placingWall, tracingPatrolRoute, deletingWall };
         private enum TracingState { beforePointsSelected, firstCellSelected, middleCellSelected, endCellSelected };
-        private static State currentState = State.placingWall;
+        private static State currentState = State.tracingPatrolRoute;
         private static TracingState currentTraceState = TracingState.beforePointsSelected;
         private static Point firstPointOfTrace;
         private static Point middlePointOfTrace;
@@ -26,6 +26,15 @@ namespace PowCamp
         private static Point mousePosition;
         private static GameObject builderGlyphObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCellCornerGlyph).FirstOrDefault();
         public static GameObject guardToAssignPatrolRouteTo;
+        private static GameObject redWall;
+        private static GameObject greenWall;
+
+
+        public static void initialize()
+        {
+            redWall = DataAccess.instantiateEntity(GameObjectTypeEnum.redWall);
+            greenWall = DataAccess.instantiateEntity(GameObjectTypeEnum.greenWall);
+        }
 
         public static Point convertScreenPointToVirtualScreenPoint(Point point)
         {
@@ -146,6 +155,10 @@ namespace PowCamp
             guardToAssignPatrolRouteTo.PatrolRoute.endCellX = endPointOfTrace.X;
             guardToAssignPatrolRouteTo.PatrolRoute.endCellY = endPointOfTrace.Y;
             guardToAssignPatrolRouteTo.PatrolRoute.targetCellIndex = 0;
+            guardToAssignPatrolRouteTo.Guard.state = GuardState.patrolling;
+            guardToAssignPatrolRouteTo.Guard.patrolState = GuardPatrollingState.walking;
+            guardToAssignPatrolRouteTo.Orientation.x = 1;
+            guardToAssignPatrolRouteTo.Orientation.y = 0;
             PatrolRoutes.placeGameObjectOnFirstCellOfRoute(guardToAssignPatrolRouteTo);
         }
 
@@ -261,35 +274,47 @@ namespace PowCamp
             Point cellThatMouseIsIn = UserInterface.convertVirtualScreenCoordsToCellCoords(mousePosition);
             List<Point> cellsToVisitAlongTrace = buildListOfCellsVisitedAlongTrace(createPatrolRouteObjectFromCurrentTrace());
 
-            foreach (Point cell in cellsToVisitAlongTrace)
-            {
-                Point builderGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
-                builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X;
-                builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y;
-                Game.drawGameObject(spriteBatch, builderGlyphObject);
-            }
+            Point builderGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cellsToVisitAlongTrace[0]);
+            builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X;
+            builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y;
+            Game.drawGameObject(spriteBatch, builderGlyphObject);
 
-            List<GameObject> wallObjects = new List<GameObject>();
             List<Point> distinctPartitions = removeDuplicatesCellPartitionList(extractPartitionsFromTracedCellCenters(cellsToVisitAlongTrace));
+
             foreach (Point partitionMidPoint in distinctPartitions)
             {
-                GameObject newWall = DataAccess.fetchGameObjectFromPool(GameObjectTypeEnum.concreteWall);
-                newWall.CellPartition.partitionMidPointX = partitionMidPoint.X;
-                newWall.CellPartition.partitionMidPointY = partitionMidPoint.Y;
-                newWall.ScreenCoord.x = partitionMidPoint.X;
-                newWall.ScreenCoord.y = partitionMidPoint.Y;
-                wallObjects.Add(newWall);
+                redWall.CellPartition.partitionMidPointX = partitionMidPoint.X;
+                redWall.CellPartition.partitionMidPointY = partitionMidPoint.Y;
+                redWall.ScreenCoord.x = partitionMidPoint.X;
+                redWall.ScreenCoord.y = partitionMidPoint.Y;
+                greenWall.CellPartition.partitionMidPointX = partitionMidPoint.X;
+                greenWall.CellPartition.partitionMidPointY = partitionMidPoint.Y;
+                greenWall.ScreenCoord.x = partitionMidPoint.X;
+                greenWall.ScreenCoord.y = partitionMidPoint.Y;
+                if (Prisoners.isAnyPrisonersInContactWithWall(redWall))
+                {
+                    Walls.draw(redWall, spriteBatch);
+                }
+                else
+                {
+                    Walls.draw(greenWall, spriteBatch);
+                }
             }
-            Walls.draw(wallObjects, spriteBatch);
-            foreach (GameObject wall in wallObjects)
-            {
-                DataAccess.releaseGameObjectFromPool(GameObjectTypeEnum.concreteWall, wall);
-            }
-
             if (currentTraceState == TracingState.endCellSelected)
             {
-                Game.gameObjects.AddRange(wallObjects);  // TODO: move this to update method
-                wallObjects.ForEach(a => PathFindingGraph.addWall(a));
+                foreach (Point partitionMidPoint in distinctPartitions)  // TODO: move this to update method
+                {
+                    GameObject newWall = DataAccess.instantiateEntity(GameObjectTypeEnum.concreteWall);
+                    newWall.CellPartition.partitionMidPointX = partitionMidPoint.X;
+                    newWall.CellPartition.partitionMidPointY = partitionMidPoint.Y;
+                    newWall.ScreenCoord.x = partitionMidPoint.X;
+                    newWall.ScreenCoord.y = partitionMidPoint.Y;
+                    if (!Prisoners.isAnyPrisonersInContactWithWall(newWall))
+                    {
+                        Game.gameObjects.Add(newWall);
+                        PathFindingGraph.addWall(newWall);
+                    }
+                }
                 currentState = State.neutral;
             }
         }

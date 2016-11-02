@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/27/2016 19:46:55
+-- Date Created: 11/01/2016 12:05:27
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -71,6 +71,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_TargetPathIndexGameObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[TargetPathIndexes] DROP CONSTRAINT [FK_TargetPathIndexGameObject];
 GO
+IF OBJECT_ID(N'[dbo].[FK_GuardGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Guards] DROP CONSTRAINT [FK_GuardGameObject];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -135,6 +138,9 @@ IF OBJECT_ID(N'[dbo].[PrevScreenCoords]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[TargetPathIndexes]', 'U') IS NOT NULL
     DROP TABLE [dbo].[TargetPathIndexes];
+GO
+IF OBJECT_ID(N'[dbo].[Guards]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Guards];
 GO
 
 -- --------------------------------------------------
@@ -324,6 +330,16 @@ CREATE TABLE [dbo].[TargetPathIndexes] (
 );
 GO
 
+-- Creating table 'Guards'
+CREATE TABLE [dbo].[Guards] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [state] int  NOT NULL,
+    [patrolState] int  NOT NULL,
+    [trackingTargetState] int  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -445,6 +461,12 @@ GO
 -- Creating primary key on [Id] in table 'TargetPathIndexes'
 ALTER TABLE [dbo].[TargetPathIndexes]
 ADD CONSTRAINT [PK_TargetPathIndexes]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Guards'
+ALTER TABLE [dbo].[Guards]
+ADD CONSTRAINT [PK_Guards]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -719,6 +741,21 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_TargetPathIndexGameObject'
 CREATE INDEX [IX_FK_TargetPathIndexGameObject]
 ON [dbo].[TargetPathIndexes]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'Guards'
+ALTER TABLE [dbo].[Guards]
+ADD CONSTRAINT [FK_GuardGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GuardGameObject'
+CREATE INDEX [IX_FK_GuardGameObject]
+ON [dbo].[Guards]
     ([GameObject_Id]);
 GO
 

@@ -10,18 +10,15 @@
 namespace PowCamp
 {
     using System;
+    using System.Collections.Generic;
     
-    public enum GameObjectTypeEnum : int
+    public partial class Guard
     {
-        fence = 0,
-        brickWall = 1,
-        mouseCursor = 2,
-        mouseBuildGlyph = 3,
-        concreteWall = 4,
-        mouseCellCornerGlyph = 5,
-        guard = 6,
-        prisoner = 7,
-        greenWall = 8,
-        redWall = 9
+        public int Id { get; set; }
+        public GuardState state { get; set; }
+        public GuardPatrollingState patrolState { get; set; }
+        public GuardTrackingTargetState trackingTargetState { get; set; }
+    
+        public virtual GameObject GameObject { get; set; }
     }
 }

@@ -30,5 +30,6 @@ namespace PowCamp
         public virtual TargetScreenCoord TargetScreenCoord { get; set; }
         public virtual PrevScreenCoord PrevScreenCoord { get; set; }
         public virtual TargetPathIndex TargetPathIndex { get; set; }
+        public virtual Guard Guard { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace PowCamp
         private static float normalMovementSpeed = 60;
         private static float wallClimbingMovementSpeed = 15;
 
-        public static bool isPrisonerInContactWithWall(GameObject prisoner, GameObject wall)
+        private static bool isPrisonerInContactWithWall(GameObject prisoner, GameObject wall)
         {
             Rectangle prisonerRectangle = new Rectangle((int)prisoner.ScreenCoord.x - UserInterface.cellWidth / 2, (int)prisoner.ScreenCoord.y - UserInterface.cellWidth / 2, UserInterface.cellWidth,
                 UserInterface.cellWidth);
@@ -29,6 +29,19 @@ namespace PowCamp
                 wallRectangle = new Rectangle((int)wall.ScreenCoord.x , (int)wall.ScreenCoord.y - UserInterface.cellWidth / 2, 1 , UserInterface.cellWidth);
             }
             return prisonerRectangle.Intersects(wallRectangle);
+        }
+
+        public static bool isAnyPrisonersInContactWithWall(GameObject wall)
+        {
+            List<GameObject> prisoners = Game.gameObjects.Where(item => item.GameObjectType.enumValue == GameObjectTypeEnum.prisoner).ToList();
+            foreach (GameObject prisoner in prisoners)
+            {
+                if (isPrisonerInContactWithWall(prisoner, wall))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static float movePrisonerSpecifiedDistanceTowardTarget(GameObject prisoner, float distanceToTravel)
@@ -49,7 +62,7 @@ namespace PowCamp
             prisoner.Orientation.y = vecToTravel.Y;
             prisoner.ScreenCoord.x += vecToTravel.X;
             prisoner.ScreenCoord.y += vecToTravel.Y;
-            if (MyMathHelper.isValuesClose(prisoner.ScreenCoord.x, prisoner.TargetScreenCoord.x) && MyMathHelper.isValuesClose(prisoner.ScreenCoord.y, prisoner.TargetScreenCoord.y))
+            if (MyMathHelper.isValuesClose(prisoner.ScreenCoord.x, prisoner.TargetScreenCoord.x, 0.1f) && MyMathHelper.isValuesClose(prisoner.ScreenCoord.y, prisoner.TargetScreenCoord.y, 0.1f))
             {
                 prisoner.ScreenCoord.x = prisoner.TargetScreenCoord.x;
                 prisoner.ScreenCoord.y = prisoner.TargetScreenCoord.y;

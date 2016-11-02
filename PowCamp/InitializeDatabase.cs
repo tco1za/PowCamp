@@ -15,6 +15,8 @@ namespace PowCamp
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Wall", dependsOn = "CellPartition" });
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "CurrentAnimation", dependsOn = "ScreenCoord" });
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "PatrolRoute", dependsOn = "Orientation" });
+            DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Guard", dependsOn = "PatrolRoute" });
+            DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Guard", dependsOn = "CurrentAnimation" });
             DataAccess.db.SaveChanges();
         }
 
@@ -42,6 +44,12 @@ namespace PowCamp
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
             newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.prisonerWalk, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 30, count = 2 };
+            newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
+            DataAccess.db.Animations.Add(newAnimation);
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.greenWall, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 4, count = 2 };
+            newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
+            DataAccess.db.Animations.Add(newAnimation);
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.redWall, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 6, count = 2 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
 
@@ -94,8 +102,7 @@ namespace PowCamp
                 newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.guard;
                 newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
                 newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.guardWalk).FirstOrDefault() };
-                newGameObjectType.ScreenCoord = new ScreenCoord();
-                newGameObjectType.PatrolRoute = new PatrolRoute();
+                newGameObjectType.Guard = new Guard() { state = GuardState.patrolling, patrolState = GuardPatrollingState.walking };
                 DataAccess.db.GameObjects.Add(newGameObjectType);
                 newGameObjectType = new GameObject();
                 newGameObjectType.GameObjectType = new GameObjectType();
@@ -106,6 +113,22 @@ namespace PowCamp
                 newGameObjectType.Orientation = new Orientation();
                 newGameObjectType.TargetScreenCoord = new TargetScreenCoord();
                 newGameObjectType.TargetPathIndex = new TargetPathIndex();
+                DataAccess.db.GameObjects.Add(newGameObjectType);
+                newGameObjectType = new GameObject();
+                newGameObjectType.GameObjectType = new GameObjectType();
+                newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.greenWall;
+                newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+                newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.greenWall).FirstOrDefault() };
+                newGameObjectType.ScreenCoord = new ScreenCoord();
+                newGameObjectType.Wall = new Wall();
+                DataAccess.db.GameObjects.Add(newGameObjectType);
+                newGameObjectType = new GameObject();
+                newGameObjectType.GameObjectType = new GameObjectType();
+                newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.redWall;
+                newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+                newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.redWall).FirstOrDefault() };
+                newGameObjectType.ScreenCoord = new ScreenCoord();
+                newGameObjectType.Wall = new Wall();
                 DataAccess.db.GameObjects.Add(newGameObjectType);
 
                 DataAccess.db.SaveChanges();

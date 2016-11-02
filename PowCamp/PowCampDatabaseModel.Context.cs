@@ -45,5 +45,6 @@ namespace PowCamp
         public virtual DbSet<TargetScreenCoord> TargetScreenCoords { get; set; }
         public virtual DbSet<PrevScreenCoord> PrevScreenCoords { get; set; }
         public virtual DbSet<TargetPathIndex> TargetPathIndexes { get; set; }
+        public virtual DbSet<Guard> Guards { get; set; }
     }
 }

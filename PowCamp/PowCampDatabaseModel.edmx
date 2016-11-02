@@ -26,6 +26,7 @@
     <EntitySet Name="TargetScreenCoords" EntityType="PowCampDatabaseModel.Store.TargetScreenCoords" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="PrevScreenCoords" EntityType="PowCampDatabaseModel.Store.PrevScreenCoords" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="TargetPathIndexes" EntityType="PowCampDatabaseModel.Store.TargetPathIndexes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Guards" EntityType="PowCampDatabaseModel.Store.Guards" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -98,6 +99,10 @@
       <End Role="TargetPathIndex" EntitySet="TargetPathIndexes" />
       <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
+    <AssociationSet Name="GuardGameObject" Association="PowCampDatabaseModel.Store.GuardGameObject">
+      <End Role="Guard" EntitySet="Guards" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="GameObjects">
     <Key>
@@ -146,7 +151,7 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="timeSinceLastPrisonerSpawn" Type="real" Nullable="false" DefaultValue="99999" />
-    <Property Name="timeToNextPrisonerSpawn" Type="real" Nullable="false" DefaultValue="50" />
+    <Property Name="timeToNextPrisonerSpawn" Type="real" Nullable="false" DefaultValue="3" />
   </EntityType>
   <EntityType Name="ComponentDependencies">
     <Key>
@@ -280,6 +285,16 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="x" Type="int" Nullable="false" />
     <Property Name="y" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Guards">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="state" Type="int" Nullable="false" />
+    <Property Name="patrolState" Type="int" Nullable="false" />
+    <Property Name="trackingTargetState" Type="int" Nullable="false" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
@@ -498,6 +513,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="GuardGameObject">
+    <End Role="Guard" Type="PowCampDatabaseModel.Store.Guards" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Guard">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -595,6 +622,11 @@
             <End Role="TargetPathIndex" EntitySet="TargetPathIndexes" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
+          <EntitySet Name="Guards" EntityType="PowCampDatabaseModel.Guard" />
+          <AssociationSet Name="GuardGameObject" Association="PowCampDatabaseModel.GuardGameObject">
+            <End Role="Guard" EntitySet="Guards" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -615,6 +647,7 @@
           <NavigationProperty Name="TargetScreenCoord" Relationship="PowCampDatabaseModel.TargetScreenCoordGameObject" FromRole="GameObject" ToRole="TargetScreenCoord" />
           <NavigationProperty Name="PrevScreenCoord" Relationship="PowCampDatabaseModel.PrevScreenCoordGameObject" FromRole="GameObject" ToRole="PrevScreenCoord" />
           <NavigationProperty Name="TargetPathIndex" Relationship="PowCampDatabaseModel.TargetPathIndexGameObject" FromRole="GameObject" ToRole="TargetPathIndex" />
+          <NavigationProperty Name="Guard" Relationship="PowCampDatabaseModel.GuardGameObject" FromRole="GameObject" ToRole="Guard" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -724,6 +757,8 @@
           <Member Name="mouseCellCornerGlyph" />
           <Member Name="guard" />
           <Member Name="prisoner" />
+          <Member Name="greenWall" />
+          <Member Name="redWall" />
         </EnumType>
         <EntityType Name="CurrentAnimation">
           <Key>
@@ -759,6 +794,8 @@
           <Member Name="mouseCellCornerGlyph" />
           <Member Name="guardWalk" />
           <Member Name="prisonerWalk" />
+          <Member Name="greenWall" />
+          <Member Name="redWall" />
         </EnumType>
         <Association Name="CurrentAnimationGameObject">
           <End Type="PowCampDatabaseModel.CurrentAnimation" Role="CurrentAnimation" Multiplicity="0..1" />
@@ -887,6 +924,32 @@
         </EntityType>
         <Association Name="TargetPathIndexGameObject">
           <End Type="PowCampDatabaseModel.TargetPathIndex" Role="TargetPathIndex" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Guard">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="state" Type="PowCampDatabaseModel.GuardState" Nullable="false" />
+          <Property Name="patrolState" Type="PowCampDatabaseModel.GuardPatrollingState" Nullable="false" />
+          <Property Name="trackingTargetState" Type="PowCampDatabaseModel.GuardTrackingTargetState" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.GuardGameObject" FromRole="Guard" ToRole="GameObject" />
+        </EntityType>
+        <EnumType Name="GuardState">
+          <Member Name="patrolling" />
+          <Member Name="trackingTarget" />
+        </EnumType>
+        <EnumType Name="GuardPatrollingState">
+          <Member Name="walking" />
+          <Member Name="turning" />
+        </EnumType>
+        <EnumType Name="GuardTrackingTargetState">
+          <Member Name="slewing" />
+          <Member Name="shooting" />
+        </EnumType>
+        <Association Name="GuardGameObject">
+          <End Type="PowCampDatabaseModel.Guard" Role="Guard" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
       </Schema>
@@ -1080,6 +1143,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Guards">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Guard)">
+        <MappingFragment StoreEntitySet="Guards">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="state" ColumnName="state" />
+          <ScalarProperty Name="patrolState" ColumnName="patrolState" />
+          <ScalarProperty Name="trackingTargetState" ColumnName="trackingTargetState" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="GameObjectGameObjectType" TypeName="PowCampDatabaseModel.GameObjectGameObjectType" StoreEntitySet="GameObjects">
       <EndProperty Name="GameObjectType">
         <ScalarProperty Name="Id" ColumnName="GameObjectType_Id" />
@@ -1221,6 +1294,14 @@
         <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
       <EndProperty Name="TargetPathIndex">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="GuardGameObject" TypeName="PowCampDatabaseModel.GuardGameObject" StoreEntitySet="Guards">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Guard">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

@@ -11,17 +11,9 @@ namespace PowCamp
 {
     using System;
     
-    public enum GameObjectTypeEnum : int
+    public enum GuardPatrollingState : int
     {
-        fence = 0,
-        brickWall = 1,
-        mouseCursor = 2,
-        mouseBuildGlyph = 3,
-        concreteWall = 4,
-        mouseCellCornerGlyph = 5,
-        guard = 6,
-        prisoner = 7,
-        greenWall = 8,
-        redWall = 9
+        walking = 0,
+        turning = 1
     }
 }

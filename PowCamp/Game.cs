@@ -43,6 +43,8 @@ namespace PowCamp
 
             PathFindingGraph.initialize();
 
+            UserInterface.initialize();
+
             InitializeDatabase.createGameObjectTypes();
 
             animations = DataAccess.getAllAnimations();
@@ -52,7 +54,10 @@ namespace PowCamp
 
             scene = new Scene();  // TODO: remove this when loading a level or game
 
-       //     loadLevel();
+            //     loadLevel();
+            guard.ScreenCoord.x = 250;
+            guard.ScreenCoord.y = 80;
+
 
             gameObjects.Add(guard);
 
@@ -132,7 +137,7 @@ namespace PowCamp
                     new Vector2((float)gameObject.ScreenCoord.x,
                         (float)gameObject.ScreenCoord.y),
                     Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation),
-                    Color.White, MyMathHelper.convertVectorToAngleOfRotation(gameObject.Orientation.x, gameObject.Orientation.y),
+                    Color.White, MyMathHelper.convertVectorToAngleOfRotationInRadians(gameObject.Orientation.x, gameObject.Orientation.y),
                     new Vector2(gameObject.CurrentAnimation.Animation.frameWidth / 2, gameObject.CurrentAnimation.Animation.frameHeight / 2), 1f, SpriteEffects.None, 1f);
             }
         }

@@ -43,8 +43,10 @@
         <AssociationConnector Association="PowCampDatabaseModel.PrevScreenCoordGameObject" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.TargetPathIndex" Width="2" PointX="3" PointY="6.375" />
         <AssociationConnector Association="PowCampDatabaseModel.TargetPathIndexGameObject" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.Guard" Width="1.5" PointX="4.625" PointY="10.375" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Guard" Width="1.75" PointX="4.625" PointY="10.375" />
         <AssociationConnector Association="PowCampDatabaseModel.GuardGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Health" Width="1.5" PointX="2.625" PointY="9.125" />
+        <AssociationConnector Association="PowCampDatabaseModel.HealthGameObject" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

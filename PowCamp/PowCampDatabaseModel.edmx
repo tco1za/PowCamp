@@ -27,6 +27,7 @@
     <EntitySet Name="PrevScreenCoords" EntityType="PowCampDatabaseModel.Store.PrevScreenCoords" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="TargetPathIndexes" EntityType="PowCampDatabaseModel.Store.TargetPathIndexes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Guards" EntityType="PowCampDatabaseModel.Store.Guards" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Healths" EntityType="PowCampDatabaseModel.Store.Healths" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -101,6 +102,10 @@
     </AssociationSet>
     <AssociationSet Name="GuardGameObject" Association="PowCampDatabaseModel.Store.GuardGameObject">
       <End Role="Guard" EntitySet="Guards" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="HealthGameObject" Association="PowCampDatabaseModel.Store.HealthGameObject">
+      <End Role="Health" EntitySet="Healths" />
       <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
   </EntityContainer>
@@ -295,6 +300,14 @@
     <Property Name="state" Type="int" Nullable="false" />
     <Property Name="patrolState" Type="int" Nullable="false" />
     <Property Name="trackingTargetState" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Healths">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="hitPoints" Type="int" Nullable="false" DefaultValue="100" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
@@ -525,6 +538,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="HealthGameObject">
+    <End Role="Health" Type="PowCampDatabaseModel.Store.Healths" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Health">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -627,6 +652,11 @@
             <End Role="Guard" EntitySet="Guards" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
+          <EntitySet Name="Healths" EntityType="PowCampDatabaseModel.Health" />
+          <AssociationSet Name="HealthGameObject" Association="PowCampDatabaseModel.HealthGameObject">
+            <End Role="Health" EntitySet="Healths" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -648,6 +678,7 @@
           <NavigationProperty Name="PrevScreenCoord" Relationship="PowCampDatabaseModel.PrevScreenCoordGameObject" FromRole="GameObject" ToRole="PrevScreenCoord" />
           <NavigationProperty Name="TargetPathIndex" Relationship="PowCampDatabaseModel.TargetPathIndexGameObject" FromRole="GameObject" ToRole="TargetPathIndex" />
           <NavigationProperty Name="Guard" Relationship="PowCampDatabaseModel.GuardGameObject" FromRole="GameObject" ToRole="Guard" />
+          <NavigationProperty Name="Health" Relationship="PowCampDatabaseModel.HealthGameObject" FromRole="GameObject" ToRole="Health" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -952,6 +983,18 @@
           <End Type="PowCampDatabaseModel.Guard" Role="Guard" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
+        <EntityType Name="Health">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="hitPoints" Type="Int32" Nullable="false" DefaultValue="100" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.HealthGameObject" FromRole="Health" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="HealthGameObject">
+          <End Type="PowCampDatabaseModel.Health" Role="Health" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1153,6 +1196,14 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Healths">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Health)">
+        <MappingFragment StoreEntitySet="Healths">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="hitPoints" ColumnName="hitPoints" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="GameObjectGameObjectType" TypeName="PowCampDatabaseModel.GameObjectGameObjectType" StoreEntitySet="GameObjects">
       <EndProperty Name="GameObjectType">
         <ScalarProperty Name="Id" ColumnName="GameObjectType_Id" />
@@ -1302,6 +1353,14 @@
         <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
       <EndProperty Name="Guard">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="HealthGameObject" TypeName="PowCampDatabaseModel.HealthGameObject" StoreEntitySet="Healths">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Health">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

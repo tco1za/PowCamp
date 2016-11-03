@@ -13,9 +13,9 @@ namespace PowCamp
     {
         private static float movementSpeed = 60f;
         private static float patrolTurningRate = 60f;  // degrees per second
-        private static float targetTrackingTurningRate = 60f;  // degrees per second
-        private static float guardVisionConeWidth = 60f; // degrees
-        private static float sightRange = 200f;
+        private static float targetTrackingTurningRate = 90f;  // degrees per second
+        private static float guardVisionConeWidth = 90f; // degrees
+        private static float sightRange = 300f;
 
         private static float moveGuardSpecifiedDistanceTowardsTargetCell(GameObject guard, float distanceToTravelThisFrame, List<Point> cellsVisitedAlongPatrolRoute)
         {
@@ -87,36 +87,27 @@ namespace PowCamp
 
         private static Vector2 getVecToPrisoner(GameObject guard, GameObject prisoner)
         {
-            return new Vector2(prisoner.ScreenCoord.x - guard.ScreenCoord.x, prisoner.ScreenCoord.y - prisoner.ScreenCoord.y);
+            return new Vector2(prisoner.ScreenCoord.x - guard.ScreenCoord.x, prisoner.ScreenCoord.y - guard.ScreenCoord.y);
         }
 
-        private static Vector2 getVectorToClosestPrisonerInSight(GameObject guard)
+        private static Vector2 getVectorToClosestPrisonerInSight(GameObject guard, List<GameObject> prisonersInSight)
         {
-            List<GameObject> prisoners = Game.gameObjects.Where(item => item.GameObjectType.enumValue == GameObjectTypeEnum.prisoner).ToList();
-            List<GameObject> prisonersInSight = new List<GameObject>();
-            foreach (GameObject prisoner in prisoners)
-            {
-                if (isPrisonerInSight(guard, prisoner))
-                {
-                    prisonersInSight.Add(prisoner);
-                }
-            }
             List<GameObject> sortedPrisonersInSight = prisonersInSight.OrderBy(a => getVecToPrisoner( guard, a ).Length()).ToList();
             return getVecToPrisoner(guard, sortedPrisonersInSight[0]);
         }
 
-        private static bool isAnyPrisonersInSight( GameObject guard )
+        private static List<GameObject> getListOfPrisonersInSight( GameObject guard )
         {
             List<GameObject> prisoners = Game.gameObjects.Where(item => item.GameObjectType.enumValue == GameObjectTypeEnum.prisoner).ToList();
-
+            List<GameObject> prisonersInSight = new List<GameObject>();
             foreach ( GameObject prisoner in prisoners )
             {
                 if ( isPrisonerInSight( guard, prisoner ) )
                 {
-                    return true;
+                    prisonersInSight.Add(prisoner);
                 }
             }
-            return false;
+            return prisonersInSight;
         }
 
         private static void followPatrolRoute(GameObject guard, GameTime gameTime)
@@ -144,8 +135,6 @@ namespace PowCamp
             }
         }
 
-
-
         private static void turnGuardTowardPoint(GameObject guard, GameTime gameTime, Vector2 point, bool pointIsPatrolRouteTarget, bool patrolRouteHasMoreThanOneCell = false)
         {
             float targetOrientation = MyMathHelper.constrainAngleInDegreesToPositive360(
@@ -161,12 +150,17 @@ namespace PowCamp
             float negativeDist = MyMathHelper.distanceAlongNegativeDirectionBetweenTwoAngles(currentOrientation, targetOrientation);
             float smallestDist = Math.Min(positiveDist, negativeDist);
 
-            if (positiveDist > negativeDist && patrolRouteHasMoreThanOneCell)
+            if (positiveDist > negativeDist)
             {
                 degreesToRotate = degreesToRotate * -1;
             }
 
-            if (Math.Abs(degreesToRotate) < Math.Abs(smallestDist) || patrolRouteHasMoreThanOneCell)
+            if (pointIsPatrolRouteTarget && !patrolRouteHasMoreThanOneCell)
+            {
+                degreesToRotate = Math.Abs(degreesToRotate);
+            }
+
+            if (Math.Abs(degreesToRotate) < Math.Abs(smallestDist) || (pointIsPatrolRouteTarget && !patrolRouteHasMoreThanOneCell))
             {
                 currentOrientation += degreesToRotate;
                 Vector2 orientationVector = MyMathHelper.convertPolarCoordsToCartesian(MathHelper.ToRadians(currentOrientation), 1);
@@ -226,15 +220,33 @@ namespace PowCamp
                 if (guard.Guard.state == GuardState.patrolling)
                 {
                     followPatrolRoute(guard, gameTime);
-                    if ( isAnyPrisonersInSight( guard ))
+                    if ( getListOfPrisonersInSight( guard ).Count > 0 )
                     {
                         guard.Guard.state = GuardState.trackingTarget;
+                        guard.Guard.trackingTargetState = GuardTrackingTargetState.slewing;
                     }
                 }
                 if (guard.Guard.state == GuardState.trackingTarget)
                 {
-                    Vector2 vectorToTarget = getVectorToClosestPrisonerInSight(guard);
-                    turnGuardTowardPoint(guard, gameTime, vectorToTarget, false);
+                    if (guard.Guard.trackingTargetState == GuardTrackingTargetState.slewing)
+                    {
+                        List<GameObject> prisonersInSight = getListOfPrisonersInSight(guard);
+                        if (prisonersInSight.Count > 0)
+                        {
+                            Vector2 vectorToTarget = getVectorToClosestPrisonerInSight(guard, prisonersInSight);
+                           // Vector2 vectorToTarget = new Vector2(Game.currentMouseState.X - guard.ScreenCoord.x, Game.currentMouseState.Y - guard.ScreenCoord.y);
+                            turnGuardTowardPoint(guard, gameTime, vectorToTarget, false);
+                        }
+                        else
+                        {
+                            guard.Guard.state = GuardState.patrolling;
+                            guard.Guard.patrolState = GuardPatrollingState.turning;
+                        }
+                    }
+                    if (guard.Guard.trackingTargetState == GuardTrackingTargetState.shooting)
+                    {
+                        
+                    }
                 }
             }
         }

@@ -17,6 +17,8 @@ namespace PowCamp
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "PatrolRoute", dependsOn = "Orientation" });
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Guard", dependsOn = "PatrolRoute" });
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Guard", dependsOn = "CurrentAnimation" });
+
+
             DataAccess.db.SaveChanges();
         }
 
@@ -113,6 +115,7 @@ namespace PowCamp
                 newGameObjectType.Orientation = new Orientation();
                 newGameObjectType.TargetScreenCoord = new TargetScreenCoord();
                 newGameObjectType.TargetPathIndex = new TargetPathIndex();
+                newGameObjectType.Health = new Health();
                 DataAccess.db.GameObjects.Add(newGameObjectType);
                 newGameObjectType = new GameObject();
                 newGameObjectType.GameObjectType = new GameObjectType();

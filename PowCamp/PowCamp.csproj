@@ -74,6 +74,9 @@
     <Compile Include="GuardTrackingTargetState.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Health.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="MyMathHelper.cs" />
     <Compile Include="Orientation.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>

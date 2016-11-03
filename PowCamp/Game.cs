@@ -32,11 +32,11 @@ namespace PowCamp
 
         protected override void Initialize()
         {
-            //graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            //graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-                graphics.PreferredBackBufferWidth = 1380;
-               graphics.PreferredBackBufferHeight = 700;
-            //    graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+           //     graphics.PreferredBackBufferWidth = 1380;
+          //     graphics.PreferredBackBufferHeight = 700;
+          //      graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             randomNumberGenerator = new Random();
@@ -120,8 +120,6 @@ namespace PowCamp
             base.Update(gameTime);
         }
 
- 
-
         public static void drawGameObject(SpriteBatch spriteBatch, GameObject gameObject)
         {
             if (gameObject.Orientation == null)
@@ -142,7 +140,7 @@ namespace PowCamp
             }
         }
 
-        public static Rectangle calculateSourceRectangleForSprite(CurrentAnimation curAnim)
+        public static Rectangle calculateSourceRectangleForSprite(CurrentAnimation curAnim)   // TODO: move to Animations class
         {
             const int spriteMapSize = 1024;
 

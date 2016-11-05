@@ -28,6 +28,8 @@
     <EntitySet Name="TargetPathIndexes" EntityType="PowCampDatabaseModel.Store.TargetPathIndexes" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Guards" EntityType="PowCampDatabaseModel.Store.Guards" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Healths" EntityType="PowCampDatabaseModel.Store.Healths" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Prisoners" EntityType="PowCampDatabaseModel.Store.Prisoners" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RemovalMarkers" EntityType="PowCampDatabaseModel.Store.RemovalMarkers" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -106,6 +108,14 @@
     </AssociationSet>
     <AssociationSet Name="HealthGameObject" Association="PowCampDatabaseModel.Store.HealthGameObject">
       <End Role="Health" EntitySet="Healths" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="PrisonerGameObject" Association="PowCampDatabaseModel.Store.PrisonerGameObject">
+      <End Role="Prisoner" EntitySet="Prisoners" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="RemovalMarkerGameObject" Association="PowCampDatabaseModel.Store.RemovalMarkerGameObject">
+      <End Role="RemovalMarker" EntitySet="RemovalMarkers" />
       <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
   </EntityContainer>
@@ -206,6 +216,7 @@
     <Property Name="enumValue" Type="int" Nullable="false" />
     <Property Name="count" Type="int" Nullable="false" />
     <Property Name="timeBetweenFrames" Type="real" Nullable="false" DefaultValue="0.5" />
+    <Property Name="mustRepeat" Type="bit" Nullable="false" DefaultValue="true" />
   </EntityType>
   <EntityType Name="Velocities">
     <Key>
@@ -308,6 +319,24 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="hitPoints" Type="int" Nullable="false" DefaultValue="100" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Prisoners">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="state" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RemovalMarkers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="mustBeRemoved" Type="bit" Nullable="false" DefaultValue="false" />
+    <Property Name="timeSinceMarkedForRemoval" Type="real" Nullable="false" DefaultValue="0" />
+    <Property Name="timeToRemoval" Type="real" Nullable="false" DefaultValue="0" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
@@ -550,6 +579,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="PrisonerGameObject">
+    <End Role="Prisoner" Type="PowCampDatabaseModel.Store.Prisoners" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Prisoner">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RemovalMarkerGameObject">
+    <End Role="RemovalMarker" Type="PowCampDatabaseModel.Store.RemovalMarkers" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RemovalMarker">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -657,6 +710,16 @@
             <End Role="Health" EntitySet="Healths" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
+          <EntitySet Name="Prisoners" EntityType="PowCampDatabaseModel.Prisoner" />
+          <AssociationSet Name="PrisonerGameObject" Association="PowCampDatabaseModel.PrisonerGameObject">
+            <End Role="Prisoner" EntitySet="Prisoners" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
+          <EntitySet Name="RemovalMarkers" EntityType="PowCampDatabaseModel.RemovalMarker" />
+          <AssociationSet Name="RemovalMarkerGameObject" Association="PowCampDatabaseModel.RemovalMarkerGameObject">
+            <End Role="RemovalMarker" EntitySet="RemovalMarkers" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -679,6 +742,8 @@
           <NavigationProperty Name="TargetPathIndex" Relationship="PowCampDatabaseModel.TargetPathIndexGameObject" FromRole="GameObject" ToRole="TargetPathIndex" />
           <NavigationProperty Name="Guard" Relationship="PowCampDatabaseModel.GuardGameObject" FromRole="GameObject" ToRole="Guard" />
           <NavigationProperty Name="Health" Relationship="PowCampDatabaseModel.HealthGameObject" FromRole="GameObject" ToRole="Health" />
+          <NavigationProperty Name="Prisoner" Relationship="PowCampDatabaseModel.PrisonerGameObject" FromRole="GameObject" ToRole="Prisoner" />
+          <NavigationProperty Name="RemovalMarker" Relationship="PowCampDatabaseModel.RemovalMarkerGameObject" FromRole="GameObject" ToRole="RemovalMarker" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -815,6 +880,7 @@
           <NavigationProperty Name="CurrentAnimations" Relationship="PowCampDatabaseModel.CurrentAnimationAnimation" FromRole="Animation" ToRole="CurrentAnimation" />
           <Property Name="count" Type="Int32" Nullable="false" />
           <Property Name="timeBetweenFrames" Type="Single" Nullable="false" DefaultValue="0.5" />
+          <Property Name="mustRepeat" Type="Boolean" Nullable="false" DefaultValue="true" />
         </EntityType>
         <EnumType Name="AnimationEnum">
           <Member Name="fence" />
@@ -827,6 +893,9 @@
           <Member Name="prisonerWalk" />
           <Member Name="greenWall" />
           <Member Name="redWall" />
+          <Member Name="guardShooting" />
+          <Member Name="guardTurning" />
+          <Member Name="prisonerDying" />
         </EnumType>
         <Association Name="CurrentAnimationGameObject">
           <End Type="PowCampDatabaseModel.CurrentAnimation" Role="CurrentAnimation" Multiplicity="0..1" />
@@ -995,6 +1064,37 @@
           <End Type="PowCampDatabaseModel.Health" Role="Health" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
+        <EnumType Name="PrisonerState">
+          <Member Name="running" />
+          <Member Name="climbing" />
+          <Member Name="dying" />
+        </EnumType>
+        <EntityType Name="Prisoner">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="state" Type="PowCampDatabaseModel.PrisonerState" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.PrisonerGameObject" FromRole="Prisoner" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="PrisonerGameObject">
+          <End Type="PowCampDatabaseModel.Prisoner" Role="Prisoner" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
+        <EntityType Name="RemovalMarker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mustBeRemoved" Type="Boolean" Nullable="false" DefaultValue="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.RemovalMarkerGameObject" FromRole="RemovalMarker" ToRole="GameObject" />
+          <Property Name="timeSinceMarkedForRemoval" Type="Single" Nullable="false" DefaultValue="0" />
+          <Property Name="timeToRemoval" Type="Single" Nullable="false" DefaultValue="0" />
+        </EntityType>
+        <Association Name="RemovalMarkerGameObject">
+          <End Type="PowCampDatabaseModel.RemovalMarker" Role="RemovalMarker" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1098,6 +1198,7 @@
           <ScalarProperty Name="enumValue" ColumnName="enumValue" />
           <ScalarProperty Name="count" ColumnName="count" />
           <ScalarProperty Name="timeBetweenFrames" ColumnName="timeBetweenFrames" />
+          <ScalarProperty Name="mustRepeat" ColumnName="mustRepeat" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1201,6 +1302,24 @@
         <MappingFragment StoreEntitySet="Healths">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="hitPoints" ColumnName="hitPoints" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Prisoners">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Prisoner)">
+        <MappingFragment StoreEntitySet="Prisoners">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="state" ColumnName="state" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RemovalMarkers">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.RemovalMarker)">
+        <MappingFragment StoreEntitySet="RemovalMarkers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="mustBeRemoved" ColumnName="mustBeRemoved" />
+          <ScalarProperty Name="timeSinceMarkedForRemoval" ColumnName="timeSinceMarkedForRemoval" />
+          <ScalarProperty Name="timeToRemoval" ColumnName="timeToRemoval" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1361,6 +1480,22 @@
         <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
       <EndProperty Name="Health">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PrisonerGameObject" TypeName="PowCampDatabaseModel.PrisonerGameObject" StoreEntitySet="Prisoners">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Prisoner">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="RemovalMarkerGameObject" TypeName="PowCampDatabaseModel.RemovalMarkerGameObject" StoreEntitySet="RemovalMarkers">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="RemovalMarker">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

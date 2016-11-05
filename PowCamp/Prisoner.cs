@@ -10,21 +10,13 @@
 namespace PowCamp
 {
     using System;
+    using System.Collections.Generic;
     
-    public enum AnimationEnum : int
+    public partial class Prisoner
     {
-        fence = 0,
-        mouseCursor = 1,
-        mouseBuildGlyph = 2,
-        brickWall = 3,
-        concreteWall = 4,
-        mouseCellCornerGlyph = 5,
-        guardWalk = 6,
-        prisonerWalk = 7,
-        greenWall = 8,
-        redWall = 9,
-        guardShooting = 10,
-        guardTurning = 11,
-        prisonerDying = 12
+        public int Id { get; set; }
+        public PrisonerState state { get; set; }
+    
+        public virtual GameObject GameObject { get; set; }
     }
 }

@@ -197,6 +197,25 @@ namespace PowCamp
             return Activator.CreateInstance(t);
         }
 
+        private static void creatAndLinkToGameObjectDependenciesThatDontExist( GameObject gameObject, string linkedComponentName )
+        {
+            List<string> allLinkedComponentNames = getAllLinkedComponentNames(gameObject);
+
+            List<ComponentDependency> dependencies = db.ComponentDependencies.Where(item => item.componentName == linkedComponentName).ToList();
+
+            foreach (ComponentDependency dependency in dependencies)
+            {
+                string dependentComponentName = dependency.dependsOn;
+                if (!allLinkedComponentNames.Contains(dependentComponentName))
+                {
+                    object newComponent = CreateInstanceFromName("PowCamp." + dependentComponentName);
+                    PropertyInfo propertyToSet = gameObject.GetType().GetProperty(dependentComponentName);
+                    propertyToSet.SetValue(gameObject, newComponent, null);
+                    creatAndLinkToGameObjectDependenciesThatDontExist(gameObject, dependentComponentName);
+                }
+            }
+        }
+
         public static void createAndLinkToGameObjectsAllDependenciesThatDontExist()
         {
             var gameObjectList = from e in db.GameObjects select e;
@@ -206,26 +225,7 @@ namespace PowCamp
                 List<string> allLinkedComponentNames = getAllLinkedComponentNames(gameObject);
                 foreach ( string linkedComponentName in allLinkedComponentNames)
                 {
-                    ComponentDependency dependency = db.ComponentDependencies.Where(item => item.componentName == linkedComponentName).FirstOrDefault();
-                    if (dependency != null)
-                    {
-                        string dependentComponentName = dependency.dependsOn;
-                        while (!allLinkedComponentNames.Contains(dependentComponentName))
-                        {
-                            object newComponent = CreateInstanceFromName("PowCamp." + dependentComponentName);
-                            PropertyInfo propertyToSet = gameObject.GetType().GetProperty(dependentComponentName);
-                            propertyToSet.SetValue(gameObject, newComponent, null);
-                            ComponentDependency nextDependency = db.ComponentDependencies.Where(item => item.componentName == dependentComponentName).FirstOrDefault();
-                            if (nextDependency != null)
-                            {
-                                dependentComponentName = nextDependency.dependsOn;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
+                    creatAndLinkToGameObjectDependenciesThatDontExist( gameObject, linkedComponentName );
                 }
             }
             db.SaveChanges();

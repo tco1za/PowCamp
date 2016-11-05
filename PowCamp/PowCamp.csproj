@@ -61,6 +61,15 @@
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DataAccess.cs" />
+    <Compile Include="GameObject.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GameObjectType.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GameObjectTypeEnum.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Guard.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
@@ -77,6 +86,12 @@
     <Compile Include="Health.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="InstantiatedGameObject.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Level.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="MyMathHelper.cs" />
     <Compile Include="Orientation.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
@@ -89,7 +104,26 @@
     <Compile Include="PrevScreenCoord.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Prisoner.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Prisoners.cs" />
+    <Compile Include="PrisonerState.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemovalMarker.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RemovalMarkers.cs" />
+    <Compile Include="SaveGame.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Scene.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ScreenCoord.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="TargetPathIndex.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
@@ -97,24 +131,15 @@
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Velocities.cs" />
+    <Compile Include="Velocity.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Wall.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Walls.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="GameObject.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GameObjectType.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GameObjectTypeEnum.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="InitializeDatabase.cs" />
-    <Compile Include="InstantiatedGameObject.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Level.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="PowCampDatabaseModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -132,22 +157,7 @@
     </Compile>
     <Compile Include="ApplicationEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SaveGame.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Scene.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ScreenCoord.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="UserInterface.cs" />
-    <Compile Include="Velocity.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Wall.cs">
-      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">

@@ -32,5 +32,7 @@ namespace PowCamp
         public virtual TargetPathIndex TargetPathIndex { get; set; }
         public virtual Guard Guard { get; set; }
         public virtual Health Health { get; set; }
+        public virtual Prisoner Prisoner { get; set; }
+        public virtual RemovalMarker RemovalMarker { get; set; }
     }
 }

@@ -11,20 +11,10 @@ namespace PowCamp
 {
     using System;
     
-    public enum AnimationEnum : int
+    public enum PrisonerState : int
     {
-        fence = 0,
-        mouseCursor = 1,
-        mouseBuildGlyph = 2,
-        brickWall = 3,
-        concreteWall = 4,
-        mouseCellCornerGlyph = 5,
-        guardWalk = 6,
-        prisonerWalk = 7,
-        greenWall = 8,
-        redWall = 9,
-        guardShooting = 10,
-        guardTurning = 11,
-        prisonerDying = 12
+        running = 0,
+        climbing = 1,
+        dying = 2
     }
 }

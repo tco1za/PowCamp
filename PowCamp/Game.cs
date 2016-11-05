@@ -108,6 +108,10 @@ namespace PowCamp
                 isLeftMouseClicked = false;
             }
 
+            gameObjects.RemoveAll(x => shouldGameObjectBeRemovedFromScene(x));
+            RemovalMarkers.update(gameObjects, gameTime);
+
+
             Prisoners.update(gameTime);
             Guards.update(gameTime);
             Velocities.update(gameTime);
@@ -115,19 +119,23 @@ namespace PowCamp
             UserInterface.update();
             Animations.update(gameTime);
 
-            gameObjects.RemoveAll(x => shouldGameObjectBeRemovedFromScene(x));
-
             base.Update(gameTime);
         }
 
         public static void drawGameObject(SpriteBatch spriteBatch, GameObject gameObject)
         {
+            float alpha = 1f;
+            if ( gameObject.RemovalMarker != null && gameObject.RemovalMarker.mustBeRemoved )
+            {
+                alpha = 1-(gameObject.RemovalMarker.timeSinceMarkedForRemoval / gameObject.RemovalMarker.timeToRemoval);
+            }
+            Color color = new Color(new Color(255,255,255), alpha);
             if (gameObject.Orientation == null)
             { 
                 spriteBatch.Draw(Game.atlases[gameObject.CurrentAnimation.Animation.atlasName],
                     new Vector2((float)gameObject.ScreenCoord.x - gameObject.CurrentAnimation.Animation.frameWidth / 2,
                     (float)gameObject.ScreenCoord.y - gameObject.CurrentAnimation.Animation.frameHeight / 2),
-                    Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation), Color.White);
+                    Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation), color);
             }
             else
             {
@@ -135,7 +143,7 @@ namespace PowCamp
                     new Vector2((float)gameObject.ScreenCoord.x,
                         (float)gameObject.ScreenCoord.y),
                     Game.calculateSourceRectangleForSprite(gameObject.CurrentAnimation),
-                    Color.White, MyMathHelper.convertVectorToAngleOfRotationInRadians(gameObject.Orientation.x, gameObject.Orientation.y),
+                    color, MyMathHelper.convertVectorToAngleOfRotationInRadians(gameObject.Orientation.x, gameObject.Orientation.y),
                     new Vector2(gameObject.CurrentAnimation.Animation.frameWidth / 2, gameObject.CurrentAnimation.Animation.frameHeight / 2), 1f, SpriteEffects.None, 1f);
             }
         }

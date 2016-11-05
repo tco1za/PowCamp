@@ -15,7 +15,8 @@ namespace PowCamp
         private static float patrolTurningRate = 60f;  // degrees per second
         private static float targetTrackingTurningRate = 90f;  // degrees per second
         private static float guardVisionConeWidth = 90f; // degrees
-        private static float sightRange = 300f;
+        private static float patrollingSightRange = 300f;
+        private static float trackingSightRange = 400f;
 
         private static float moveGuardSpecifiedDistanceTowardsTargetCell(GameObject guard, float distanceToTravelThisFrame, List<Point> cellsVisitedAlongPatrolRoute)
         {
@@ -70,7 +71,7 @@ namespace PowCamp
             return UserInterface.convertCellCoordsToVirtualScreenCoords(cellsVisitedAlongPatrolRoute[guard.PatrolRoute.targetCellIndex]).X + UserInterface.cellWidth / 2;
         }
 
-        private static bool isPrisonerInSight( GameObject guard, GameObject prisoner )
+        private static bool isPrisonerInSight( GameObject guard, GameObject prisoner, float sightRange )
         {
             Vector2 vecToPrisoner = getVecToPrisoner( guard, prisoner );
             float angle = MyMathHelper.angleBetweenTwoVectorsInDegrees(vecToPrisoner, new Vector2(guard.Orientation.x, guard.Orientation.y));
@@ -90,21 +91,24 @@ namespace PowCamp
             return new Vector2(prisoner.ScreenCoord.x - guard.ScreenCoord.x, prisoner.ScreenCoord.y - guard.ScreenCoord.y);
         }
 
-        private static Vector2 getVectorToClosestPrisonerInSight(GameObject guard, List<GameObject> prisonersInSight)
+        private static GameObject getClosestPrisonerInSight(GameObject guard, List<GameObject> prisonersInSight)
         {
             List<GameObject> sortedPrisonersInSight = prisonersInSight.OrderBy(a => getVecToPrisoner( guard, a ).Length()).ToList();
-            return getVecToPrisoner(guard, sortedPrisonersInSight[0]);
+            return sortedPrisonersInSight[0];
         }
 
-        private static List<GameObject> getListOfPrisonersInSight( GameObject guard )
+        private static List<GameObject> getListOfLivingPrisonersInSight( GameObject guard, float sightRange )
         {
             List<GameObject> prisoners = Game.gameObjects.Where(item => item.GameObjectType.enumValue == GameObjectTypeEnum.prisoner).ToList();
             List<GameObject> prisonersInSight = new List<GameObject>();
             foreach ( GameObject prisoner in prisoners )
             {
-                if ( isPrisonerInSight( guard, prisoner ) )
+                if (prisoner.Health.hitPoints > 0)
                 {
-                    prisonersInSight.Add(prisoner);
+                    if (isPrisonerInSight(guard, prisoner, sightRange))
+                    {
+                        prisonersInSight.Add(prisoner);
+                    }
                 }
             }
             return prisonersInSight;
@@ -123,6 +127,7 @@ namespace PowCamp
 
             if (guard.Guard.patrolState == GuardPatrollingState.walking)
             {
+                Animations.changeAnimation(guard, AnimationEnum.guardWalk);
                 while (distTotravel > 0)
                 {
                     distTotravel = moveGuardSpecifiedDistanceTowardsTargetCell(guard, distTotravel, cellsVisitedAlongPatrolRoute);
@@ -130,12 +135,13 @@ namespace PowCamp
             }
             if (guard.Guard.patrolState == GuardPatrollingState.turning)
             {
+                Animations.changeAnimation(guard, AnimationEnum.guardTurning);
                 Vector2 vectorToTarget = getVectorToTarget(guard, getTargetX(guard, cellsVisitedAlongPatrolRoute), getTargetY(guard, cellsVisitedAlongPatrolRoute));
                 turnGuardTowardPoint(guard, gameTime, vectorToTarget, true, cellsVisitedAlongPatrolRoute.Count > 1);
             }
         }
 
-        private static void turnGuardTowardPoint(GameObject guard, GameTime gameTime, Vector2 point, bool pointIsPatrolRouteTarget, bool patrolRouteHasMoreThanOneCell = false)
+        private static void turnGuardTowardPoint(GameObject guard, GameTime gameTime, Vector2 point, bool pointIsPatrolRouteTarget, bool patrolRouteHasMoreThanOneCell = false, GameObject targetedPrisoner = null)
         {
             float targetOrientation = MyMathHelper.constrainAngleInDegreesToPositive360(
                 MathHelper.ToDegrees(MyMathHelper.convertVectorToAngleOfRotationInRadians(point.X, point.Y)));
@@ -176,6 +182,7 @@ namespace PowCamp
                 }
                 else
                 {
+                    targetedPrisoner.Health.hitPoints -= 100;
                     guard.Guard.trackingTargetState = GuardTrackingTargetState.shooting;
                 }
             }
@@ -220,7 +227,8 @@ namespace PowCamp
                 if (guard.Guard.state == GuardState.patrolling)
                 {
                     followPatrolRoute(guard, gameTime);
-                    if ( getListOfPrisonersInSight( guard ).Count > 0 )
+                    List<GameObject> prisonersInSight = getListOfLivingPrisonersInSight(guard, patrollingSightRange);
+                    if (prisonersInSight.Count > 0 )
                     {
                         guard.Guard.state = GuardState.trackingTarget;
                         guard.Guard.trackingTargetState = GuardTrackingTargetState.slewing;
@@ -230,12 +238,13 @@ namespace PowCamp
                 {
                     if (guard.Guard.trackingTargetState == GuardTrackingTargetState.slewing)
                     {
-                        List<GameObject> prisonersInSight = getListOfPrisonersInSight(guard);
+                        List<GameObject> prisonersInSight = getListOfLivingPrisonersInSight(guard, trackingSightRange);
                         if (prisonersInSight.Count > 0)
                         {
-                            Vector2 vectorToTarget = getVectorToClosestPrisonerInSight(guard, prisonersInSight);
-                           // Vector2 vectorToTarget = new Vector2(Game.currentMouseState.X - guard.ScreenCoord.x, Game.currentMouseState.Y - guard.ScreenCoord.y);
-                            turnGuardTowardPoint(guard, gameTime, vectorToTarget, false);
+                            GameObject targetedPrisoner = getClosestPrisonerInSight(guard, prisonersInSight);
+
+                            Vector2 vectorToTarget = getVecToPrisoner(guard, targetedPrisoner);
+                            turnGuardTowardPoint(guard, gameTime, vectorToTarget, false, false, targetedPrisoner);
                         }
                         else
                         {
@@ -245,12 +254,17 @@ namespace PowCamp
                     }
                     if (guard.Guard.trackingTargetState == GuardTrackingTargetState.shooting)
                     {
-                        
+                        Animations.changeAnimation(guard, AnimationEnum.guardShooting);
+                        if ( Animations.isCurrentAnimationAtEndOfLastFrame( guard.CurrentAnimation) )
+                        {
+                            guard.Guard.state = GuardState.patrolling;
+                        }
                     }
                 }
             }
         }
 
-   
+  
+
     }
 }

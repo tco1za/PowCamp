@@ -47,5 +47,7 @@ namespace PowCamp
         public virtual DbSet<TargetPathIndex> TargetPathIndexes { get; set; }
         public virtual DbSet<Guard> Guards { get; set; }
         public virtual DbSet<Health> Healths { get; set; }
+        public virtual DbSet<Prisoner> Prisoners { get; set; }
+        public virtual DbSet<RemovalMarker> RemovalMarkers { get; set; }
     }
 }

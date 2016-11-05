@@ -18,6 +18,7 @@ namespace PowCamp
         public Animation()
         {
             this.timeBetweenFrames = 0.5F;
+            this.mustRepeat = true;
             this.CurrentAnimations = new HashSet<CurrentAnimation>();
         }
     
@@ -30,6 +31,7 @@ namespace PowCamp
         public AnimationEnum enumValue { get; set; }
         public int count { get; set; }
         public float timeBetweenFrames { get; set; }
+        public bool mustRepeat { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurrentAnimation> CurrentAnimations { get; set; }

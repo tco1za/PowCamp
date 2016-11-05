@@ -9,6 +9,21 @@ namespace PowCamp
 {
     class Animations
     {
+        public static void changeAnimation(GameObject gameObject, AnimationEnum enumValue)
+        {
+            if (gameObject.CurrentAnimation.Animation.enumValue != enumValue)
+            {
+                gameObject.CurrentAnimation.Animation = DataAccess.db.Animations.Where(item => item.enumValue == enumValue).FirstOrDefault();
+                gameObject.CurrentAnimation.index = 0;
+                gameObject.CurrentAnimation.timeSinceLastFrameChange = 0;
+            }
+        }
+
+        public static bool isCurrentAnimationAtEndOfLastFrame( CurrentAnimation currentAnimation )
+        {
+            return (currentAnimation.index == currentAnimation.Animation.count - 1 && currentAnimation.timeSinceLastFrameChange > currentAnimation.Animation.timeBetweenFrames);
+        }
+
         public static void update( GameTime gameTime )
         {
             List<GameObject> gameObjectsWithAnimations = Game.gameObjects.Where(a => a.CurrentAnimation != null).ToList();
@@ -21,9 +36,20 @@ namespace PowCamp
                     gameObject.CurrentAnimation.index++;
                     if (gameObject.CurrentAnimation.index >= gameObject.CurrentAnimation.Animation.count)
                     {
-                        gameObject.CurrentAnimation.index = 0;
+                        if (gameObject.CurrentAnimation.Animation.mustRepeat)
+                        {
+                            gameObject.CurrentAnimation.index = 0;
+                            gameObject.CurrentAnimation.timeSinceLastFrameChange = 0;
+                        }
+                        else
+                        {
+                            gameObject.CurrentAnimation.index = gameObject.CurrentAnimation.Animation.count - 1;
+                        }
                     }
-                    gameObject.CurrentAnimation.timeSinceLastFrameChange = 0;
+                    else
+                    {
+                        gameObject.CurrentAnimation.timeSinceLastFrameChange = 0;
+                    }
                 }
             }
         }

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/03/2016 16:51:29
+-- Date Created: 11/05/2016 11:58:21
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -77,6 +77,12 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_HealthGameObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Healths] DROP CONSTRAINT [FK_HealthGameObject];
 GO
+IF OBJECT_ID(N'[dbo].[FK_PrisonerGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Prisoners] DROP CONSTRAINT [FK_PrisonerGameObject];
+GO
+IF OBJECT_ID(N'[dbo].[FK_RemovalMarkerGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RemovalMarkers] DROP CONSTRAINT [FK_RemovalMarkerGameObject];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -147,6 +153,12 @@ IF OBJECT_ID(N'[dbo].[Guards]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Healths]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Healths];
+GO
+IF OBJECT_ID(N'[dbo].[Prisoners]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Prisoners];
+GO
+IF OBJECT_ID(N'[dbo].[RemovalMarkers]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[RemovalMarkers];
 GO
 
 -- --------------------------------------------------
@@ -247,7 +259,8 @@ CREATE TABLE [dbo].[Animations] (
     [startIndex] int  NOT NULL,
     [enumValue] int  NOT NULL,
     [count] int  NOT NULL,
-    [timeBetweenFrames] real  NOT NULL
+    [timeBetweenFrames] real  NOT NULL,
+    [mustRepeat] bit  NOT NULL
 );
 GO
 
@@ -350,6 +363,24 @@ GO
 CREATE TABLE [dbo].[Healths] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [hitPoints] int  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'Prisoners'
+CREATE TABLE [dbo].[Prisoners] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [state] int  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
+-- Creating table 'RemovalMarkers'
+CREATE TABLE [dbo].[RemovalMarkers] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [mustBeRemoved] bit  NOT NULL,
+    [timeSinceMarkedForRemoval] real  NOT NULL,
+    [timeToRemoval] real  NOT NULL,
     [GameObject_Id] int  NOT NULL
 );
 GO
@@ -487,6 +518,18 @@ GO
 -- Creating primary key on [Id] in table 'Healths'
 ALTER TABLE [dbo].[Healths]
 ADD CONSTRAINT [PK_Healths]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Prisoners'
+ALTER TABLE [dbo].[Prisoners]
+ADD CONSTRAINT [PK_Prisoners]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'RemovalMarkers'
+ALTER TABLE [dbo].[RemovalMarkers]
+ADD CONSTRAINT [PK_RemovalMarkers]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -791,6 +834,36 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_HealthGameObject'
 CREATE INDEX [IX_FK_HealthGameObject]
 ON [dbo].[Healths]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'Prisoners'
+ALTER TABLE [dbo].[Prisoners]
+ADD CONSTRAINT [FK_PrisonerGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_PrisonerGameObject'
+CREATE INDEX [IX_FK_PrisonerGameObject]
+ON [dbo].[Prisoners]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'RemovalMarkers'
+ALTER TABLE [dbo].[RemovalMarkers]
+ADD CONSTRAINT [FK_RemovalMarkerGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_RemovalMarkerGameObject'
+CREATE INDEX [IX_FK_RemovalMarkerGameObject]
+ON [dbo].[RemovalMarkers]
     ([GameObject_Id]);
 GO
 

@@ -75,10 +75,31 @@ namespace PowCamp
         {
             spawnNewPrisoners(gameTime);
 
-            List<GameObject> prisoners = Game.gameObjects.Where(item => item.GameObjectType.enumValue == GameObjectTypeEnum.prisoner).ToList();
+            List<GameObject> prisoners = Game.gameObjects.Where(item => item.Prisoner != null).ToList();
             foreach (GameObject prisoner in prisoners)
             {
-                currentMovementSpeed = normalMovementSpeed;
+                if ( prisoner.Health.hitPoints > 0 )
+                {
+                    prisoner.Prisoner.state = PrisonerState.running;
+                }
+                else
+                {
+                    prisoner.Prisoner.state = PrisonerState.dying;
+                }
+                if ( prisoner.Prisoner.state == PrisonerState.running )
+                {
+                    currentMovementSpeed = normalMovementSpeed;
+                    Animations.changeAnimation(prisoner, AnimationEnum.prisonerWalk);
+                }
+                if (prisoner.Prisoner.state == PrisonerState.dying)
+                {
+                    currentMovementSpeed = 0;
+                    Animations.changeAnimation(prisoner, AnimationEnum.prisonerDying);
+                    if (Animations.isCurrentAnimationAtEndOfLastFrame( prisoner.CurrentAnimation) )
+                    {
+                        prisoner.RemovalMarker.mustBeRemoved = true;
+                    }
+                }
                 List<GameObject> walls = Game.gameObjects.Where(item => item.Wall != null).ToList();
                 foreach ( GameObject wall in walls  )
                 {

@@ -217,6 +217,10 @@
     <Property Name="count" Type="int" Nullable="false" />
     <Property Name="timeBetweenFrames" Type="real" Nullable="false" DefaultValue="0.5" />
     <Property Name="mustRepeat" Type="bit" Nullable="false" DefaultValue="true" />
+    <Property Name="topLeftCoordOfFirstFrameX" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="topLeftCoordOfFirstFrameY" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="numberOfColumns" Type="int" Nullable="false" DefaultValue="1" />
+    <Property Name="mustAnimate" Type="bit" Nullable="false" DefaultValue="true" />
   </EntityType>
   <EntityType Name="Velocities">
     <Key>
@@ -855,6 +859,10 @@
           <Member Name="prisoner" />
           <Member Name="greenWall" />
           <Member Name="redWall" />
+          <Member Name="leftSidePanel" />
+          <Member Name="rightSidePanel" />
+          <Member Name="buildFenceButton" />
+          <Member Name="hireGuardButton" />
         </EnumType>
         <EntityType Name="CurrentAnimation">
           <Key>
@@ -881,6 +889,10 @@
           <Property Name="count" Type="Int32" Nullable="false" />
           <Property Name="timeBetweenFrames" Type="Single" Nullable="false" DefaultValue="0.5" />
           <Property Name="mustRepeat" Type="Boolean" Nullable="false" DefaultValue="true" />
+          <Property Name="topLeftCoordOfFirstFrameX" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="topLeftCoordOfFirstFrameY" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="numberOfColumns" Type="Int32" Nullable="false" DefaultValue="1" />
+          <Property Name="mustAnimate" Type="Boolean" Nullable="false" DefaultValue="true" />
         </EntityType>
         <EnumType Name="AnimationEnum">
           <Member Name="fence" />
@@ -896,6 +908,8 @@
           <Member Name="guardShooting" />
           <Member Name="guardTurning" />
           <Member Name="prisonerDying" />
+          <Member Name="sidePanels" />
+          <Member Name="buttons" />
         </EnumType>
         <Association Name="CurrentAnimationGameObject">
           <End Type="PowCampDatabaseModel.CurrentAnimation" Role="CurrentAnimation" Multiplicity="0..1" />
@@ -1199,6 +1213,10 @@
           <ScalarProperty Name="count" ColumnName="count" />
           <ScalarProperty Name="timeBetweenFrames" ColumnName="timeBetweenFrames" />
           <ScalarProperty Name="mustRepeat" ColumnName="mustRepeat" />
+          <ScalarProperty Name="topLeftCoordOfFirstFrameX" ColumnName="topLeftCoordOfFirstFrameX" />
+          <ScalarProperty Name="topLeftCoordOfFirstFrameY" ColumnName="topLeftCoordOfFirstFrameY" />
+          <ScalarProperty Name="numberOfColumns" ColumnName="numberOfColumns" />
+          <ScalarProperty Name="mustAnimate" ColumnName="mustAnimate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

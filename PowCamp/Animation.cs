@@ -19,6 +19,10 @@ namespace PowCamp
         {
             this.timeBetweenFrames = 0.5F;
             this.mustRepeat = true;
+            this.topLeftCoordOfFirstFrameX = 0;
+            this.topLeftCoordOfFirstFrameY = 0;
+            this.numberOfColumns = 1;
+            this.mustAnimate = true;
             this.CurrentAnimations = new HashSet<CurrentAnimation>();
         }
     
@@ -32,6 +36,10 @@ namespace PowCamp
         public int count { get; set; }
         public float timeBetweenFrames { get; set; }
         public bool mustRepeat { get; set; }
+        public int topLeftCoordOfFirstFrameX { get; set; }
+        public int topLeftCoordOfFirstFrameY { get; set; }
+        public int numberOfColumns { get; set; }
+        public bool mustAnimate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurrentAnimation> CurrentAnimations { get; set; }

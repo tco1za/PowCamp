@@ -26,9 +26,9 @@ namespace PowCamp
 
         public static void update( GameTime gameTime )
         {
-            List<GameObject> gameObjectsWithAnimations = Game.gameObjects.Where(a => a.CurrentAnimation != null).ToList();
+            List<GameObject> gameObjectsWithAnimationsThatMustAnimate = Game.gameObjects.Where(a => a.CurrentAnimation != null && a.CurrentAnimation.Animation.mustAnimate).ToList();
 
-            foreach ( GameObject gameObject in gameObjectsWithAnimations )
+            foreach ( GameObject gameObject in gameObjectsWithAnimationsThatMustAnimate )
             {
                 gameObject.CurrentAnimation.timeSinceLastFrameChange += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if ( gameObject.CurrentAnimation.timeSinceLastFrameChange > gameObject.CurrentAnimation.Animation.timeBetweenFrames )

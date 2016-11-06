@@ -263,7 +263,18 @@ namespace PowCamp
             {
                 drawPatrolRoute(spriteBatch);
             }
-            GameObject mouseCursorObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCursor).FirstOrDefault();
+
+            GameObject sidePanel = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.leftSidePanel).FirstOrDefault();
+            sidePanel.ScreenCoord.x = UserInterface.sidePanelWidth / 2 + 208;
+            sidePanel.ScreenCoord.y = UserInterface.virtualScreenHeight / 2 + 500;
+            Game.drawGameObject(spriteBatch, sidePanel);
+
+            drawMouseCursor(spriteBatch);
+        }
+
+        private static void drawMouseCursor(SpriteBatch spriteBatch)
+        {
+            GameObject mouseCursorObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCursor).FirstOrDefault();  //  TODO:  dont execute db query for these
             mouseCursorObject.ScreenCoord.x = mousePosition.X;
             mouseCursorObject.ScreenCoord.y = mousePosition.Y;
             Game.drawGameObject(spriteBatch, mouseCursorObject);

@@ -22,6 +22,10 @@ namespace PowCamp
         guard = 6,
         prisoner = 7,
         greenWall = 8,
-        redWall = 9
+        redWall = 9,
+        leftSidePanel = 10,
+        rightSidePanel = 11,
+        buildFenceButton = 12,
+        hireGuardButton = 13
     }
 }

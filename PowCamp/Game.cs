@@ -13,6 +13,7 @@ namespace PowCamp
     {
         private Texture2D spriteMap1;
         private Texture2D background;
+        private Texture2D buttonsAndMisc;
         public static GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static List<GameObject> gameObjects = new List<GameObject>();
@@ -79,7 +80,11 @@ namespace PowCamp
 
             background = Content.Load<Texture2D>("backTest");
             spriteMap1 = Content.Load<Texture2D>("spriteMap1");
+            buttonsAndMisc = Content.Load<Texture2D>("buttonsAndMisc");
+
             atlases.Add("spriteMap1", spriteMap1);
+            atlases.Add("buttonsAndMisc", buttonsAndMisc);
+
         }
 
         protected override void UnloadContent()
@@ -150,12 +155,11 @@ namespace PowCamp
 
         public static Rectangle calculateSourceRectangleForSprite(CurrentAnimation curAnim)   // TODO: move to Animations class
         {
-            const int spriteMapSize = 1024;
-
             int index = curAnim.Animation.startIndex + curAnim.index;
-            int cellX = index % (spriteMapSize / curAnim.Animation.frameWidth);
-            int cellY = index / (spriteMapSize / curAnim.Animation.frameHeight);
-            return new Rectangle(new Point(cellX * curAnim.Animation.frameWidth, cellY * curAnim.Animation.frameHeight),
+            int cellX = index % curAnim.Animation.numberOfColumns;
+            int cellY = index / curAnim.Animation.numberOfColumns;
+            return new Rectangle(new Point(cellX * curAnim.Animation.frameWidth + curAnim.Animation.topLeftCoordOfFirstFrameX,
+                cellY * curAnim.Animation.frameHeight + curAnim.Animation.topLeftCoordOfFirstFrameY),
                 new Point(curAnim.Animation.frameWidth, curAnim.Animation.frameHeight));
         }
 

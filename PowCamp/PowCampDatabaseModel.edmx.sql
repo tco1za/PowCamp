@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/05/2016 11:58:21
+-- Date Created: 11/06/2016 14:45:11
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -260,7 +260,11 @@ CREATE TABLE [dbo].[Animations] (
     [enumValue] int  NOT NULL,
     [count] int  NOT NULL,
     [timeBetweenFrames] real  NOT NULL,
-    [mustRepeat] bit  NOT NULL
+    [mustRepeat] bit  NOT NULL,
+    [topLeftCoordOfFirstFrameX] int  NOT NULL,
+    [topLeftCoordOfFirstFrameY] int  NOT NULL,
+    [numberOfColumns] int  NOT NULL,
+    [mustAnimate] bit  NOT NULL
 );
 GO
 

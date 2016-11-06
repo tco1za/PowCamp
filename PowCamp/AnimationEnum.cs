@@ -25,6 +25,8 @@ namespace PowCamp
         redWall = 9,
         guardShooting = 10,
         guardTurning = 11,
-        prisonerDying = 12
+        prisonerDying = 12,
+        sidePanels = 13,
+        buttons = 14
     }
 }

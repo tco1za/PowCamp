@@ -30,44 +30,52 @@ namespace PowCamp
         private static void createAnimations()
         {
             int spriteMap1CellWidth = 100;
-            int spriteMap1CellHeight = 100;
+            int spriteMap1CellHeight = 100;  // TODO: create a new entity for animation columns and offsets
             Animation newAnimation;
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.fence, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 0, count = 2 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.fence, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 0, count = 2, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.mouseCursor, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 11, count = 1 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.mouseCursor, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 11, count = 1, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.mouseBuildGlyph, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 10, count = 1 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.mouseBuildGlyph, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 10, count = 1, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.concreteWall, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 2, count = 2 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.concreteWall, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 2, count = 2, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.mouseCellCornerGlyph, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 12, count = 2 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.mouseCellCornerGlyph, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 12, count = 2, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.guardWalk, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 20, count = 2 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.guardWalk, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 20, count = 2, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.prisonerWalk, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 30, count = 2 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.prisonerWalk, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 30, count = 2, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.greenWall, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 4, count = 2 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.greenWall, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 4, count = 2, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.redWall, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 6, count = 2 };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.redWall, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 6, count = 2, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.guardShooting, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 22, count = 3, timeBetweenFrames = 0.1f, mustRepeat = false };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.guardShooting, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 22, count = 3, timeBetweenFrames = 0.1f, mustRepeat = false, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.guardTurning, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 25, count = 2, timeBetweenFrames = 0.5f };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.guardTurning, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 25, count = 2, timeBetweenFrames = 0.5f, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.prisonerDying, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 32, count = 3, timeBetweenFrames = 0.5f, mustRepeat = false };
+            newAnimation = new Animation() { atlasName = "spriteMap1", enumValue = AnimationEnum.prisonerDying, frameHeight = spriteMap1CellHeight, frameWidth = spriteMap1CellWidth, startIndex = 32, count = 3, timeBetweenFrames = 0.5f, mustRepeat = false, numberOfColumns = 10 };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
+
+            newAnimation = new Animation() { atlasName = "buttonsAndMisc", enumValue = AnimationEnum.sidePanels, frameHeight = 2153, frameWidth = 1090, startIndex = 0, count = 2, topLeftCoordOfFirstFrameX = 0, topLeftCoordOfFirstFrameY = 0, numberOfColumns = 2, mustAnimate = false };
+            newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
+            DataAccess.db.Animations.Add(newAnimation);
+            newAnimation = new Animation() { atlasName = "buttonsAndMisc", enumValue = AnimationEnum.buttons, frameHeight = 173, frameWidth = 173, startIndex = 0, count = 4, topLeftCoordOfFirstFrameX = 430, topLeftCoordOfFirstFrameY = 0, numberOfColumns = 4, mustAnimate = false };
+            newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
+            DataAccess.db.Animations.Add(newAnimation);
+
 
             DataAccess.db.SaveChanges();
         }
@@ -142,6 +150,30 @@ namespace PowCamp
                 newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
                 newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.redWall).FirstOrDefault() };
                 newGameObjectType.Wall = new Wall();
+                DataAccess.db.GameObjects.Add(newGameObjectType);
+                newGameObjectType = new GameObject();
+                newGameObjectType.GameObjectType = new GameObjectType();
+                newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.leftSidePanel;
+                newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+                newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.sidePanels).FirstOrDefault() };
+                DataAccess.db.GameObjects.Add(newGameObjectType);
+                newGameObjectType = new GameObject();
+                newGameObjectType.GameObjectType = new GameObjectType();
+                newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.rightSidePanel;
+                newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+                newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 1, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.sidePanels).FirstOrDefault() };
+                DataAccess.db.GameObjects.Add(newGameObjectType);
+                newGameObjectType = new GameObject();
+                newGameObjectType.GameObjectType = new GameObjectType();  // TODO:  make a function for all these
+                newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.hireGuardButton;
+                newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+                newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 2, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.buttons).FirstOrDefault() };
+                DataAccess.db.GameObjects.Add(newGameObjectType);
+                newGameObjectType = new GameObject();
+                newGameObjectType.GameObjectType = new GameObjectType();
+                newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.buildFenceButton;
+                newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+                newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.buttons).FirstOrDefault() };
                 DataAccess.db.GameObjects.Add(newGameObjectType);
 
                 DataAccess.db.SaveChanges();

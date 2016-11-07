@@ -69,10 +69,10 @@ namespace PowCamp
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
 
-            newAnimation = new Animation() { atlasName = "buttonsAndMisc", enumValue = AnimationEnum.sidePanels, frameHeight = 2153, frameWidth = 1090, startIndex = 0, count = 2, topLeftCoordOfFirstFrameX = 0, topLeftCoordOfFirstFrameY = 0, numberOfColumns = 2, mustAnimate = false };
+            newAnimation = new Animation() { atlasName = "buttonsAndMisc", enumValue = AnimationEnum.sidePanels, frameHeight = 1080, frameWidth = 204, startIndex = 0, count = 2, topLeftCoordOfFirstFrameX = 0, topLeftCoordOfFirstFrameY = 0, numberOfColumns = 2, mustAnimate = false };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
-            newAnimation = new Animation() { atlasName = "buttonsAndMisc", enumValue = AnimationEnum.buttons, frameHeight = 173, frameWidth = 173, startIndex = 0, count = 4, topLeftCoordOfFirstFrameX = 430, topLeftCoordOfFirstFrameY = 0, numberOfColumns = 4, mustAnimate = false };
+            newAnimation = new Animation() { atlasName = "buttonsAndMisc", enumValue = AnimationEnum.buttons, frameHeight = 180, frameWidth = 180, startIndex = 0, count = 4, topLeftCoordOfFirstFrameX = 408, topLeftCoordOfFirstFrameY = 0, numberOfColumns = 4, mustAnimate = false };
             newAnimation.name = Enum.GetName(typeof(AnimationEnum), newAnimation.enumValue);
             DataAccess.db.Animations.Add(newAnimation);
 
@@ -163,23 +163,47 @@ namespace PowCamp
                 newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
                 newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 1, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.sidePanels).FirstOrDefault() };
                 DataAccess.db.GameObjects.Add(newGameObjectType);
-                newGameObjectType = new GameObject();
-                newGameObjectType.GameObjectType = new GameObjectType();  // TODO:  make a function for all these
-                newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.hireGuardButton;
-                newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
-                newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 2, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.buttons).FirstOrDefault() };
-                DataAccess.db.GameObjects.Add(newGameObjectType);
-                newGameObjectType = new GameObject();
-                newGameObjectType.GameObjectType = new GameObjectType();
-                newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.buildFenceButton;
-                newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
-                newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.buttons).FirstOrDefault() };
-                DataAccess.db.GameObjects.Add(newGameObjectType);
+
+                createButtons();
+                createTools();
 
                 DataAccess.db.SaveChanges();
                 DataAccess.createAndLinkToGameObjectsAllDependenciesThatDontExist();
             }
         }
 
+        private static void createButtons()
+        {
+            GameObject newGameObjectType;
+            newGameObjectType = new GameObject();
+            newGameObjectType.GameObjectType = new GameObjectType();  // TODO:  make a function for all these
+            newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.hireGuardButton;
+            newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+            newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 2, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.buttons).FirstOrDefault() };
+            DataAccess.db.GameObjects.Add(newGameObjectType);
+            newGameObjectType = new GameObject();
+            newGameObjectType.GameObjectType = new GameObjectType();
+            newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.buildFenceButton;
+            newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+            newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.buttons).FirstOrDefault() };
+            DataAccess.db.GameObjects.Add(newGameObjectType);
+        }
+
+        private static void createTools()
+        {
+            GameObject newGameObjectType;
+            newGameObjectType = new GameObject();
+            newGameObjectType.GameObjectType = new GameObjectType();
+            newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.buildFenceTool;
+            newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+            newGameObjectType.Tool = new Tool() { buttonEnum = GameObjectTypeEnum.buildFenceButton };
+            DataAccess.db.GameObjects.Add(newGameObjectType);
+            newGameObjectType = new GameObject();
+            newGameObjectType.GameObjectType = new GameObjectType();
+            newGameObjectType.GameObjectType.enumValue = GameObjectTypeEnum.hireGuardTool;
+            newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
+            newGameObjectType.Tool = new Tool() { buttonEnum = GameObjectTypeEnum.hireGuardButton };
+            DataAccess.db.GameObjects.Add(newGameObjectType);
+        }
     }
 }

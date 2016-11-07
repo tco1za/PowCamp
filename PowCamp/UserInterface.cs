@@ -18,17 +18,17 @@ namespace PowCamp
         public static int sidePanelWidth = 204;
         private enum State { neutral , placingWall, tracingPatrolRoute, deletingWall };
         private enum TracingState { beforePointsSelected, firstCellSelected, middleCellSelected, endCellSelected };
-        private static State currentState = State.tracingPatrolRoute;
         private static TracingState currentTraceState = TracingState.beforePointsSelected;
         private static Point firstPointOfTrace;
         private static Point middlePointOfTrace;
         private static Point endPointOfTrace;
         private static Point mousePosition;
-        private static GameObject builderGlyphObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCellCornerGlyph).FirstOrDefault();
+        private static GameObject builderGlyphObject;
         public static GameObject guardToAssignPatrolRouteTo;
         private static GameObject redWall;
         private static GameObject greenWall;
 
+        private static State currentState = State.neutral;
 
         public static void initialize()
         {
@@ -68,6 +68,10 @@ namespace PowCamp
             mousePosition = new Point(mouseState.X, mouseState.Y);
             mousePosition = convertScreenPointToVirtualScreenPoint(mousePosition);
 
+            if (currentState == State.neutral)
+            {
+                checkButtonsForMouseClicks();
+            }
             if (currentState == State.placingWall)
             {
                 updatePlacingWall();
@@ -76,6 +80,55 @@ namespace PowCamp
             {
                 updateTracingPatrolRoute();
             }
+           
+        }
+
+        private static void checkButtonsForMouseClicks()
+        {
+            List<GameObject> tools = Game.gameObjects.Where(a => a.Tool != null).ToList();
+            int index = 0;
+            foreach (GameObject tool in tools)
+            {
+                GameObject button = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == tool.Tool.buttonEnum).FirstOrDefault();
+                setButtonPosition(index, button);
+                Debug.WriteLine(index + " " + button.GameObjectType.name);
+
+                if (isMouseOver(button))
+                {
+                    if (Game.isLeftMouseClicked)
+                    {
+                        if (button.GameObjectType.enumValue == GameObjectTypeEnum.buildFenceButton)
+                        {
+                            currentState = State.placingWall;
+                        }
+                        if (button.GameObjectType.enumValue == GameObjectTypeEnum.hireGuardButton)
+                        {
+                            currentState = State.tracingPatrolRoute;
+                            currentTraceState = TracingState.beforePointsSelected;
+                        }
+                    }
+                }
+                index++;
+            }
+
+        }
+
+        private static bool isMouseOver(GameObject button)
+        {
+            Rectangle buttonRectangle = new Rectangle((int)button.ScreenCoord.x, (int)button.ScreenCoord.y, button.CurrentAnimation.Animation.frameWidth, button.CurrentAnimation.Animation.frameHeight);
+           // Debug.WriteLine(mousePosition.X + " " + mousePosition.Y);
+            return (mousePosition.X > (int)button.ScreenCoord.x && mousePosition.X < (int)button.ScreenCoord.x + button.CurrentAnimation.Animation.frameWidth &&
+                mousePosition.Y > (int)button.ScreenCoord.y && mousePosition.Y < (int)button.ScreenCoord.y + button.CurrentAnimation.Animation.frameHeight);
+
+            
+
+            //return buttonRectangle.Contains(mousePosition.X, mousePosition.Y);
+        }
+
+        private static void setButtonPosition(int index, GameObject button)
+        {
+            button.ScreenCoord.x = UserInterface.sidePanelWidth / 2;
+            button.ScreenCoord.y = 100 + index * button.CurrentAnimation.Animation.frameHeight;
         }
 
         private static void updateTracingPatrolRoute()
@@ -264,17 +317,56 @@ namespace PowCamp
                 drawPatrolRoute(spriteBatch);
             }
 
-            GameObject sidePanel = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.leftSidePanel).FirstOrDefault();
-            sidePanel.ScreenCoord.x = UserInterface.sidePanelWidth / 2 + 208;
-            sidePanel.ScreenCoord.y = UserInterface.virtualScreenHeight / 2 + 500;
+            drawSidePanels(spriteBatch);
+            drawButtons(spriteBatch);
+            drawMouseCursor(spriteBatch);
+        }
+
+        private static void drawSidePanels(SpriteBatch spriteBatch)
+        {
+            GameObject sidePanel = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.leftSidePanel).FirstOrDefault();
+            sidePanel.ScreenCoord.x = UserInterface.sidePanelWidth / 2;
+            sidePanel.ScreenCoord.y = UserInterface.virtualScreenHeight / 2;  
             Game.drawGameObject(spriteBatch, sidePanel);
 
-            drawMouseCursor(spriteBatch);
+            GameObject rightSidePanel = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.rightSidePanel).FirstOrDefault();
+            rightSidePanel.ScreenCoord.x = UserInterface.virtualScreenWidth - (UserInterface.sidePanelWidth / 2);
+            rightSidePanel.ScreenCoord.y = UserInterface.virtualScreenHeight / 2;
+            Game.drawGameObject(spriteBatch, rightSidePanel);
+        }
+
+        private static void drawButtons(SpriteBatch spriteBatch)
+        {
+            List<GameObject> tools = Game.gameObjects.Where(a => a.Tool != null).ToList();
+            int index = 0;
+            foreach ( GameObject tool in tools )
+            {
+                GameObject button = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == tool.Tool.buttonEnum).FirstOrDefault();
+                setButtonPosition(index, button);
+                if (currentState == State.placingWall && button.GameObjectType.enumValue == GameObjectTypeEnum.buildFenceButton)
+                {
+                    button.CurrentAnimation.index = 1;
+                }
+                if (currentState == State.tracingPatrolRoute && button.GameObjectType.enumValue == GameObjectTypeEnum.hireGuardButton)
+                {
+                    button.CurrentAnimation.index = 3;
+                }
+                if ( currentState == State.neutral && button.GameObjectType.enumValue == GameObjectTypeEnum.buildFenceButton)
+                {
+                    button.CurrentAnimation.index = 0;
+                }
+                if (currentState == State.neutral && button.GameObjectType.enumValue == GameObjectTypeEnum.hireGuardButton)
+                {
+                    button.CurrentAnimation.index = 2;
+                }
+                Game.drawGameObject(spriteBatch, button);
+                index++;
+            }
         }
 
         private static void drawMouseCursor(SpriteBatch spriteBatch)
         {
-            GameObject mouseCursorObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCursor).FirstOrDefault();  //  TODO:  dont execute db query for these
+            GameObject mouseCursorObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCursor).FirstOrDefault(); 
             mouseCursorObject.ScreenCoord.x = mousePosition.X;
             mouseCursorObject.ScreenCoord.y = mousePosition.Y;
             Game.drawGameObject(spriteBatch, mouseCursorObject);
@@ -285,6 +377,7 @@ namespace PowCamp
             Point cellThatMouseIsIn = UserInterface.convertVirtualScreenCoordsToCellCoords(mousePosition);
             List<Point> cellsToVisitAlongTrace = buildListOfCellsVisitedAlongTrace(createPatrolRouteObjectFromCurrentTrace());
 
+            builderGlyphObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseCellCornerGlyph).FirstOrDefault();
             Point builderGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cellsToVisitAlongTrace[0]);
             builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X;
             builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y;
@@ -338,7 +431,7 @@ namespace PowCamp
             {
                 Point builderGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
 
-                GameObject builderGlyphObject = DataAccess.db.GameObjects.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseBuildGlyph).FirstOrDefault();
+                GameObject builderGlyphObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseBuildGlyph).FirstOrDefault();
                 builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X + cellWidth / 2;
                 builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y + cellWidth / 2;
                 Game.drawGameObject(spriteBatch, builderGlyphObject);

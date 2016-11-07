@@ -130,6 +130,9 @@
     <Compile Include="TargetScreenCoord.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tool.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Velocities.cs" />
     <Compile Include="Velocity.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>

@@ -10,24 +10,13 @@
 namespace PowCamp
 {
     using System;
+    using System.Collections.Generic;
     
-    public enum GameObjectTypeEnum : int
+    public partial class Tool
     {
-        fence = 0,
-        brickWall = 1,
-        mouseCursor = 2,
-        mouseBuildGlyph = 3,
-        concreteWall = 4,
-        mouseCellCornerGlyph = 5,
-        guard = 6,
-        prisoner = 7,
-        greenWall = 8,
-        redWall = 9,
-        leftSidePanel = 10,
-        rightSidePanel = 11,
-        buildFenceButton = 12,
-        hireGuardButton = 13,
-        buildFenceTool = 14,
-        hireGuardTool = 15
+        public int Id { get; set; }
+        public GameObjectTypeEnum buttonEnum { get; set; }
+    
+        public virtual GameObject GameObject { get; set; }
     }
 }

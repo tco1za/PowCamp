@@ -24,6 +24,7 @@ namespace PowCamp
         public static List<Animation> animations;
         public static Scene scene;
         public static Random randomNumberGenerator;
+        public static List<GameObject> gameObjectTypes;
 
         public Game()
         {
@@ -33,38 +34,43 @@ namespace PowCamp
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-           //     graphics.PreferredBackBufferWidth = 1380;
-          //     graphics.PreferredBackBufferHeight = 700;
-          //      graphics.IsFullScreen = true;
+       //     graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+       //     graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                graphics.PreferredBackBufferWidth = 1380;
+               graphics.PreferredBackBufferHeight = 700;
+        //        graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             randomNumberGenerator = new Random();
-
             PathFindingGraph.initialize();
-
             UserInterface.initialize();
-
             InitializeDatabase.createGameObjectTypes();
-
             animations = DataAccess.getAllAnimations();
+            gameObjectTypes = DataAccess.getAllGameObjectTypes();
 
-            GameObject guard = DataAccess.instantiateEntity(GameObjectTypeEnum.guard);
-            UserInterface.guardToAssignPatrolRouteTo = guard;
-
-            scene = new Scene();  // TODO: remove this when loading a level or game
+            createLevel();  // TODO: remove when loading
 
             //     loadLevel();
-            guard.ScreenCoord.x = 250;
-            guard.ScreenCoord.y = 80;
-
-
-            gameObjects.Add(guard);
+       
 
             //   gameObjects = DataAccess.loadSaveGame("10/3/2016 12:00:00 AM");
             //     DataAccess.saveGame(gameObjects);
             base.Initialize();
+        }
+
+        private static void createLevel()
+        {
+            GameObject guard = DataAccess.instantiateEntity(GameObjectTypeEnum.guard);
+            guard.ScreenCoord.x = 250;
+            guard.ScreenCoord.y = 80;
+            gameObjects.Add(guard);
+            UserInterface.guardToAssignPatrolRouteTo = guard;
+
+            GameObject hireGuardTool = DataAccess.instantiateEntity(GameObjectTypeEnum.hireGuardTool);
+            gameObjects.Add(hireGuardTool);
+            GameObject buildFenceTool = DataAccess.instantiateEntity(GameObjectTypeEnum.buildFenceTool);
+            gameObjects.Add(buildFenceTool);
+            scene = new Scene(); 
         }
 
         private static void loadLevel()

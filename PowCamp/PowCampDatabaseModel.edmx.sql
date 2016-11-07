@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/06/2016 14:45:11
+-- Date Created: 11/07/2016 11:45:29
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -389,6 +389,14 @@ CREATE TABLE [dbo].[RemovalMarkers] (
 );
 GO
 
+-- Creating table 'Tools'
+CREATE TABLE [dbo].[Tools] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [buttonEnum] int  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -534,6 +542,12 @@ GO
 -- Creating primary key on [Id] in table 'RemovalMarkers'
 ALTER TABLE [dbo].[RemovalMarkers]
 ADD CONSTRAINT [PK_RemovalMarkers]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Tools'
+ALTER TABLE [dbo].[Tools]
+ADD CONSTRAINT [PK_Tools]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -868,6 +882,21 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_RemovalMarkerGameObject'
 CREATE INDEX [IX_FK_RemovalMarkerGameObject]
 ON [dbo].[RemovalMarkers]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'Tools'
+ALTER TABLE [dbo].[Tools]
+ADD CONSTRAINT [FK_ToolGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ToolGameObject'
+CREATE INDEX [IX_FK_ToolGameObject]
+ON [dbo].[Tools]
     ([GameObject_Id]);
 GO
 

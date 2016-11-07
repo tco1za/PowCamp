@@ -111,6 +111,11 @@ namespace PowCamp
             return loadResult;
         }
 
+        public static List<GameObject> getAllGameObjectTypes()
+        {
+            return db.GameObjects.AsNoTracking().Where(item => item.InstantiatedGameObject == null).ToList();
+        }
+
         private static void saveScene(List<GameObject> gameObjects, Scene scene)
         {
             foreach (GameObject gameObject in gameObjects)

@@ -13,7 +13,7 @@ namespace PowCamp
         {
             if (gameObject.CurrentAnimation.Animation.enumValue != enumValue)
             {
-                gameObject.CurrentAnimation.Animation = DataAccess.db.Animations.Where(item => item.enumValue == enumValue).FirstOrDefault();
+                gameObject.CurrentAnimation.Animation = Game.animations.Where(item => item.enumValue == enumValue).FirstOrDefault();
                 gameObject.CurrentAnimation.index = 0;
                 gameObject.CurrentAnimation.timeSinceLastFrameChange = 0;
             }

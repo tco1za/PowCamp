@@ -49,5 +49,6 @@ namespace PowCamp
         public virtual DbSet<Health> Healths { get; set; }
         public virtual DbSet<Prisoner> Prisoners { get; set; }
         public virtual DbSet<RemovalMarker> RemovalMarkers { get; set; }
+        public virtual DbSet<Tool> Tools { get; set; }
     }
 }

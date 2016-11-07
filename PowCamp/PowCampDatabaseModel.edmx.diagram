@@ -6,9 +6,9 @@
     <edmx:Diagrams>
       <Diagram DiagramId="5dbfd7e727d84f73976845f8d13eabce" Name="Diagram1" DisplayType="true" ZoomLevel="109" >
         <EntityTypeShape EntityType="PowCampDatabaseModel.GameObject" Width="2" PointX="10.5" PointY="0.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.GameObjectType" Width="2.125" PointX="10.5" PointY="5.25" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.GameObjectType" Width="2.125" PointX="10.625" PointY="5.5" />
         <AssociationConnector Association="PowCampDatabaseModel.GameObjectGameObjectType" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.InstantiatedGameObject" Width="2" PointX="7.75" PointY="4" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.InstantiatedGameObject" Width="2" PointX="7.875" PointY="4.125" />
         <AssociationConnector Association="PowCampDatabaseModel.InstantiatedGameObjectGameObject" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.ScreenCoord" Width="1.5" PointX="13.875" PointY="1.125" />
         <AssociationConnector Association="PowCampDatabaseModel.ScreenCoordGameObject" />
@@ -51,6 +51,8 @@
         <AssociationConnector Association="PowCampDatabaseModel.PrisonerGameObject" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.RemovalMarker" Width="2.5" PointX="9" PointY="10" />
         <AssociationConnector Association="PowCampDatabaseModel.RemovalMarkerGameObject" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Tool" Width="1.875" PointX="20.625" PointY="6.375" />
+        <AssociationConnector Association="PowCampDatabaseModel.ToolGameObject" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

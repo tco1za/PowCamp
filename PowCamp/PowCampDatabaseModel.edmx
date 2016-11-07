@@ -30,6 +30,7 @@
     <EntitySet Name="Healths" EntityType="PowCampDatabaseModel.Store.Healths" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Prisoners" EntityType="PowCampDatabaseModel.Store.Prisoners" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="RemovalMarkers" EntityType="PowCampDatabaseModel.Store.RemovalMarkers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tools" EntityType="PowCampDatabaseModel.Store.Tools" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -116,6 +117,10 @@
     </AssociationSet>
     <AssociationSet Name="RemovalMarkerGameObject" Association="PowCampDatabaseModel.Store.RemovalMarkerGameObject">
       <End Role="RemovalMarker" EntitySet="RemovalMarkers" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
+    <AssociationSet Name="ToolGameObject" Association="PowCampDatabaseModel.Store.ToolGameObject">
+      <End Role="Tool" EntitySet="Tools" />
       <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
   </EntityContainer>
@@ -341,6 +346,14 @@
     <Property Name="mustBeRemoved" Type="bit" Nullable="false" DefaultValue="false" />
     <Property Name="timeSinceMarkedForRemoval" Type="real" Nullable="false" DefaultValue="0" />
     <Property Name="timeToRemoval" Type="real" Nullable="false" DefaultValue="0" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Tools">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="buttonEnum" Type="int" Nullable="false" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
@@ -607,6 +620,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="ToolGameObject">
+    <End Role="Tool" Type="PowCampDatabaseModel.Store.Tools" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Tool">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -724,6 +749,11 @@
             <End Role="RemovalMarker" EntitySet="RemovalMarkers" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
+          <EntitySet Name="Tools" EntityType="PowCampDatabaseModel.Tool" />
+          <AssociationSet Name="ToolGameObject" Association="PowCampDatabaseModel.ToolGameObject">
+            <End Role="Tool" EntitySet="Tools" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -748,6 +778,7 @@
           <NavigationProperty Name="Health" Relationship="PowCampDatabaseModel.HealthGameObject" FromRole="GameObject" ToRole="Health" />
           <NavigationProperty Name="Prisoner" Relationship="PowCampDatabaseModel.PrisonerGameObject" FromRole="GameObject" ToRole="Prisoner" />
           <NavigationProperty Name="RemovalMarker" Relationship="PowCampDatabaseModel.RemovalMarkerGameObject" FromRole="GameObject" ToRole="RemovalMarker" />
+          <NavigationProperty Name="Tool" Relationship="PowCampDatabaseModel.ToolGameObject" FromRole="GameObject" ToRole="Tool" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -863,6 +894,8 @@
           <Member Name="rightSidePanel" />
           <Member Name="buildFenceButton" />
           <Member Name="hireGuardButton" />
+          <Member Name="buildFenceTool" />
+          <Member Name="hireGuardTool" />
         </EnumType>
         <EntityType Name="CurrentAnimation">
           <Key>
@@ -1109,6 +1142,18 @@
           <End Type="PowCampDatabaseModel.RemovalMarker" Role="RemovalMarker" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
+        <EntityType Name="Tool">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="buttonEnum" Type="PowCampDatabaseModel.GameObjectTypeEnum" Nullable="false" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.ToolGameObject" FromRole="Tool" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="ToolGameObject">
+          <End Type="PowCampDatabaseModel.Tool" Role="Tool" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1341,6 +1386,14 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Tools">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Tool)">
+        <MappingFragment StoreEntitySet="Tools">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="buttonEnum" ColumnName="buttonEnum" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="GameObjectGameObjectType" TypeName="PowCampDatabaseModel.GameObjectGameObjectType" StoreEntitySet="GameObjects">
       <EndProperty Name="GameObjectType">
         <ScalarProperty Name="Id" ColumnName="GameObjectType_Id" />
@@ -1514,6 +1567,14 @@
         <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
       <EndProperty Name="RemovalMarker">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ToolGameObject" TypeName="PowCampDatabaseModel.ToolGameObject" StoreEntitySet="Tools">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Tool">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

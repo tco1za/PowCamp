@@ -34,5 +34,6 @@ namespace PowCamp
         public virtual Health Health { get; set; }
         public virtual Prisoner Prisoner { get; set; }
         public virtual RemovalMarker RemovalMarker { get; set; }
+        public virtual Tool Tool { get; set; }
     }
 }

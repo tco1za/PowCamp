@@ -17,8 +17,8 @@ namespace PowCamp
 
         private static bool isPrisonerInContactWithWall(GameObject prisoner, GameObject wall)
         {
-            Rectangle prisonerRectangle = new Rectangle((int)prisoner.ScreenCoord.x - UserInterface.cellWidth / 2, (int)prisoner.ScreenCoord.y - UserInterface.cellWidth / 2, UserInterface.cellWidth,
-                UserInterface.cellWidth);
+            Rectangle prisonerRectangle = new Rectangle((int)prisoner.ScreenCoord.x - UserInterface.cellWidth / 2+1, (int)prisoner.ScreenCoord.y - UserInterface.cellWidth / 2+1, UserInterface.cellWidth-2,
+                UserInterface.cellWidth-2);
             Rectangle wallRectangle = new Rectangle();
             if (Walls.isWallHorizontal(wall))
             {
@@ -31,9 +31,9 @@ namespace PowCamp
             return prisonerRectangle.Intersects(wallRectangle);
         }
 
-        public static bool isAnyPrisonersInContactWithWall(GameObject wall)
+        public static bool isAnyLivePrisonersInContactWithWall(GameObject wall)
         {
-            List<GameObject> prisoners = Game.gameObjects.Where(item => item.GameObjectType.enumValue == GameObjectTypeEnum.prisoner).ToList();
+            List<GameObject> prisoners = Game.gameObjects.Where(item => item.Prisoner != null && item.Health.hitPoints > 0).ToList();
             foreach (GameObject prisoner in prisoners)
             {
                 if (isPrisonerInContactWithWall(prisoner, wall))
@@ -90,6 +90,19 @@ namespace PowCamp
                 {
                     currentMovementSpeed = normalMovementSpeed;
                     Animations.changeAnimation(prisoner, AnimationEnum.prisonerWalk);
+                    List<GameObject> walls = Game.gameObjects.Where(item => item.Wall != null).ToList();
+                    foreach (GameObject wall in walls)
+                    {
+                        if (isPrisonerInContactWithWall(prisoner, wall))
+                        {
+                            currentMovementSpeed = wallClimbingMovementSpeed;
+                        }
+                    }
+                    float distTotravel = (float)gameTime.ElapsedGameTime.TotalSeconds * currentMovementSpeed;
+                    while (distTotravel > 0)
+                    {
+                        distTotravel = movePrisonerSpecifiedDistanceTowardTarget(prisoner, distTotravel);
+                    }
                 }
                 if (prisoner.Prisoner.state == PrisonerState.dying)
                 {
@@ -99,19 +112,6 @@ namespace PowCamp
                     {
                         prisoner.RemovalMarker.mustBeRemoved = true;
                     }
-                }
-                List<GameObject> walls = Game.gameObjects.Where(item => item.Wall != null).ToList();
-                foreach ( GameObject wall in walls  )
-                {
-                    if ( isPrisonerInContactWithWall( prisoner, wall ) )
-                    {
-                        currentMovementSpeed = wallClimbingMovementSpeed;
-                    }
-                }
-                float distTotravel = (float)gameTime.ElapsedGameTime.TotalSeconds * currentMovementSpeed;
-                while (distTotravel > 0 )
-                {
-                    distTotravel = movePrisonerSpecifiedDistanceTowardTarget(prisoner, distTotravel);
                 }
             }
         }

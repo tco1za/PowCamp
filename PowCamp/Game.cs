@@ -34,11 +34,11 @@ namespace PowCamp
 
         protected override void Initialize()
         {
-       //     graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-       //     graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-                graphics.PreferredBackBufferWidth = 1380;
-               graphics.PreferredBackBufferHeight = 700;
-        //        graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+        //        graphics.PreferredBackBufferWidth = 1380;
+        //       graphics.PreferredBackBufferHeight = 700;
+                graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             randomNumberGenerator = new Random();
@@ -60,11 +60,7 @@ namespace PowCamp
 
         private static void createLevel()
         {
-            GameObject guard = DataAccess.instantiateEntity(GameObjectTypeEnum.guard);
-            guard.ScreenCoord.x = 250;
-            guard.ScreenCoord.y = 80;
-            gameObjects.Add(guard);
-            UserInterface.guardToAssignPatrolRouteTo = guard;
+         
 
             GameObject hireGuardTool = DataAccess.instantiateEntity(GameObjectTypeEnum.hireGuardTool);
             gameObjects.Add(hireGuardTool);

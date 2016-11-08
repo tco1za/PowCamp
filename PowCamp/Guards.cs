@@ -13,7 +13,7 @@ namespace PowCamp
     {
         private static float movementSpeed = 60f;
         private static float patrolTurningRate = 60f;  // degrees per second
-        private static float targetTrackingTurningRate = 90f;  // degrees per second
+        private static float targetTrackingTurningRate = 60f;  // degrees per second
         private static float guardVisionConeWidth = 90f; // degrees
         private static float patrollingSightRange = 300f;
         private static float trackingSightRange = 400f;
@@ -258,6 +258,7 @@ namespace PowCamp
                         if ( Animations.isCurrentAnimationAtEndOfLastFrame( guard.CurrentAnimation) )
                         {
                             guard.Guard.state = GuardState.patrolling;
+                            guard.Guard.patrolState = GuardPatrollingState.turning;
                         }
                     }
                 }

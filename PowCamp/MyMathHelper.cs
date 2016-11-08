@@ -76,5 +76,34 @@ namespace PowCamp
         {
             return (float)Math.Atan2(y, x);
         }
+
+        public static List<int> interpolatePoints(int start, int end, bool includeEnd)
+        {
+            List<int> interpolatedPoints = new List<int>();
+
+            if (end > start)
+            {
+                if (includeEnd)
+                {
+                    end = end + 1;
+                }
+                for (int i = start; i < end; i++)
+                {
+                    interpolatedPoints.Add(i);
+                }
+            }
+            else
+            {
+                if (includeEnd)
+                {
+                    end = end - 1;
+                }
+                for (int i = start; i > end; i--)
+                {
+                    interpolatedPoints.Add(i);
+                }
+            }
+            return interpolatedPoints;
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace PowCamp
     {
         fence = 0,
         mouseCursor = 1,
-        mouseBuildGlyph = 2,
+        patrolRouteGreenGlyph = 2,
         brickWall = 3,
         concreteWall = 4,
         mouseCellCornerGlyph = 5,
@@ -27,6 +27,7 @@ namespace PowCamp
         guardTurning = 11,
         prisonerDying = 12,
         sidePanels = 13,
-        buttons = 14
+        buttons = 14,
+        patrolRouteRed = 15
     }
 }

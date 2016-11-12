@@ -258,8 +258,6 @@ namespace PowCamp
                 && cellThatMouseIsCurrentlyIn.X < getNumHorizontalCells() && cellThatMouseIsCurrentlyIn.Y < getNumVerticalCells());
         }
 
-
-
         private static double distanceBetweenTwoPoints(Point firstPoint, Point secondPoint)
         {
             return Math.Sqrt((Math.Pow(firstPoint.X - secondPoint.X, 2) + Math.Pow(firstPoint.Y - secondPoint.Y, 2)));
@@ -420,20 +418,20 @@ namespace PowCamp
 
             foreach (Point cell in cellsToVisitAlongPatrolRoute)
             {
-                Point builderGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
-
-                GameObject builderGlyphObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.mouseBuildGlyph).FirstOrDefault();
-                builderGlyphObject.ScreenCoord.x = builderGlyphPosition.X + cellWidth / 2;
-                builderGlyphObject.ScreenCoord.y = builderGlyphPosition.Y + cellWidth / 2;
-                Game.drawGameObject(spriteBatch, builderGlyphObject);
+                Point patrolRouteGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
+                GameObject patrolRouteGlyphObject;
+                if (!PatrolRoutes.isPatrolRouteObstructed(cellsToVisitAlongPatrolRoute))
+                {
+                    patrolRouteGlyphObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.patrolRouteGreenGlyph).FirstOrDefault();
+                }
+                else
+                {
+                    patrolRouteGlyphObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.patrolRouteRedGlyph).FirstOrDefault();
+                }
+                patrolRouteGlyphObject.ScreenCoord.x = patrolRouteGlyphPosition.X + cellWidth / 2;
+                patrolRouteGlyphObject.ScreenCoord.y = patrolRouteGlyphPosition.Y + cellWidth / 2;
+                Game.drawGameObject(spriteBatch, patrolRouteGlyphObject);
             }
-        }
-
-        private static Point middleOfTwoPoints( Point p1, Point p2)
-        {
-            Point vector = p2 - p1;
-            Point middle = p1 + new Point(vector.X / 2, vector.Y/2);
-            return middle;
         }
 
         private static List<Point> extractPartitionsFromTracedCellCenters( List<Point> tracedCellCorners )
@@ -443,7 +441,7 @@ namespace PowCamp
             {
                 if (i < tracedCellCorners.Count() - 1)
                 {
-                    cellPartitions.Add(middleOfTwoPoints(convertCellCoordsToVirtualScreenCoords(tracedCellCorners[i]), convertCellCoordsToVirtualScreenCoords(tracedCellCorners[i + 1])));
+                    cellPartitions.Add(MyMathHelper.middleOfTwoPoints(convertCellCoordsToVirtualScreenCoords(tracedCellCorners[i]), convertCellCoordsToVirtualScreenCoords(tracedCellCorners[i + 1])));
                 }
             }
             return cellPartitions;

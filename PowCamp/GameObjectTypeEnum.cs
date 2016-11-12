@@ -16,7 +16,7 @@ namespace PowCamp
         fence = 0,
         brickWall = 1,
         mouseCursor = 2,
-        mouseBuildGlyph = 3,
+        patrolRouteGreenGlyph = 3,
         concreteWall = 4,
         mouseCellCornerGlyph = 5,
         guard = 6,
@@ -28,6 +28,7 @@ namespace PowCamp
         buildFenceButton = 12,
         hireGuardButton = 13,
         buildFenceTool = 14,
-        hireGuardTool = 15
+        hireGuardTool = 15,
+        patrolRouteRedGlyph = 16
     }
 }

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/07/2016 11:45:29
+-- Date Created: 11/12/2016 11:58:24
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -83,6 +83,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_RemovalMarkerGameObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[RemovalMarkers] DROP CONSTRAINT [FK_RemovalMarkerGameObject];
 GO
+IF OBJECT_ID(N'[dbo].[FK_ToolGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Tools] DROP CONSTRAINT [FK_ToolGameObject];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -159,6 +162,9 @@ IF OBJECT_ID(N'[dbo].[Prisoners]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[RemovalMarkers]', 'U') IS NOT NULL
     DROP TABLE [dbo].[RemovalMarkers];
+GO
+IF OBJECT_ID(N'[dbo].[Tools]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Tools];
 GO
 
 -- --------------------------------------------------

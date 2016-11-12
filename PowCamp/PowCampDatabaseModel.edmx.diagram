@@ -22,7 +22,7 @@
         <AssociationConnector Association="PowCampDatabaseModel.LevelScene" />
         <AssociationConnector Association="PowCampDatabaseModel.InstantiatedGameObjectScene" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.CurrentAnimation" Width="2.125" PointX="16.375" PointY="2.375" />
-        <EntityTypeShape EntityType="PowCampDatabaseModel.Animation" Width="2.5" PointX="19.25" PointY="1.875" />
+        <EntityTypeShape EntityType="PowCampDatabaseModel.Animation" Width="2.5" PointX="19.25" PointY="1.375" />
         <AssociationConnector Association="PowCampDatabaseModel.CurrentAnimationGameObject" />
         <AssociationConnector Association="PowCampDatabaseModel.CurrentAnimationAnimation" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.Velocity" Width="1.5" PointX="15.875" PointY="4.875" />

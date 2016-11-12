@@ -883,7 +883,7 @@
           <Member Name="fence" />
           <Member Name="brickWall" />
           <Member Name="mouseCursor" />
-          <Member Name="mouseBuildGlyph" />
+          <Member Name="patrolRouteGreenGlyph" />
           <Member Name="concreteWall" />
           <Member Name="mouseCellCornerGlyph" />
           <Member Name="guard" />
@@ -896,6 +896,7 @@
           <Member Name="hireGuardButton" />
           <Member Name="buildFenceTool" />
           <Member Name="hireGuardTool" />
+          <Member Name="patrolRouteRedGlyph" />
         </EnumType>
         <EntityType Name="CurrentAnimation">
           <Key>
@@ -930,7 +931,7 @@
         <EnumType Name="AnimationEnum">
           <Member Name="fence" />
           <Member Name="mouseCursor" />
-          <Member Name="mouseBuildGlyph" />
+          <Member Name="patrolRouteGreenGlyph" />
           <Member Name="brickWall" />
           <Member Name="concreteWall" />
           <Member Name="mouseCellCornerGlyph" />
@@ -943,6 +944,7 @@
           <Member Name="prisonerDying" />
           <Member Name="sidePanels" />
           <Member Name="buttons" />
+          <Member Name="patrolRouteRed" />
         </EnumType>
         <Association Name="CurrentAnimationGameObject">
           <End Type="PowCampDatabaseModel.CurrentAnimation" Role="CurrentAnimation" Multiplicity="0..1" />

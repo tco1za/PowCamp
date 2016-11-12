@@ -72,6 +72,13 @@ namespace PowCamp
             }
         }
 
+        public static Point middleOfTwoPoints(Point p1, Point p2)
+        {
+            Point vector = p2 - p1;
+            Point middle = p1 + new Point(vector.X / 2, vector.Y / 2);
+            return middle;
+        }
+
         public static float convertVectorToAngleOfRotationInRadians(float x, float y) 
         {
             return (float)Math.Atan2(y, x);

@@ -34,11 +34,11 @@ namespace PowCamp
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-        //        graphics.PreferredBackBufferWidth = 1380;
-        //       graphics.PreferredBackBufferHeight = 700;
-                graphics.IsFullScreen = true;
+        //    graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+        //    graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                graphics.PreferredBackBufferWidth = 1380;
+               graphics.PreferredBackBufferHeight = 700;
+        //        graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             randomNumberGenerator = new Random();

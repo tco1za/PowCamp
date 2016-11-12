@@ -415,22 +415,21 @@ namespace PowCamp
         private static void drawPatrolRoute(SpriteBatch spriteBatch)
         {
             List<Point> cellsToVisitAlongPatrolRoute = PatrolRoutes.buildListOfCellsVisitedAlongTrace(createPatrolRouteObjectFromCurrentTrace());
-
+            GameObject patrolRouteGlyphObject;
+            int indexOfLastUnobstructedCellInPatrolRoute = PatrolRoutes.getIndexOfLastUnobstructedCellInPatrolRoute(cellsToVisitAlongPatrolRoute);
+            patrolRouteGlyphObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.patrolRouteGreenGlyph).FirstOrDefault();
+            int index = 0;
             foreach (Point cell in cellsToVisitAlongPatrolRoute)
             {
-                Point patrolRouteGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
-                GameObject patrolRouteGlyphObject;
-                if (!PatrolRoutes.isPatrolRouteObstructed(cellsToVisitAlongPatrolRoute))
-                {
-                    patrolRouteGlyphObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.patrolRouteGreenGlyph).FirstOrDefault();
-                }
-                else
+                if ( index > indexOfLastUnobstructedCellInPatrolRoute )
                 {
                     patrolRouteGlyphObject = Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.patrolRouteRedGlyph).FirstOrDefault();
                 }
+                Point patrolRouteGlyphPosition = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
                 patrolRouteGlyphObject.ScreenCoord.x = patrolRouteGlyphPosition.X + cellWidth / 2;
                 patrolRouteGlyphObject.ScreenCoord.y = patrolRouteGlyphPosition.Y + cellWidth / 2;
                 Game.drawGameObject(spriteBatch, patrolRouteGlyphObject);
+                index++;
             }
         }
 

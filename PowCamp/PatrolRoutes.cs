@@ -10,30 +10,54 @@ namespace PowCamp
 {
     class PatrolRoutes
     {
-        public static bool isPatrolRouteObstructed(List<Point> cellsToVisitAlongPatrolRoute)
+        public static bool isPartitionBetweenPatrolRouteCellsCoincidingWithWall(Point partitionMidPointBetweenCells, List<GameObject> walls)
         {
-            List<GameObject> walls = Game.gameObjects.Where(a => a.Wall != null).ToList();
-
-            int index = 0;
-            foreach ( Point cell in cellsToVisitAlongPatrolRoute  )
+            foreach (GameObject wall in walls)
             {
-                if (index < cellsToVisitAlongPatrolRoute.Count - 1)
+                if (partitionMidPointBetweenCells.X == wall.CellPartition.partitionMidPointX && partitionMidPointBetweenCells.Y == wall.CellPartition.partitionMidPointY)
                 {
-                     Point partitionMidPointBetweenCells = getPartitionMidpointBetweenCells(cellsToVisitAlongPatrolRoute, index);
-                    foreach ( GameObject wall in walls )
-                    {
-                        if ( partitionMidPointBetweenCells.X == wall.CellPartition.partitionMidPointX && partitionMidPointBetweenCells.Y == wall.CellPartition.partitionMidPointY)
-                        {
-                            return true;
-                        }
-                    }
-                    index++;
+                    return true;
                 }
             }
             return false;
         }
 
-        private static Point getPartitionMidpointBetweenCells(List<Point> cellsToVisitAlongPatrolRoute, int index)
+        public static List<Point> getListOfUnobstructedPatrolRouteCells(List<Point> cellsToVisitAlongPatrolRoute)
+        {
+            int indexOfLastUnobstructedCellInPatrolRoute = PatrolRoutes.getIndexOfLastUnobstructedCellInPatrolRoute(cellsToVisitAlongPatrolRoute);
+            int index = 0;
+            List<Point> listOfUnobstructedPatrolRouteCells = new List<Point>();
+            foreach (Point cell in cellsToVisitAlongPatrolRoute)
+            {
+                if (index <= indexOfLastUnobstructedCellInPatrolRoute)
+                {
+                    listOfUnobstructedPatrolRouteCells.Add(cell);
+                }
+                index++;
+            }
+            return listOfUnobstructedPatrolRouteCells;
+        }
+
+        public static int getIndexOfLastUnobstructedCellInPatrolRoute(List<Point> cellsToVisitAlongPatrolRoute)
+        {
+            List<GameObject> walls = Game.gameObjects.Where(a => a.Wall != null).ToList();
+            int index = 0;
+            foreach (Point cell in cellsToVisitAlongPatrolRoute)
+            {
+                if (index < cellsToVisitAlongPatrolRoute.Count - 1)
+                {
+                    Point partitionMidPointBetweenCells = PatrolRoutes.getPartitionMidpointBetweenCells(cellsToVisitAlongPatrolRoute, index);
+                    if (PatrolRoutes.isPartitionBetweenPatrolRouteCellsCoincidingWithWall(partitionMidPointBetweenCells, walls))
+                    {
+                        return index; 
+                    }
+                }
+                index++;
+            }
+            return cellsToVisitAlongPatrolRoute.Count - 1;
+        }
+
+        public static Point getPartitionMidpointBetweenCells(List<Point> cellsToVisitAlongPatrolRoute, int index)
         {
             Point nextCellScreenCoords = UserInterface.convertCellCoordsToVirtualScreenCoords(cellsToVisitAlongPatrolRoute[index + 1]);
             Point currentCellScreenCoords = UserInterface.convertCellCoordsToVirtualScreenCoords(cellsToVisitAlongPatrolRoute[index]);

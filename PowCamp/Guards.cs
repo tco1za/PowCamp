@@ -116,7 +116,7 @@ namespace PowCamp
 
         private static void followPatrolRoute(GameObject guard, GameTime gameTime)
         {
-            List<Point> cellsVisitedAlongPatrolRoute = PatrolRoutes.buildListOfCellsVisitedAlongTrace(guard.PatrolRoute);
+            List<Point> cellsVisitedAlongPatrolRoute = PatrolRoutes.getListOfUnobstructedPatrolRouteCells(PatrolRoutes.buildListOfCellsVisitedAlongTrace(guard.PatrolRoute));
 
             if (cellsVisitedAlongPatrolRoute.Count == 1)
             {

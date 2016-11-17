@@ -11,6 +11,7 @@ namespace PowCamp
 {
     public class Game : Microsoft.Xna.Framework.Game
     {
+        public static int currentLevelId = 0;
         private Texture2D spriteMap1;
         private Texture2D background;
         private Texture2D buttonsAndMisc;
@@ -21,6 +22,7 @@ namespace PowCamp
         public static MouseState currentMouseState;
         public static bool isLeftMouseClicked = false;
         public static Dictionary<string, Texture2D> atlases = new Dictionary<string, Texture2D>();
+        public static List<Texture2D> levelNavigationGrids = new List<Texture2D>();
         public static List<Animation> animations;
         public static Scene scene;
         public static Random randomNumberGenerator;
@@ -42,7 +44,6 @@ namespace PowCamp
             graphics.ApplyChanges();
 
             randomNumberGenerator = new Random();
-            PathFindingGraph.initialize();
             UserInterface.initialize();
             InitializeDatabase.createGameObjectTypes();
             animations = DataAccess.getAllAnimations();
@@ -60,8 +61,6 @@ namespace PowCamp
 
         private static void createLevel()
         {
-         
-
             GameObject hireGuardTool = DataAccess.instantiateEntity(GameObjectTypeEnum.hireGuardTool);
             gameObjects.Add(hireGuardTool);
             GameObject buildFenceTool = DataAccess.instantiateEntity(GameObjectTypeEnum.buildFenceTool);
@@ -83,10 +82,13 @@ namespace PowCamp
             background = Content.Load<Texture2D>("backTest");
             spriteMap1 = Content.Load<Texture2D>("spriteMap1");
             buttonsAndMisc = Content.Load<Texture2D>("buttonsAndMisc");
+            levelNavigationGrids.Add(Content.Load<Texture2D>("level1NavigationGrid"));
+
 
             atlases.Add("spriteMap1", spriteMap1);
             atlases.Add("buttonsAndMisc", buttonsAndMisc);
 
+            PathFindingGraph.initialize();
         }
 
         protected override void UnloadContent()

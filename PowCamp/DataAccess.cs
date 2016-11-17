@@ -14,7 +14,6 @@ namespace PowCamp
 {
     class DataAccess
     {
-        private static int currentLevelId = 1;
         public static PowCampDatabaseModelContainer db = new PowCampDatabaseModelContainer();    
         private static string currentErrorMessage;
         private static Dictionary<GameObjectTypeEnum, List<GameObject>> availableInstantiatedGameObjectsPool = new Dictionary<GameObjectTypeEnum, List<GameObject>>();
@@ -132,7 +131,7 @@ namespace PowCamp
         public static void saveGame(List<GameObject> gameObjects, Scene scene)
         {
             scene.Id = -1;
-            scene.SaveGame = new SaveGame() { name = DateTime.Now.ToString(), levelCreatedFrom = currentLevelId };
+            scene.SaveGame = new SaveGame() { name = DateTime.Now.ToString(), levelCreatedFrom = Game.currentLevelId };
             saveScene(gameObjects, scene);
         }
 
@@ -145,13 +144,13 @@ namespace PowCamp
 
         public static LoadResult loadLevel(int levelID)
         {
-            currentLevelId = db.Levels.Where(item => item.Id == levelID).FirstOrDefault().Id;
+            Game.currentLevelId = db.Levels.Where(item => item.Id == levelID).FirstOrDefault().Id;
             return loadScene( db.Scenes.Where(item => item.Level.Id == levelID).FirstOrDefault().Id );
         }
 
         public static LoadResult loadSaveGame(string name)
         {
-            currentLevelId = db.SaveGames.Where(item => item.name == name).FirstOrDefault().levelCreatedFrom;
+            Game.currentLevelId = db.SaveGames.Where(item => item.name == name).FirstOrDefault().levelCreatedFrom;
             return loadScene(db.Scenes.Where(item => item.SaveGame.name == name).FirstOrDefault().Id);
         }
  

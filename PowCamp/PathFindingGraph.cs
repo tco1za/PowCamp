@@ -193,11 +193,26 @@ namespace PowCamp
         private static void initializeNodes()
         {
             graph = new Graph();
+            Color[] levelNavigationColorArray = new Color[Game.levelNavigationGrids[Game.currentLevelId].Width * Game.levelNavigationGrids[Game.currentLevelId].Height];
+            Game.levelNavigationGrids[Game.currentLevelId].GetData(levelNavigationColorArray);
+
             for (int y = yIndexStart; y < yIndexEnd; y++)
             {
                 for (int x = xIndexStart; x < xIndexEnd; x++)
                 {
-                    graph.AddNode(x * UserInterface.cellWidth, y * UserInterface.cellWidth, 0);
+                    Node newNode = new Node(x * UserInterface.cellWidth, y * UserInterface.cellWidth, 0);
+                    Point screenCoords = UserInterface.convertCellCoordsToVirtualScreenCoords(new Point(x, y));
+                    Color color = levelNavigationColorArray[screenCoords.X + UserInterface.cellWidth/2 + (screenCoords.Y + UserInterface.cellWidth/2) * Game.levelNavigationGrids[Game.currentLevelId].Width];
+                    if (color.R == 0 || color.G == 0 || color.B == 0)
+                    {
+                        newNode.Passable = false;
+                        GameObject newGameObject = DataAccess.instantiateEntity(GameObjectTypeEnum.concreteWall);
+                        newGameObject.ScreenCoord.x = screenCoords.X + UserInterface.cellWidth / 2;
+                        newGameObject.ScreenCoord.y = screenCoords.Y + UserInterface.cellWidth / 2;
+
+                        Game.gameObjects.Add(newGameObject);
+                    }
+                    graph.AddNode(newNode);
                 }
             }
         }

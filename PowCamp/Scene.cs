@@ -19,12 +19,15 @@ namespace PowCamp
         {
             this.timeSinceLastPrisonerSpawn = 99999F;
             this.timeToNextPrisonerSpawn = 3F;
+            this.bankBalance = 500;
             this.InstantiatedGameObjects = new HashSet<InstantiatedGameObject>();
         }
     
         public int Id { get; set; }
         public float timeSinceLastPrisonerSpawn { get; set; }
         public float timeToNextPrisonerSpawn { get; set; }
+        public int bankBalance { get; set; }
+        public float timeSinceLastGrant { get; set; }
     
         public virtual SaveGame SaveGame { get; set; }
         public virtual Level Level { get; set; }

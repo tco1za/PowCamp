@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/12/2016 11:58:24
+-- Date Created: 11/20/2016 19:23:35
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -86,6 +86,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_ToolGameObject]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Tools] DROP CONSTRAINT [FK_ToolGameObject];
 GO
+IF OBJECT_ID(N'[dbo].[FK_CostGameObject]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Costs] DROP CONSTRAINT [FK_CostGameObject];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -166,6 +169,9 @@ GO
 IF OBJECT_ID(N'[dbo].[Tools]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Tools];
 GO
+IF OBJECT_ID(N'[dbo].[Costs]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Costs];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -216,7 +222,9 @@ GO
 CREATE TABLE [dbo].[Scenes] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [timeSinceLastPrisonerSpawn] real  NOT NULL,
-    [timeToNextPrisonerSpawn] real  NOT NULL
+    [timeToNextPrisonerSpawn] real  NOT NULL,
+    [bankBalance] int  NOT NULL,
+    [timeSinceLastGrant] real  NOT NULL
 );
 GO
 
@@ -403,6 +411,14 @@ CREATE TABLE [dbo].[Tools] (
 );
 GO
 
+-- Creating table 'Costs'
+CREATE TABLE [dbo].[Costs] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [cost] int  NOT NULL,
+    [GameObject_Id] int  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -554,6 +570,12 @@ GO
 -- Creating primary key on [Id] in table 'Tools'
 ALTER TABLE [dbo].[Tools]
 ADD CONSTRAINT [PK_Tools]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Costs'
+ALTER TABLE [dbo].[Costs]
+ADD CONSTRAINT [PK_Costs]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -903,6 +925,21 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_ToolGameObject'
 CREATE INDEX [IX_FK_ToolGameObject]
 ON [dbo].[Tools]
+    ([GameObject_Id]);
+GO
+
+-- Creating foreign key on [GameObject_Id] in table 'Costs'
+ALTER TABLE [dbo].[Costs]
+ADD CONSTRAINT [FK_CostGameObject]
+    FOREIGN KEY ([GameObject_Id])
+    REFERENCES [dbo].[GameObjects]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_CostGameObject'
+CREATE INDEX [IX_FK_CostGameObject]
+ON [dbo].[Costs]
     ([GameObject_Id]);
 GO
 

@@ -11,6 +11,8 @@ namespace PowCamp
 {
     public class Game : Microsoft.Xna.Framework.Game
     {
+        public static int timeBetweenGrants = 5;
+        public static int sizeOfGrants = 100;
         public static int currentLevelId = 0;
         private Texture2D spriteMap1;
         private Texture2D background;
@@ -103,11 +105,9 @@ namespace PowCamp
                 DataAccess.saveLevel(gameObjects, "level1", scene);
                 Exit();
             }
-            // TODO: Add your update logic here
             // TODO: play audio here
             previousMouseState = currentMouseState;
             currentMouseState = Mouse.GetState();
-
             if (previousMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed)
             {
                 isLeftMouseClicked = true;
@@ -116,19 +116,25 @@ namespace PowCamp
             {
                 isLeftMouseClicked = false;
             }
-
             gameObjects.RemoveAll(x => shouldGameObjectBeRemovedFromScene(x));
             RemovalMarkers.update(gameObjects, gameTime);
-
-
+            updateGrants(gameTime);
             Prisoners.update(gameTime);
             Guards.update(gameTime);
             Velocities.update(gameTime);
-
             UserInterface.update();
             Animations.update(gameTime);
-
             base.Update(gameTime);
+        }
+
+        private static void updateGrants(GameTime gameTime)
+        {
+            scene.timeSinceLastGrant += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (scene.timeSinceLastGrant > timeBetweenGrants)
+            {
+                scene.bankBalance += sizeOfGrants;
+                scene.timeSinceLastGrant = 0;
+            }
         }
 
         public static void drawGameObject(SpriteBatch spriteBatch, GameObject gameObject)

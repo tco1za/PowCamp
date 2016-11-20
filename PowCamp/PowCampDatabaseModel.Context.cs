@@ -50,5 +50,6 @@ namespace PowCamp
         public virtual DbSet<Prisoner> Prisoners { get; set; }
         public virtual DbSet<RemovalMarker> RemovalMarkers { get; set; }
         public virtual DbSet<Tool> Tools { get; set; }
+        public virtual DbSet<Cost> Costs { get; set; }
     }
 }

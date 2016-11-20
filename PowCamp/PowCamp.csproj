@@ -57,6 +57,9 @@
     <Compile Include="ComponentDependency.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Cost.cs">
+      <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="CurrentAnimation.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>

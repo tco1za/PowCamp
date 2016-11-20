@@ -151,6 +151,7 @@ namespace PowCamp
                     {
                         GameObject newGuard = DataAccess.instantiateEntity(GameObjectTypeEnum.guard);
                         Game.gameObjects.Add(newGuard);
+                        Game.scene.bankBalance -= newGuard.Cost.cost;
                         assignTracePatrolRouteToGuard(newGuard);
                         currentState = State.neutral;
                     }
@@ -199,6 +200,7 @@ namespace PowCamp
                             {
                                 removeExistingWallInNewWallPosition(newWall);
                                 Game.gameObjects.Add(newWall);
+                                Game.scene.bankBalance -= newWall.Cost.cost;
                                 PathFindingGraph.addWall(newWall);
                             }
                         }

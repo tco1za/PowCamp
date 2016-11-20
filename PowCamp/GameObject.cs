@@ -35,5 +35,6 @@ namespace PowCamp
         public virtual Prisoner Prisoner { get; set; }
         public virtual RemovalMarker RemovalMarker { get; set; }
         public virtual Tool Tool { get; set; }
+        public virtual Cost Cost { get; set; }
     }
 }

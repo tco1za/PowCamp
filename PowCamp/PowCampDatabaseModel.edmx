@@ -31,6 +31,7 @@
     <EntitySet Name="Prisoners" EntityType="PowCampDatabaseModel.Store.Prisoners" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="RemovalMarkers" EntityType="PowCampDatabaseModel.Store.RemovalMarkers" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Tools" EntityType="PowCampDatabaseModel.Store.Tools" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Costs" EntityType="PowCampDatabaseModel.Store.Costs" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="GameObjectGameObjectType" Association="PowCampDatabaseModel.Store.GameObjectGameObjectType">
       <End Role="GameObject" EntitySet="GameObjects" />
       <End Role="GameObjectType" EntitySet="GameObjectTypes" />
@@ -123,6 +124,10 @@
       <End Role="Tool" EntitySet="Tools" />
       <End Role="GameObject" EntitySet="GameObjects" />
     </AssociationSet>
+    <AssociationSet Name="CostGameObject" Association="PowCampDatabaseModel.Store.CostGameObject">
+      <End Role="Cost" EntitySet="Costs" />
+      <End Role="GameObject" EntitySet="GameObjects" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="GameObjects">
     <Key>
@@ -172,6 +177,8 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="timeSinceLastPrisonerSpawn" Type="real" Nullable="false" DefaultValue="99999" />
     <Property Name="timeToNextPrisonerSpawn" Type="real" Nullable="false" DefaultValue="3" />
+    <Property Name="bankBalance" Type="int" Nullable="false" DefaultValue="500" />
+    <Property Name="timeSinceLastGrant" Type="real" Nullable="false" />
   </EntityType>
   <EntityType Name="ComponentDependencies">
     <Key>
@@ -354,6 +361,14 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="buttonEnum" Type="int" Nullable="false" />
+    <Property Name="GameObject_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Costs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="cost" Type="int" Nullable="false" DefaultValue="100" />
     <Property Name="GameObject_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="GameObjectGameObjectType">
@@ -632,6 +647,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="CostGameObject">
+    <End Role="Cost" Type="PowCampDatabaseModel.Store.Costs" Multiplicity="*" />
+    <End Role="GameObject" Type="PowCampDatabaseModel.Store.GameObjects" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GameObject">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Cost">
+        <PropertyRef Name="GameObject_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -754,6 +781,11 @@
             <End Role="Tool" EntitySet="Tools" />
             <End Role="GameObject" EntitySet="GameObjects" />
           </AssociationSet>
+          <EntitySet Name="Costs" EntityType="PowCampDatabaseModel.Cost" />
+          <AssociationSet Name="CostGameObject" Association="PowCampDatabaseModel.CostGameObject">
+            <End Role="Cost" EntitySet="Costs" />
+            <End Role="GameObject" EntitySet="GameObjects" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="GameObject">
           <Key>
@@ -779,6 +811,7 @@
           <NavigationProperty Name="Prisoner" Relationship="PowCampDatabaseModel.PrisonerGameObject" FromRole="GameObject" ToRole="Prisoner" />
           <NavigationProperty Name="RemovalMarker" Relationship="PowCampDatabaseModel.RemovalMarkerGameObject" FromRole="GameObject" ToRole="RemovalMarker" />
           <NavigationProperty Name="Tool" Relationship="PowCampDatabaseModel.ToolGameObject" FromRole="GameObject" ToRole="Tool" />
+          <NavigationProperty Name="Cost" Relationship="PowCampDatabaseModel.CostGameObject" FromRole="GameObject" ToRole="Cost" />
         </EntityType>
         <EntityType Name="GameObjectType">
           <Key>
@@ -837,6 +870,8 @@
           <NavigationProperty Name="InstantiatedGameObjects" Relationship="PowCampDatabaseModel.InstantiatedGameObjectScene" FromRole="Scene" ToRole="InstantiatedGameObject" />
           <Property Name="timeSinceLastPrisonerSpawn" Type="Single" Nullable="false" DefaultValue="99999" />
           <Property Name="timeToNextPrisonerSpawn" Type="Single" Nullable="false" DefaultValue="3" />
+          <Property Name="bankBalance" Type="Int32" Nullable="false" DefaultValue="500" />
+          <Property Name="timeSinceLastGrant" Type="Single" Nullable="false" />
         </EntityType>
         <Association Name="GameObjectCellCoord">
           <End Type="PowCampDatabaseModel.CellCoord" Role="CellCoord" Multiplicity="0..1" />
@@ -1156,6 +1191,18 @@
           <End Type="PowCampDatabaseModel.Tool" Role="Tool" Multiplicity="0..1" />
           <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
         </Association>
+        <EntityType Name="Cost">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cost" Type="Int32" Nullable="false" DefaultValue="100" />
+          <NavigationProperty Name="GameObject" Relationship="PowCampDatabaseModel.CostGameObject" FromRole="Cost" ToRole="GameObject" />
+        </EntityType>
+        <Association Name="CostGameObject">
+          <End Type="PowCampDatabaseModel.Cost" Role="Cost" Multiplicity="0..1" />
+          <End Type="PowCampDatabaseModel.GameObject" Role="GameObject" Multiplicity="1" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1209,6 +1256,8 @@
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="timeSinceLastPrisonerSpawn" ColumnName="timeSinceLastPrisonerSpawn" />
           <ScalarProperty Name="timeToNextPrisonerSpawn" ColumnName="timeToNextPrisonerSpawn" />
+          <ScalarProperty Name="bankBalance" ColumnName="bankBalance" />
+          <ScalarProperty Name="timeSinceLastGrant" ColumnName="timeSinceLastGrant" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1396,6 +1445,14 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Costs">
+      <EntityTypeMapping TypeName="IsTypeOf(PowCampDatabaseModel.Cost)">
+        <MappingFragment StoreEntitySet="Costs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="cost" ColumnName="cost" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="GameObjectGameObjectType" TypeName="PowCampDatabaseModel.GameObjectGameObjectType" StoreEntitySet="GameObjects">
       <EndProperty Name="GameObjectType">
         <ScalarProperty Name="Id" ColumnName="GameObjectType_Id" />
@@ -1577,6 +1634,14 @@
         <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
       </EndProperty>
       <EndProperty Name="Tool">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CostGameObject" TypeName="PowCampDatabaseModel.CostGameObject" StoreEntitySet="Costs">
+      <EndProperty Name="GameObject">
+        <ScalarProperty Name="Id" ColumnName="GameObject_Id" />
+      </EndProperty>
+      <EndProperty Name="Cost">
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>

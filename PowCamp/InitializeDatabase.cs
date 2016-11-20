@@ -23,6 +23,10 @@ namespace PowCamp
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Prisoner", dependsOn = "CurrentAnimation" });
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Prisoner", dependsOn = "RemovalMarker" });
             DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Wall", dependsOn = "ScreenCoord" });
+            DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Wall", dependsOn = "Cost" });
+            DataAccess.db.ComponentDependencies.Add(new ComponentDependency() { componentName = "Guard", dependsOn = "Cost" });
+
+
 
             DataAccess.db.SaveChanges();
         }
@@ -117,6 +121,7 @@ namespace PowCamp
                 newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
                 newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.concreteWall).FirstOrDefault() };
                 newGameObjectType.Wall = new Wall();
+                newGameObjectType.Cost = new Cost() { cost = 100 };
                 DataAccess.db.GameObjects.Add(newGameObjectType);
                 newGameObjectType = new GameObject();
                 newGameObjectType.GameObjectType = new GameObjectType();
@@ -130,6 +135,7 @@ namespace PowCamp
                 newGameObjectType.GameObjectType.name = Enum.GetName(typeof(GameObjectTypeEnum), newGameObjectType.GameObjectType.enumValue);
                 newGameObjectType.CurrentAnimation = new CurrentAnimation() { index = 0, Animation = DataAccess.db.Animations.Where(item => item.enumValue == AnimationEnum.guardWalk).FirstOrDefault() };
                 newGameObjectType.Guard = new Guard() { state = GuardState.patrolling, patrolState = GuardPatrollingState.walking };
+                newGameObjectType.Cost = new Cost() { cost = 1000 };
                 DataAccess.db.GameObjects.Add(newGameObjectType);
                 newGameObjectType = new GameObject();
                 newGameObjectType.GameObjectType = new GameObjectType();

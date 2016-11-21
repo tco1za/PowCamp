@@ -313,7 +313,13 @@ namespace PowCamp
 
             drawSidePanels(spriteBatch);
             drawButtons(spriteBatch);
+            drawBankBalance(spriteBatch);
             drawMouseCursor(spriteBatch);
+        }
+
+        private static void drawBankBalance(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(Game.font, "Bank: $" + Game.scene.bankBalance, new Vector2(30, 10), Color.Black);
         }
 
         private static void drawSidePanels(SpriteBatch spriteBatch)

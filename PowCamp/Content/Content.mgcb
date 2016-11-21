@@ -61,3 +61,9 @@
 /processorParam:TextureFormat=Color
 /build:level1NavigationGrid.jpg
 
+#begin Score.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Score.spritefont
+

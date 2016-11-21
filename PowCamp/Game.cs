@@ -17,6 +17,7 @@ namespace PowCamp
         private Texture2D spriteMap1;
         private Texture2D background;
         private Texture2D buttonsAndMisc;
+        public static SpriteFont font;
         public static GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static List<GameObject> gameObjects = new List<GameObject>();
@@ -81,6 +82,7 @@ namespace PowCamp
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            font = Content.Load<SpriteFont>("Score"); 
             background = Content.Load<Texture2D>("backTest");
             spriteMap1 = Content.Load<Texture2D>("spriteMap1");
             buttonsAndMisc = Content.Load<Texture2D>("buttonsAndMisc");

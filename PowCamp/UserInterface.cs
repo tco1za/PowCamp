@@ -29,6 +29,11 @@ namespace PowCamp
 
         private static State currentState = State.neutral;
 
+        private static bool isInsufficientFundsBlinking = false;
+        private static float timeSinceInsufficientFundsStartedBlinking = 999f;
+        private static float timeInsufficientFundsMustBlinkFor = 5f;
+        private static float timeBetweenInsufficientFundsBlinks = 0.5f;
+
         public static void initialize()
         {
             redWall = DataAccess.instantiateEntity(GameObjectTypeEnum.redWall);
@@ -61,12 +66,20 @@ namespace PowCamp
             return new Point(cellCoords.X * cellWidth + sidePanelWidth, cellCoords.Y * cellWidth);
         }
 
-        public static void update()
+        public static void update( GameTime gameTime )
         {
             MouseState mouseState = Game.currentMouseState;
             mousePosition = new Point(mouseState.X, mouseState.Y);
             mousePosition = convertScreenPointToVirtualScreenPoint(mousePosition);
 
+            if ( isInsufficientFundsBlinking)
+            {
+                if (timeSinceInsufficientFundsStartedBlinking > timeInsufficientFundsMustBlinkFor)
+                {
+                    isInsufficientFundsBlinking = false;
+                }
+                timeSinceInsufficientFundsStartedBlinking += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
             if (currentState == State.neutral)
             {
                 checkButtonsForMouseClicks();
@@ -96,17 +109,38 @@ namespace PowCamp
                         Game.isLeftMouseClicked = false;
                         if (button.GameObjectType.enumValue == GameObjectTypeEnum.buildFenceButton)
                         {
-                            currentState = State.placingWall;
-                            currentTraceState = TracingState.beforePointsSelected;
+                            if (isBankBalanceOkForBuild(GameObjectTypeEnum.concreteWall))
+                            {
+                                currentState = State.placingWall;
+                                currentTraceState = TracingState.beforePointsSelected;
+                            }
                         }
                         if (button.GameObjectType.enumValue == GameObjectTypeEnum.hireGuardButton)
                         {
-                            currentState = State.tracingPatrolRoute;
-                            currentTraceState = TracingState.beforePointsSelected;
+                            if ( isBankBalanceOkForBuild( GameObjectTypeEnum.guard ) )
+                            {
+                                currentState = State.tracingPatrolRoute;
+                                currentTraceState = TracingState.beforePointsSelected;
+                            }
                         }
                     }
                 }
                 index++;
+            }
+        }
+
+        private static bool isBankBalanceOkForBuild( GameObjectTypeEnum enumValue )
+        {
+            if (Game.scene.bankBalance > Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == enumValue).FirstOrDefault().Cost.cost)
+            {
+                return true;
+            }
+            else
+            {
+                SoundEffects.errorSound.Play();
+                isInsufficientFundsBlinking = true;
+                timeSinceInsufficientFundsStartedBlinking = 0f;
+                return false;
             }
         }
 
@@ -319,7 +353,19 @@ namespace PowCamp
 
         private static void drawBankBalance(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(Game.font, "Bank: $" + Game.scene.bankBalance, new Vector2(30, 10), Color.Black);
+            Color bankBalanceColor = Color.Black;
+            if ( isInsufficientFundsBlinking )
+            {
+                bankBalanceColor = Color.Red;
+                if ( ((int)(timeSinceInsufficientFundsStartedBlinking / timeBetweenInsufficientFundsBlinks)) % 2 == 0 )
+                {
+                    spriteBatch.DrawString(Game.insufficientFundsFont, "Insufficient Funds", new Vector2(30, 10), Color.Red);
+                }
+            }
+            else
+            {
+                spriteBatch.DrawString(Game.bankBalanceFont, "Bank: $" + Game.scene.bankBalance, new Vector2(30, 10), Color.Black);
+            }
         }
 
         private static void drawSidePanels(SpriteBatch spriteBatch)

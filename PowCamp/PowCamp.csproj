@@ -127,6 +127,7 @@
     <Compile Include="ScreenCoord.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SoundEffects.cs" />
     <Compile Include="TargetPathIndex.cs">
       <DependentUpon>PowCampDatabaseModel.tt</DependentUpon>
     </Compile>

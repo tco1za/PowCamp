@@ -61,9 +61,21 @@
 /processorParam:TextureFormat=Color
 /build:level1NavigationGrid.jpg
 
-#begin Score.spritefont
+#begin SoundFX/error.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundFX/error.wav
+
+#begin BankBalance.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:TextureFormat=Compressed
-/build:Score.spritefont
+/build:BankBalance.spritefont
+
+#begin InsufficientFunds.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:InsufficientFunds.spritefont
 

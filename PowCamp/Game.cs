@@ -17,7 +17,8 @@ namespace PowCamp
         private Texture2D spriteMap1;
         private Texture2D background;
         private Texture2D buttonsAndMisc;
-        public static SpriteFont font;
+        public static SpriteFont bankBalanceFont;
+        public static SpriteFont insufficientFundsFont;
         public static GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static List<GameObject> gameObjects = new List<GameObject>();
@@ -82,13 +83,15 @@ namespace PowCamp
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            font = Content.Load<SpriteFont>("Score"); 
+            bankBalanceFont = Content.Load<SpriteFont>("BankBalance"); 
+            insufficientFundsFont = Content.Load<SpriteFont>("InsufficientFunds");
+
             background = Content.Load<Texture2D>("backTest");
             spriteMap1 = Content.Load<Texture2D>("spriteMap1");
             buttonsAndMisc = Content.Load<Texture2D>("buttonsAndMisc");
             levelNavigationGrids.Add(Content.Load<Texture2D>("level1NavigationGrid"));
 
-
+            SoundEffects.load(Content);
             atlases.Add("spriteMap1", spriteMap1);
             atlases.Add("buttonsAndMisc", buttonsAndMisc);
 
@@ -124,7 +127,7 @@ namespace PowCamp
             Prisoners.update(gameTime);
             Guards.update(gameTime);
             Velocities.update(gameTime);
-            UserInterface.update();
+            UserInterface.update(gameTime);
             Animations.update(gameTime);
             base.Update(gameTime);
         }

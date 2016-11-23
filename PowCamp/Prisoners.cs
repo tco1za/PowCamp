@@ -155,7 +155,11 @@ namespace PowCamp
                 newPrisoner.TargetScreenCoord.y = newPrisoner.ScreenCoord.y;
                 Game.gameObjects.Add(newPrisoner);
                 Game.scene.timeSinceLastPrisonerSpawn = 0f;
-                Game.scene.timeToNextPrisonerSpawn = 0.5f;
+                Game.scene.timeToNextPrisonerSpawn = Game.scene.timeToNextPrisonerSpawn * 0.95f;
+                if (Game.scene.timeToNextPrisonerSpawn < 0.5f )
+                {
+                    Game.scene.timeToNextPrisonerSpawn = 0.5f;
+                }
             }
         }
     }

@@ -193,8 +193,8 @@ namespace PowCamp
         private static void initializeNodes()
         {
             graph = new Graph();
-            Color[] levelNavigationColorArray = new Color[Game.levelNavigationGrids[Game.currentLevelId].Width * Game.levelNavigationGrids[Game.currentLevelId].Height];
-            Game.levelNavigationGrids[Game.currentLevelId].GetData(levelNavigationColorArray);
+            Color[] levelNavigationColorArray = new Color[Game.levelNavigationGrids[Game.currentLevelId-1].Width * Game.levelNavigationGrids[Game.currentLevelId-1].Height];
+            Game.levelNavigationGrids[Game.currentLevelId-1].GetData(levelNavigationColorArray);
 
             for (int y = yIndexStart; y < yIndexEnd; y++)
             {
@@ -202,11 +202,11 @@ namespace PowCamp
                 {
                     Node newNode = new Node(x * UserInterface.cellWidth, y * UserInterface.cellWidth, 0);
                     Point screenCoords = UserInterface.convertCellCoordsToVirtualScreenCoords(new Point(x, y));
-                    Color color = levelNavigationColorArray[screenCoords.X + UserInterface.cellWidth/2 + (screenCoords.Y + UserInterface.cellWidth/2) * Game.levelNavigationGrids[Game.currentLevelId].Width];
+                    Color color = levelNavigationColorArray[screenCoords.X + UserInterface.cellWidth/2 + (screenCoords.Y + UserInterface.cellWidth/2) * Game.levelNavigationGrids[Game.currentLevelId-1].Width];
                     if (color.R == 0 || color.G == 0 || color.B == 0)
                     {
                         newNode.Passable = false;
-                        GameObject newGameObject = DataAccess.instantiateEntity(GameObjectTypeEnum.concreteWall);
+                        GameObject newGameObject = DataAccess.instantiateEntity(GameObjectTypeEnum.patrolRouteRedGlyph);   // TODO: remove this
                         newGameObject.ScreenCoord.x = screenCoords.X + UserInterface.cellWidth / 2;
                         newGameObject.ScreenCoord.y = screenCoords.Y + UserInterface.cellWidth / 2;
 

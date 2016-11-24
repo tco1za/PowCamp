@@ -17,6 +17,8 @@ namespace PowCamp
         private static int xIndexEnd = UserInterface.getNumHorizontalCells();
         private static int yIndexEnd = UserInterface.getNumVerticalCells();
 
+        private static Color[] levelNavigationColorArray;
+
         private static int xRange = xIndexEnd - xIndexStart;
 
         private static int[,] arcsLookupTable;
@@ -155,6 +157,7 @@ namespace PowCamp
 
         private static void initializeGraph()
         {
+            getPixelDataForNavigation();
             initializeNodes();
             initializeArcs();
         }
@@ -182,28 +185,110 @@ namespace PowCamp
 
                         if (xIndex >= xIndexStart && xIndex < xIndexEnd && yIndex >= yIndexStart && yIndex < yIndexEnd)
                         {
-                            Arc arcAdded = graph.AddArc((Node)graph.Nodes[y * xRange + x], (Node)graph.Nodes[yIndex * xRange + xIndex], 1);
-                            arcsLookupTable[y * xRange + x, yIndex * xRange + xIndex] = graph.Arcs.Count - 1;
+                            if (isArcTraversable(new Point(x, y), offset))
+                            {
+                                Arc arcAdded = graph.AddArc((Node)graph.Nodes[y * xRange + x], (Node)graph.Nodes[yIndex * xRange + xIndex], 1);
+                                arcsLookupTable[y * xRange + x, yIndex * xRange + xIndex] = graph.Arcs.Count - 1;
+                            }
                         }
                     }
                 }
             }
         }
 
+        private static void getPixelDataForNavigation()
+        {
+            levelNavigationColorArray = new Color[Game.levelNavigationGrids[Game.currentLevelId - 1].Width * Game.levelNavigationGrids[Game.currentLevelId - 1].Height];
+            Game.levelNavigationGrids[Game.currentLevelId - 1].GetData(levelNavigationColorArray);
+        }
+
+        private static bool isCellCornerTraversable( Point cell, int corner )
+        {
+            Point screenCoords = UserInterface.convertCellCoordsToVirtualScreenCoords(cell);
+            int xOffset = 0;
+            int yOffset = 0;
+            if ( corner == 0  )
+            {
+                xOffset = UserInterface.cellWidth / 4;
+                yOffset = UserInterface.cellWidth / 4;
+            }
+            if (corner == 1)
+            {
+                xOffset = (UserInterface.cellWidth / 4) * 3;
+                yOffset = UserInterface.cellWidth / 4;
+            }
+            if (corner == 2)
+            {
+                xOffset = UserInterface.cellWidth / 4;
+                yOffset = (UserInterface.cellWidth / 4) * 3;
+            }
+            if (corner == 3)
+            {
+                xOffset = (UserInterface.cellWidth / 4) * 3;
+                yOffset = (UserInterface.cellWidth / 4) * 3;
+            }
+            Color color = levelNavigationColorArray[screenCoords.X + xOffset + (screenCoords.Y + yOffset) * Game.levelNavigationGrids[Game.currentLevelId - 1].Width];
+            if (color.R == 0 || color.G == 0 || color.B == 0 )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private static bool isArcTraversable( Point sourceCell, Point offset )
+        {
+            if (offset.X == 1 && offset.Y == 1)
+            {
+                if (!isCellCornerTraversable(new Point(sourceCell.X + offset.X, sourceCell.Y), 2)  ||
+                     !isCellCornerTraversable(new Point(sourceCell.X, sourceCell.Y + offset.Y), 1))
+                {
+                    return false; 
+                }
+            }
+            if (offset.X == -1 && offset.Y == -1)
+            {
+                if (!isCellCornerTraversable(new Point(sourceCell.X + offset.X, sourceCell.Y), 1) ||
+                     !isCellCornerTraversable(new Point(sourceCell.X, sourceCell.Y + offset.Y), 2))
+                {
+                    return false;
+                }
+            }
+            if (offset.X == -1 && offset.Y == 1)
+            {
+                if (!isCellCornerTraversable(new Point(sourceCell.X + offset.X, sourceCell.Y), 3) ||
+                     !isCellCornerTraversable(new Point(sourceCell.X, sourceCell.Y + offset.Y), 0))
+                {
+                    return false;
+                }
+            }
+            if (offset.X == 1 && offset.Y == -1)
+            {
+                if (!isCellCornerTraversable(new Point(sourceCell.X + offset.X, sourceCell.Y), 0) ||
+                     !isCellCornerTraversable(new Point(sourceCell.X, sourceCell.Y + offset.Y), 3))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private static void initializeNodes()
         {
             graph = new Graph();
-            Color[] levelNavigationColorArray = new Color[Game.levelNavigationGrids[Game.currentLevelId-1].Width * Game.levelNavigationGrids[Game.currentLevelId-1].Height];
-            Game.levelNavigationGrids[Game.currentLevelId-1].GetData(levelNavigationColorArray);
-
             for (int y = yIndexStart; y < yIndexEnd; y++)
             {
                 for (int x = xIndexStart; x < xIndexEnd; x++)
                 {
                     Node newNode = new Node(x * UserInterface.cellWidth, y * UserInterface.cellWidth, 0);
                     Point screenCoords = UserInterface.convertCellCoordsToVirtualScreenCoords(new Point(x, y));
-                    Color color = levelNavigationColorArray[screenCoords.X + UserInterface.cellWidth/2 + (screenCoords.Y + UserInterface.cellWidth/2) * Game.levelNavigationGrids[Game.currentLevelId-1].Width];
-                    if (color.R == 0 || color.G == 0 || color.B == 0)
+
+                    if ( !isCellCornerTraversable(new Point(x, y), 0) ||
+                         !isCellCornerTraversable(new Point(x, y), 1) ||
+                         !isCellCornerTraversable(new Point(x, y), 2) ||
+                         !isCellCornerTraversable(new Point(x, y), 3))
                     {
                         newNode.Passable = false;
                         GameObject newGameObject = DataAccess.instantiateEntity(GameObjectTypeEnum.patrolRouteRedGlyph);   // TODO: remove this

@@ -131,7 +131,7 @@ namespace PowCamp
 
         private static bool isBankBalanceOkForBuild( GameObjectTypeEnum enumValue )
         {
-            if (Game.scene.bankBalance > Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == enumValue).FirstOrDefault().Cost.cost)
+            if (Game.scene.bankBalance >= Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == enumValue).FirstOrDefault().Cost.cost)
             {
                 return true;
             }

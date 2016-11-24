@@ -13,7 +13,7 @@ namespace PowCamp
     {
         public static int timeBetweenGrants = 5;
         public static int sizeOfGrants = 100;
-        public static int currentLevelId = 0;
+        public static int currentLevelId = 1;
         private Texture2D spriteMap1;
         private Texture2D background;
         private Texture2D buttonsAndMisc;

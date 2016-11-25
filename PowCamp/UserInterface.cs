@@ -223,6 +223,7 @@ namespace PowCamp
                     {
                         List<Point> cellsToVisitAlongTrace = getCellsVisitedAlongTrace();
                         List<Point> distinctPartitions = getDistinctPartitions(cellsToVisitAlongTrace);
+                        int index = 0;
                         foreach (Point partitionMidPoint in distinctPartitions) 
                         {
                             GameObject newWall = DataAccess.instantiateEntity(GameObjectTypeEnum.concreteWall);
@@ -230,13 +231,15 @@ namespace PowCamp
                             newWall.CellPartition.partitionMidPointY = partitionMidPoint.Y;
                             newWall.ScreenCoord.x = partitionMidPoint.X;
                             newWall.ScreenCoord.y = partitionMidPoint.Y;
-                            if (!Prisoners.isAnyLivePrisonersInContactWithWall(newWall))
+                            if (!Prisoners.isAnyLivePrisonersInContactWithWall(newWall)
+                                && newWall.Cost.cost <= Game.scene.bankBalance)
                             {
                                 removeExistingWallInNewWallPosition(newWall);
                                 Game.gameObjects.Add(newWall);
                                 Game.scene.bankBalance -= newWall.Cost.cost;
                                 PathFindingGraph.addWall(newWall);
                             }
+                            index++;
                         }
                         currentState = State.neutral;
                     }
@@ -436,6 +439,7 @@ namespace PowCamp
             List<Point> cellsToVisitAlongTrace = getCellsVisitedAlongTrace();
             drawBuilderGlyph(spriteBatch, cellsToVisitAlongTrace);
             List<Point> distinctPartitions = getDistinctPartitions(cellsToVisitAlongTrace);
+            int index = 0;
             foreach (Point partitionMidPoint in distinctPartitions)
             {
                 redWall.CellPartition.partitionMidPointX = partitionMidPoint.X;
@@ -446,7 +450,8 @@ namespace PowCamp
                 greenWall.CellPartition.partitionMidPointY = partitionMidPoint.Y;
                 greenWall.ScreenCoord.x = partitionMidPoint.X;
                 greenWall.ScreenCoord.y = partitionMidPoint.Y;
-                if (Prisoners.isAnyLivePrisonersInContactWithWall(redWall))
+                if (Prisoners.isAnyLivePrisonersInContactWithWall(redWall) || 
+                    (index+1) * Game.gameObjectTypes.Where(a => a.GameObjectType.enumValue == GameObjectTypeEnum.concreteWall).FirstOrDefault().Cost.cost > Game.scene.bankBalance )
                 {
                     Walls.draw(redWall, spriteBatch);
                 }
@@ -454,6 +459,7 @@ namespace PowCamp
                 {
                     Walls.draw(greenWall, spriteBatch);
                 }
+                index++;
             }
         }
 

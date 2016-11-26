@@ -72,6 +72,8 @@ namespace PowCamp
             mousePosition = new Point(mouseState.X, mouseState.Y);
             mousePosition = convertScreenPointToVirtualScreenPoint(mousePosition);
 
+            updateTimeLeft(gameTime);
+
             if ( isInsufficientFundsBlinking)
             {
                 if (timeSinceInsufficientFundsStartedBlinking > timeInsufficientFundsMustBlinkFor)
@@ -92,6 +94,11 @@ namespace PowCamp
             {
                 updateTracingPatrolRoute();
             }
+        }
+
+        private static void updateTimeLeft(GameTime gameTime)
+        {
+            Game.scene.secondsLeft -= (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         private static void checkButtonsForMouseClicks()
@@ -351,6 +358,8 @@ namespace PowCamp
             drawSidePanels(spriteBatch);
             drawButtons(spriteBatch);
             drawBankBalance(spriteBatch);
+            drawNumPrisonersEscaped(spriteBatch);
+            drawTimeLeft(spriteBatch);
             drawMouseCursor(spriteBatch);
         }
 
@@ -369,6 +378,16 @@ namespace PowCamp
             {
                 spriteBatch.DrawString(Game.bankBalanceFont, "Bank: $" + Game.scene.bankBalance, new Vector2(30, 10), Color.Black);
             }
+        }
+
+        private static void drawNumPrisonersEscaped(SpriteBatch spriteBatch)
+        {
+             spriteBatch.DrawString(Game.bankBalanceFont, "Prisoners Escaped: " + Game.scene.numPrisonersEscaped + " of " + Game.scene.maxNumEscapedPrisonersAllowed, new Vector2(1350, 10), Color.Black);
+        }
+
+        private static void drawTimeLeft(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(Game.bankBalanceFont, "Time Left: " + Game.scene.secondsLeft, new Vector2(1550, 40), Color.Black);
         }
 
         private static void drawSidePanels(SpriteBatch spriteBatch)

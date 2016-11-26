@@ -20,6 +20,9 @@ namespace PowCamp
             this.timeSinceLastPrisonerSpawn = 99999F;
             this.timeToNextPrisonerSpawn = 3F;
             this.bankBalance = 500;
+            this.numPrisonersEscaped = 0;
+            this.maxNumEscapedPrisonersAllowed = 20;
+            this.secondsLeft = 60F;
             this.InstantiatedGameObjects = new HashSet<InstantiatedGameObject>();
         }
     
@@ -28,6 +31,9 @@ namespace PowCamp
         public float timeToNextPrisonerSpawn { get; set; }
         public int bankBalance { get; set; }
         public float timeSinceLastGrant { get; set; }
+        public int numPrisonersEscaped { get; set; }
+        public int maxNumEscapedPrisonersAllowed { get; set; }
+        public float secondsLeft { get; set; }
     
         public virtual SaveGame SaveGame { get; set; }
         public virtual Level Level { get; set; }

@@ -179,6 +179,9 @@
     <Property Name="timeToNextPrisonerSpawn" Type="real" Nullable="false" DefaultValue="3" />
     <Property Name="bankBalance" Type="int" Nullable="false" DefaultValue="500" />
     <Property Name="timeSinceLastGrant" Type="real" Nullable="false" />
+    <Property Name="numPrisonersEscaped" Type="int" Nullable="false" DefaultValue="0" />
+    <Property Name="maxNumEscapedPrisonersAllowed" Type="int" Nullable="false" DefaultValue="20" />
+    <Property Name="secondsLeft" Type="real" Nullable="false" />
   </EntityType>
   <EntityType Name="ComponentDependencies">
     <Key>
@@ -872,6 +875,9 @@
           <Property Name="timeToNextPrisonerSpawn" Type="Single" Nullable="false" DefaultValue="3" />
           <Property Name="bankBalance" Type="Int32" Nullable="false" DefaultValue="500" />
           <Property Name="timeSinceLastGrant" Type="Single" Nullable="false" />
+          <Property Name="numPrisonersEscaped" Type="Int32" Nullable="false" DefaultValue="0" />
+          <Property Name="maxNumEscapedPrisonersAllowed" Type="Int32" Nullable="false" DefaultValue="20" />
+          <Property Name="secondsLeft" Type="Single" Nullable="false" DefaultValue="60" />
         </EntityType>
         <Association Name="GameObjectCellCoord">
           <End Type="PowCampDatabaseModel.CellCoord" Role="CellCoord" Multiplicity="0..1" />
@@ -1258,6 +1264,9 @@
           <ScalarProperty Name="timeToNextPrisonerSpawn" ColumnName="timeToNextPrisonerSpawn" />
           <ScalarProperty Name="bankBalance" ColumnName="bankBalance" />
           <ScalarProperty Name="timeSinceLastGrant" ColumnName="timeSinceLastGrant" />
+          <ScalarProperty Name="numPrisonersEscaped" ColumnName="numPrisonersEscaped" />
+          <ScalarProperty Name="maxNumEscapedPrisonersAllowed" ColumnName="maxNumEscapedPrisonersAllowed" />
+          <ScalarProperty Name="secondsLeft" ColumnName="secondsLeft" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

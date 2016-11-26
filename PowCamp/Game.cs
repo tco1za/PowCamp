@@ -121,7 +121,7 @@ namespace PowCamp
             {
                 isLeftMouseClicked = false;
             }
-            gameObjects.RemoveAll(x => shouldGameObjectBeRemovedFromScene(x));
+           // gameObjects.RemoveAll(x => shouldGameObjectBeRemovedFromScene(x));
             RemovalMarkers.update(gameObjects, gameTime);
             updateGrants(gameTime);
             Prisoners.update(gameTime);
@@ -199,7 +199,7 @@ namespace PowCamp
 
         private bool shouldGameObjectBeRemovedFromScene(GameObject gameObject)
         {
-            if ( gameObject.ScreenCoord != null && gameObject.CurrentAnimation != null && !isGameObjectSpriteVisibleOnscreen(gameObject) )
+            if ( gameObject.ScreenCoord != null && gameObject.CurrentAnimation != null && !isGameObjectSpriteVisibleOnscreen(gameObject) && gameObject.Prisoner != null )
             {
                 return true;
             }

@@ -71,8 +71,30 @@ namespace PowCamp
             return distanceLeftOver;
         }
 
+        private static bool isPrisonerEscaped( GameObject prisoner )
+        {
+            if (prisoner.Health.hitPoints > 0)
+            {
+                if (prisoner.ScreenCoord.x < -UserInterface.cellWidth/2 + UserInterface.sidePanelWidth || prisoner.ScreenCoord.y < -UserInterface.cellWidth/2
+                    || prisoner.ScreenCoord.y > UserInterface.virtualScreenHeight + UserInterface.cellWidth/2 || 
+                    prisoner.ScreenCoord.x > UserInterface.virtualScreenWidth - UserInterface.sidePanelWidth + UserInterface.cellWidth / 2)
+                {
+                    Game.scene.numPrisonersEscaped++;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void removeAllEscapedPrisoners()
+        {
+            Game.gameObjects.RemoveAll(a => a.Prisoner != null && isPrisonerEscaped(a));
+        }
+
         public static void update( GameTime gameTime )
         {
+            removeAllEscapedPrisoners();
+
             spawnNewPrisoners(gameTime);
 
             List<GameObject> prisoners = Game.gameObjects.Where(item => item.Prisoner != null).ToList();

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/20/2016 19:23:35
+-- Date Created: 11/26/2016 19:00:24
 -- Generated from EDMX file: C:\PowCamp\PowCamp\PowCampDatabaseModel.edmx
 -- --------------------------------------------------
 
@@ -224,7 +224,10 @@ CREATE TABLE [dbo].[Scenes] (
     [timeSinceLastPrisonerSpawn] real  NOT NULL,
     [timeToNextPrisonerSpawn] real  NOT NULL,
     [bankBalance] int  NOT NULL,
-    [timeSinceLastGrant] real  NOT NULL
+    [timeSinceLastGrant] real  NOT NULL,
+    [numPrisonersEscaped] int  NOT NULL,
+    [maxNumEscapedPrisonersAllowed] int  NOT NULL,
+    [secondsLeft] real  NOT NULL
 );
 GO
 

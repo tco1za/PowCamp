@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5dbfd7e727d84f73976845f8d13eabce" Name="Diagram1" DisplayType="true" ZoomLevel="124" >
+      <Diagram DiagramId="5dbfd7e727d84f73976845f8d13eabce" Name="Diagram1" DisplayType="true" ZoomLevel="135" >
         <EntityTypeShape EntityType="PowCampDatabaseModel.GameObject" Width="2" PointX="10.5" PointY="0.625" IsExpanded="true" />
         <EntityTypeShape EntityType="PowCampDatabaseModel.GameObjectType" Width="2.125" PointX="10.625" PointY="5.5" />
         <AssociationConnector Association="PowCampDatabaseModel.GameObjectGameObjectType" />
